@@ -38,7 +38,7 @@ class parse_bag:
         self.found2 = False
         self.found3 = False
         self.treasures = 0
-        self.game_time = 5*60 + 60 # corresponds to the game being over
+        self.start_time = 0 #5*60 + 60 # corresponds to the game being over
         self.client_connected = False
 
     def loop_through_topics(self):
@@ -52,21 +52,21 @@ class parse_bag:
                 self.adversary_1_x = msg.xpos
                 self.adversary_1_y = msg.ypos
                 if self.client_connected==True:
-                    self.found1 = self.is_player_found(self.found1, self.adversary_1_x, self.adversary_1_y, self.adversary_1_x_prev, self.adversary_1_y_prev, t)
+                    self.found1 = self.is_player_found(self.found1, self.adversary_1_x, self.adversary_1_y, self.adversary_1_x_prev, self.adversary_1_y_prev, t.secs)
             elif topic == self.topic_list[2]:
                 self.adversary_2_x_prev = msg.xpos
                 self.adversary_2_y_prev = msg.ypos
                 self.adversary_2_x = msg.xpos
                 self.adversary_2_y = msg.ypos
                 if self.client_connected==True:
-                    self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t)
+                    self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t.secs)
             elif topic == self.topic_list[3]:
                 self.adversary_3_x_prev2 = self.adversary_3_x
                 self.adversary_3_y_prev2 = self.adversary_3_y
                 self.adversary_3_x = msg.xpos
                 self.adversary_3_y = msg.ypos
                 if self.client_connected==True:
-                    self.found3 = self.is_player_found(self.found3, self.adversary_3_x, self.adversary_3_y, self.adversary_3_x_prev, self.adversary_3_y_prev, t)
+                    self.found3 = self.is_player_found(self.found3, self.adversary_3_x, self.adversary_3_y, self.adversary_3_x_prev, self.adversary_3_y_prev, t.secs)
             elif topic == self.topic_list[4]:
                 self.player_x_prev = self.player_x
                 self.player_y_prev = self.player_y
@@ -75,16 +75,16 @@ class parse_bag:
             elif topic == self.topic_list[5]:
                 if (msg.lives_count<self.game_lives):
                     self.game_lives = msg.lives_count
-                    print('Game now shows player has ',self.game_lives,' self.lives at time',(t.secs-self.game_time)/60.0)
+                    print('Game now shows player has ',self.game_lives,' self.lives at time',(t.secs-self.start_time)/60.0)
             elif topic == self.topic_list[6]:
                 if self.client_connected==False:
                     if msg.data==1:
-                        self.game_time = t.secs
+                        self.start_time = t.secs
                         self.client_connected = True
                 if self.client_connected==True:
                     if msg.data==0:
                         # If the full trial didn't happen, reset metrics
-                        if (t.secs-self.game_time)/60.0<4.5: # isn't the full trial
+                        if (t.secs-self.start_time)/60.0<4.5: # isn't the full trial
                             self.reset_game()
                         self.client_connected = False
 
@@ -128,7 +128,7 @@ class parse_bag:
                 if (is_adv_close and is_adv_facing and (is_path_on_building == False)):
                     found = True
                     self.lives -= 1
-                    print('Life lost at time',(t.secs-self.game_time)/60.0)
+                    print('Life lost at time',(t-self.start_time)/60.0)
             else:
                 if dist>self.disttoreposition:
                     found = False
