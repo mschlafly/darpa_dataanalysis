@@ -4,10 +4,10 @@ from performance import parse_bag
 import csv
 import matplotlib.pyplot as plt
 
-minsub = 8
-maxsub = 8
-# subID = '01'
-skipped_subjects = [2,3,4,5,6,10,12,16]
+minsub = 1
+maxsub = 42
+skipped_subjects = [2,3,4,5,6,10,12,16,19,15,38]
+# 15 missing waypoing low and 38 missing directergodic high
 # list_of_complete_datasets =[1,7,8,9,11,13,14,15,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42]
 # print(len(list_of_complete_datasets))
 
@@ -16,6 +16,13 @@ columns = ['Subject','Control','Complexity','Lives','Treasure']
 with open(file,'w') as csvfile:
     testwriter = csv.writer(csvfile,delimiter=',')
     testwriter.writerow(columns)
+
+file_missingbags = "missing_bags.csv"
+columns = ['Subject','Control','Complexity','Control','Complexity']
+with open(file_missingbags,'w') as csvfile:
+    testwriter = csv.writer(csvfile,delimiter=',')
+    testwriter.writerow(columns)
+
 
 for sub in range(minsub, maxsub+1):
     found = False
@@ -35,9 +42,11 @@ for sub in range(minsub, maxsub+1):
         # control_type = ['none','waypoint','directergodic','sharedergodic','autoergodic']
         # autonomy = ['direct','shared','auto']
 
-        player_lives = np.zeros(10)
-        treasures_found = np.zeros(10)
-        numeach = np.zeros(10)
+        # player_lives = np.zeros(10)
+        # treasures_found = np.zeros(10)
+        # numeach = np.zeros(10)
+
+        # Loop through trials
         for env in range(0, len(environments)):
             for con in range(0, len(control)):
                 try:
@@ -47,40 +56,15 @@ for sub in range(minsub, maxsub+1):
                     # filename = '/home/murpheylab/Desktop/sub' + subID + '/' + subID + '_' + control[con] + '_' + environments[env] + '.bag'
                     # filename = '/home/murpheylab/Desktop/sub' + subID + '/repaired.bag'
                     print(filename)
+
+                    # Get game data by parsing the bag using performance.py
                     game_data = parse_bag(filename,environments[env])
-                    print(game_data.lives)
+                    print('Lives left: ',game_data.lives)
+
+                    # Prints discrepency in game lives between the number shown to player and counted lives
                     if game_data.game_lives!=game_data.lives:
-                        print('game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
+                        print('Discrepency in lives-- game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
 
-                    # Store data into matrix
-                    if environments[env] =='low':
-                        player_lives[con] = game_data.lives
-                        treasures_found[con] = game_data.treasures
-                        numeach[con] += 1
-                    else:
-                        player_lives[con+5] = game_data.lives
-                        treasures_found[con+5] = game_data.treasures
-                        numeach[con+5] += 1
-                    row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
-                    with open (file,'a') as csvfile:
-                        testwriter = csv.writer(csvfile,delimiter=',')
-                        testwriter.writerow(row)
-                except:
-                    # rosbag filter 08_autoergodic_low.bag 08_autoergodic_low_filtered.bag "topic=='/treasure_info' or topic=='/adversary_1_position' or topic=='/adversary_2_position' or topic=='/adversary_3_position' or topic=='/person_position' or topic=='/player_info' or topic=='/client_count'"
-                    print('------------------------------------------------------------')
-                    print('Was unable to open and search bag file for ', environments[env], control[con])
-                    print('------------------------------------------------------------')
-
-                    # try:
-                    # print('Opening filtered file')
-                    # filename = '/home/murpheylab/Desktop/exp_data/sub' + subID + '/' + subID + '_' + control[con] + '_' + environments[env] + '_filtered.bag'
-                    #
-                    # print(filename)
-                    # game_data = parse_bag(filename,environments[env])
-                    # print(game_data.lives)
-                    # if game_data.game_lives!=game_data.lives:
-                    #     print('game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
-                    #
                     # # Store data into matrix
                     # if environments[env] =='low':
                     #     player_lives[con] = game_data.lives
@@ -90,25 +74,34 @@ for sub in range(minsub, maxsub+1):
                     #     player_lives[con+5] = game_data.lives
                     #     treasures_found[con+5] = game_data.treasures
                     #     numeach[con+5] += 1
-                    # row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
-                    # with open (file,'a') as csvfile:
-                    #     testwriter = csv.writer(csvfile,delimiter=',')
-                    #     testwriter.writerow(row)
-                    # except:
-                    #     print('------------------------------------------------------------')
-                    #     print('Unable to open and search filtered bag file')
-                    #     print('------------------------------------------------------------')
-        width = 0.5
-        ind = np.arange(10)
-        plt.figure(sub)
-        p1 = plt.bar(ind,player_lives,width)
-        p2 = plt.bar(ind,treasures_found,width,bottom=player_lives)
-        plt.ylabel('Score')
-        plt.title('Game Performance for Subject ' + subID)
-        labels = ('LN','LW','LD','LS','LA','HN','HW','HD','HS','HA')
-        plt.xticks(ind, labels)
-        plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
-        plt.savefig(subID+'_performance.pdf')
+
+                    # Save data to csv
+                    row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
+                    with open(file,'a') as csvfile:
+                        testwriter = csv.writer(csvfile,delimiter=',')
+                        testwriter.writerow(row)
+                except:
+                    print('------------------------------------------------------------')
+                    print('Was unable to open and search bag file for ', environments[env], control[con])
+                    print('------------------------------------------------------------')
+
+                    # Save trial to list of missing bags
+                    row = [subID,con,env,control[con],environments[env]]
+                    with open(file_missingbags,'a') as csvfile:
+                        testwriter = csv.writer(csvfile,delimiter=',')
+                        testwriter.writerow(row)
+
+        # width = 0.5
+        # ind = np.arange(10)
+        # plt.figure(sub)
+        # p1 = plt.bar(ind,player_lives,width)
+        # p2 = plt.bar(ind,treasures_found,width,bottom=player_lives)
+        # plt.ylabel('Score')
+        # plt.title('Game Performance for Subject ' + subID)
+        # labels = ('LN','LW','LD','LS','LA','HN','HW','HD','HS','HA')
+        # plt.xticks(ind, labels)
+        # plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
+        # plt.savefig(subID+'_performance.pdf')
 
         # for i in range(10):
         #     if player_lives[i]>0:
@@ -141,4 +134,4 @@ for sub in range(minsub, maxsub+1):
 #     plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
 #     plt.savefig('combined_performance.pdf')
 
-plt.show()
+# plt.show()
