@@ -61,33 +61,10 @@ for sub in range(minsub, maxsub+1):
                     if game_data.game_lives!=game_data.lives:
                         print('Discrepency in lives-- game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
 
-                    # # Store data into matrix
-                    # if environments[env] =='low':
-                    #     player_lives[con] = game_data.lives
-                    #     treasures_found[con] = game_data.treasures
-                    #     numeach[con] += 1
-                    # else:
-                    #     player_lives[con+5] = game_data.lives
-                    #     treasures_found[con+5] = game_data.treasures
-                    #     numeach[con+5] += 1
-
-                    # Save data to csv
-                    # game_data.treasures = game_data.treasures-game_data.end1_treas-game_data.end2_treas
-                    # print(game_data.end1_treas,game_data.end2_treas,game_data.treasures)
-
                     row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
                     with open(file,'a') as csvfile:
                         testwriter = csv.writer(csvfile,delimiter=',')
                         testwriter.writerow(row)
-
-                    # row = [subID,control[con],environments[env],game_data.end1_lives,game_data.end1_treas]
-                    # with open(file,'a') as csvfile:
-                    #     testwriter = csv.writer(csvfile,delimiter=',')
-                    #     testwriter.writerow(row)
-                    # row = [subID,control[con],environments[env],game_data.end2_lives,game_data.end2_treas]
-                    # with open(file,'a') as csvfile:
-                    #     testwriter = csv.writer(csvfile,delimiter=',')
-                    #     testwriter.writerow(row)
                 except:
                     print('------------------------------------------------------------')
                     print('Was unable to open and search bag file for ', environments[env], control[con])
