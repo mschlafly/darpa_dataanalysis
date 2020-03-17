@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 minsub = 1
 maxsub = 42
-skipped_subjects = [2,3,4,5,6,10,12,16,19,15,38]
+skipped_subjects = []#[2,3,4,5,6,10,12,16,19,15,38]
 # 15 missing waypoing low and 38 missing directergodic high
 # list_of_complete_datasets =[1,7,8,9,11,13,14,15,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,39,40,41,42]
 # print(len(list_of_complete_datasets))
@@ -76,10 +76,22 @@ for sub in range(minsub, maxsub+1):
                     #     numeach[con+5] += 1
 
                     # Save data to csv
+                    # game_data.treasures = game_data.treasures-game_data.end1_treas-game_data.end2_treas
+                    # print(game_data.end1_treas,game_data.end2_treas,game_data.treasures)
+
                     row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
                     with open(file,'a') as csvfile:
                         testwriter = csv.writer(csvfile,delimiter=',')
                         testwriter.writerow(row)
+
+                    # row = [subID,control[con],environments[env],game_data.end1_lives,game_data.end1_treas]
+                    # with open(file,'a') as csvfile:
+                    #     testwriter = csv.writer(csvfile,delimiter=',')
+                    #     testwriter.writerow(row)
+                    # row = [subID,control[con],environments[env],game_data.end2_lives,game_data.end2_treas]
+                    # with open(file,'a') as csvfile:
+                    #     testwriter = csv.writer(csvfile,delimiter=',')
+                    #     testwriter.writerow(row)
                 except:
                     print('------------------------------------------------------------')
                     print('Was unable to open and search bag file for ', environments[env], control[con])

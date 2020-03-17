@@ -19,7 +19,6 @@ class parse_bag:
         self.building_array = populate_building_array(env)
         self.reset_game()
 
-
         rospy.Subscriber('/treasure_info', treasure_info, self.update_treasure)
         rospy.Subscriber('/adversary_1_position', person_position, self.update_adv_1)
         rospy.Subscriber('/adversary_2_position', person_position, self.update_adv_2)
@@ -185,28 +184,59 @@ if __name__ == '__main__':
                         row_found = True
                         print('Row for this trial has already been saved')
                         break
-    print('Run this: rosbag play -r 25 --clock ./sub'+subID+'/'+subID+'_'+control[con]+'_'+environments[env]+'.bag')
+    print('Run this: rosbag play -r 35 --clock ./sub'+subID+'/'+subID+'_'+control[con]+'_'+environments[env]+'.bag')
 
+    row_found = False
     # Listen to trial and save once finished
     if row_found==False:
         game_data = parse_bag(environments[env])
         end_time = 5*60
+        end1 = ((5.0/3)*1)*60  # + 40
+        end2 = ((5.0/3)*2)*60  # + 40
+        end1_on = True
+        end2_on = True
         done = False
         while (not rospy.is_shutdown()) and done==False:
             if game_data.start_time>0 and done==False:
                 game_time = rospy.get_time()-game_data.start_time
                 # print(game_data.start_time,rospy.get_time(),game_time)
                 if game_time>end_time:
-                    if game_data.game_lives!=game_data.lives:
-                        print('game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
-                    else:
-                        print('lives: ',game_data.lives)
-
-                    # Append data file
-                    row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
-                    with open(file, 'a') as csvfile:
-                        testwriter = csv.writer(csvfile,delimiter=',')
-                        testwriter.writerow(row)
-                    print('Saved row to file: ', row)
+                    # print(game_time)
                     done = True
+                # if game_time>end1 and end1_on==True:
+                #     # print(game_time,end1_on)
+                #     end1_treas = game_data.treasures
+                #     # Append data file
+                #     row = [subID,control[con],environments[env],game_data.lives,end1_treas]
+                #     with open(file, 'a') as csvfile:
+                #         testwriter = csv.writer(csvfile,delimiter=',')
+                #         testwriter.writerow(row)
+                #     print('Saved row to file: ', row)
+                #     end1_on = False
+                #     game_data.lives = 8
+                # if game_time>end2 and end2_on:
+                #     # print(game_time,end2_on)
+                #     end2_treas = game_data.treasures-end1_treas
+                #     # Append data file
+                #     row = [subID,control[con],environments[env],game_data.lives,end2_treas]
+                #     with open(file, 'a') as csvfile:
+                #         testwriter = csv.writer(csvfile,delimiter=',')
+                #         testwriter.writerow(row)
+                #     print('Saved row to file: ', row)
+                #     end2_on = False
+                #     game_data.lives = 8
+
             rospy.sleep(.1)
+
+        if game_data.game_lives!=game_data.lives:
+            print('game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
+        else:
+            print('lives: ',game_data.lives)
+
+        # game_data.treasures = game_data.treasures-end1_treas-end2_treas
+        # Append data file
+        row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
+        with open(file, 'a') as csvfile:
+            testwriter = csv.writer(csvfile,delimiter=',')
+            testwriter.writerow(row)
+        print('Saved row to file: ', row)

@@ -1,51 +1,67 @@
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.patches import Polygon
-
+from make_boxplot import make_boxplot
 
 
 minsub = 1
 maxsub = 42
-skipped_subjects = [2,3,4,5,6,10,12,16,19,15,38]
+skipped_subjects = []#[2,3,4,5,6,10,12,16,19,15,38]
 
-plot_each = True
+plot_each = False
+save_data = True
 
 file = "performance.csv"
+file_subdata = "subject_info.csv"
 environments = ['low','high']
 control = ['none','waypoint','directergodic','sharedergodic','autoergodic']
+method = ['none','waypoint','ergodic']
+autonomy = ['direct','shared','auto']
 
-# Count the number of subjects tested
-numsub = 0
-for sub in range(minsub, maxsub+1):
-    found = False
-    for i in range(len(skipped_subjects)):
-        # print(list_of_complete_datasets[i])
-        if sub==skipped_subjects[i]:
-            found = True
-    if found == False:
-        numsub +=1
-print('Plotting data for '+str(numsub)+' subjects')
+# # Count the number of subjects tested
+# numsub = 0
+# for sub in range(minsub, maxsub+1):
+#     found = False
+#     for i in range(len(skipped_subjects)):
+#         # print(list_of_complete_datasets[i])
+#         if sub==skipped_subjects[i]:
+#             found = True
+#     if found == False:
+#         numsub +=1
 
-# Set up csv for storing data to process in R
-file_all = "metrics_all.csv"
-columns = ['Subject','Control','Complexity','Trial','Lives','Treasure','Score']
-with open(file_all,'w') as csvfile:
-    testwriter = csv.writer(csvfile,delimiter=',')
-    testwriter.writerow(columns)
-file_high = "metrics_high.csv"
-columns = ['Subject','Control','Lives','Treasure','Score']
-with open(file_high,'w') as csvfile:
-    testwriter = csv.writer(csvfile,delimiter=',')
-    testwriter.writerow(columns)
-file_low = "metrics_low.csv"
-with open(file_low,'w') as csvfile:
-    testwriter = csv.writer(csvfile,delimiter=',')
-    testwriter.writerow(columns)
+# Set up csvs for storing data to process in R
+if save_data:
+    # type of control
+    file_control_all = "control_all.csv"
+    columns = ['Subject','Control','Complexity','Trial','Skill','Perweek',
+                'Lifetime','Uselow','Usehigh','Lives','Treasure','Score']
+    with open(file_control_all,'w') as csvfile:
+        testwriter = csv.writer(csvfile,delimiter=',')
+        testwriter.writerow(columns)
+    # method
+    file_method_all = "method_all.csv"
+    columns = ['Subject','Method','Complexity','Skill','Perweek',
+                'Lifetime','Uselow','Usehigh','Lives','Treasure','Score']
+    with open(file_method_all,'w') as csvfile:
+        testwriter = csv.writer(csvfile,delimiter=',')
+        testwriter.writerow(columns)
+    # autonomy level
+    file_autonomy_all = "autonomy_all.csv"
+    columns = ['Subject','Autonomy','Complexity','Skill','Perweek',
+                'Lifetime','Uselow','Usehigh','Lives','Treasure','Score']
+    with open(file_autonomy_all,'w') as csvfile:
+        testwriter = csv.writer(csvfile,delimiter=',')
+        testwriter.writerow(columns)
 
-lives_all = np.zeros((numsub,10))
-treasure_all = np.zeros((numsub,10))
-score_all = np.zeros((numsub,10))
+lives_all = np.zeros((maxsub,10))
+treasure_all = np.zeros((maxsub,10))
+score_all = np.zeros((maxsub,10))
+lives_method = np.zeros((maxsub,6))
+treasure_method = np.zeros((maxsub,6))
+score_method = np.zeros((maxsub,6))
+lives_autonomy = np.zeros((maxsub,6))
+treasure_autonomy = np.zeros((maxsub,6))
+score_autonomy = np.zeros((maxsub,6))
 subnum = 0
 for sub in range(minsub, maxsub+1):
     found = False
@@ -89,170 +105,262 @@ for sub in range(minsub, maxsub+1):
                 labels = ('LN','LW','LD','LS','LA','HN','HW','HD','HS','HA')
                 plt.xticks(ind, labels)
                 plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
-                plt.savefig('individualplots/'+subID+'_performance.pdf')
-            # if np.min(lives_all[subnum,:])>0:
-            with open(file_all,'w') as csvfile:
-                testwriter = csv.writer(csvfile,delimiter=',')
-                for i in range(10):
-                    if i<5:
-                        con = i
+                plt.savefig('individualplots/'+subID+'_performance.png')
+
+            if save_data:
+                # Read subject_info.csv for the amount of video games the person plays
+                with open(file_subdata,'r') as csvfile:
+                    subdata = csv.reader(csvfile)#,delimiter=',')
+                    for row in subdata:
+                        if str(sub)==row[0]:
+                            skill = np.mean(lives_all[subnum,:])
+                            perweek = row[1]
+                            lifetime = row[2]
+
+                if np.min(lives_all[subnum,0:5])>0:
+                    all_low = 1
+                else:
+                    all_low = 0
+
+                if np.min(lives_all[subnum,5:10])>0:
+                    all_high = 1
+                else:
+                    all_high =0
+
+                # if all of the experimental trials are there for either all high or all low
+                if (all_high==1 or all_low==1):
+                    # control type
+                    with open(file_control_all,'a') as csvfile:
+                        testwriter = csv.writer(csvfile,delimiter=',')
+                        for i in range(10):
+                            if i<5:
+                                con = i
+                                env = 0
+                            else:
+                                con = i-5
+                                env = 1
+                            row_save = [subID,control[con],environments[env],'trial'+str(i),
+                                        skill,perweek,lifetime,all_low,all_high,
+                                        lives_all[subnum,i],treasure_all[subnum,i],score_all[subnum,i]]
+                            testwriter.writerow(row_save)
+                    # method
+                    with open(file_method_all,'a') as csvfile:
+                        testwriter = csv.writer(csvfile,delimiter=',')
+                        # Loop through none and waypoint files
+                        for i in range(10):
+                            if i<5:
+                                con = i
+                                env = 0
+                                ind = i
+                            else:
+                                con = i-5
+                                env = 1
+                                ind = i-2
+                            if control[con] == 'none' or control[con] == 'waypoint':
+                                row_save = [subID,method[con],environments[env],
+                                            skill,perweek,lifetime,all_low,all_high,
+                                            lives_all[subnum,i],treasure_all[subnum,i],score_all[subnum,i]]
+                                testwriter.writerow(row_save)
+                                lives_method[subnum,ind] = lives_all[subnum,i]
+                                treasure_method[subnum,ind] = treasure_all[subnum,i]
+                                score_method[subnum,ind] = score_all[subnum,i]
+
+                        # Save average ergodic low performance
+                        con = 2
                         env = 0
-                    else:
-                        con = i-5
+                        ind = 2
+                        lives_average = np.mean(lives_all[subnum,2:5])
+                        treasure_average = np.mean(treasure_all[subnum,2:5])
+                        score_average = np.mean(score_all[subnum,2:5])
+                        row_save = [subID,method[con],environments[env],
+                                    skill,perweek,lifetime,all_low,all_high,
+                                    lives_average,treasure_average,score_average]
+                        testwriter.writerow(row_save)
+                        lives_method[subnum,ind] = lives_average
+                        treasure_method[subnum,ind] = treasure_average
+                        score_method[subnum,ind] = score_average
+
+                        # Save average ergodic high performance
+                        con = 2
                         env = 1
-                    row_save = [subID,control[con],environments[env],'trial'+str(i),
-                                lives_all[subnum,i],treasure_all[subnum,i],score_all[subnum,i]]
-                    testwriter.writerow(row_save)
-            # else:
-            #     print(subID + ' has trial that was never found')
-            with open(file_low,'w') as csvfile:
-                testwriter = csv.writer(csvfile,delimiter=',')
-                for i in range(5):
-                    row_save = [subID,control[con],
-                                lives_all[subnum,i],treasure_all[subnum,i],score_all[subnum,i]]
-                    testwriter.writerow(row_save)
-            with open(file_high,'w') as csvfile:
-                testwriter = csv.writer(csvfile,delimiter=',')
-                for i in range(5,10):
-                    row_save = [subID,control[con],
-                                lives_all[subnum,i],treasure_all[subnum,i],score_all[subnum,i]]
-                    testwriter.writerow(row_save)
-            subnum += 1
+                        ind = 5
+                        lives_average = np.mean(lives_all[subnum,7:10])
+                        treasure_average = np.mean(treasure_all[subnum,7:10])
+                        score_average = np.mean(score_all[subnum,7:10])
+                        row_save = [subID,method[con],environments[env],
+                                    skill,perweek,lifetime,all_low,all_high,
+                                    lives_average,treasure_average,score_average]
+                        testwriter.writerow(row_save)
+                        lives_method[subnum,ind] = lives_average
+                        treasure_method[subnum,ind] = treasure_average
+                        score_method[subnum,ind] = score_average
+                    # autonomy
+                    with open(file_autonomy_all,'a') as csvfile:
+                        testwriter = csv.writer(csvfile,delimiter=',')
+                        for i in range(10):
+                            if i<5:
+                                con = i
+                                env = 0
+                                ind = i-2
+                            else:
+                                con = i-5
+                                env = 1
+                                ind = i-4
+                            if con>1:
+                                row_save = [subID,autonomy[con-2],environments[env],
+                                            skill,perweek,lifetime,all_low,all_high,
+                                            lives_all[subnum,i],treasure_all[subnum,i],score_all[subnum,i]]
+                                testwriter.writerow(row_save)
+                                lives_autonomy[subnum,ind] = lives_all[subnum,i]
+                                treasure_autonomy[subnum,ind] = treasure_all[subnum,i]
+                                score_autonomy[subnum,ind] = score_all[subnum,i]
+
+            # print(sub,np.min(lives_all[subnum,:]),lives_all[subnum,:])
+            if np.min(lives_all[subnum,:])>0 and float(lifetime+'.0')<999.0: #skill>6.69: #skill>6.91:# and np.mean(lives_all[subnum,:])>7:
+                # print(subnum,sub,lifetime)#,lives_all[subnum,:])
+                subnum += 1
+            else:
+                lives_all[subnum,:] = np.zeros(10)
+                treasure_all[subnum,:] = np.zeros(10)
+                score_all[subnum,:] = np.zeros(10)
+                lives_method[subnum,:] = np.zeros(6)
+                treasure_method[subnum,:] = np.zeros(6)
+                score_method[subnum,:] = np.zeros(6)
+                lives_autonomy[subnum,:] = np.zeros(6)
+                treasure_autonomy[subnum,:] = np.zeros(6)
+                score_autonomy[subnum,:] = np.zeros(6)
+
+
+print('The number of subjects included is ', subnum)
 
 # PLOT BOXPLOTS
-
-# parameters
-figure_size = (8,3.55) # sets the size of the figure in inches
-labels = ('LN','LW','LD','LS','LA','HN','HW','HD','HS','HA')
-medianprops = dict(linewidth=2.5, color='black')
+############################################
+# Overall Plots
+############################################
+# Plot parameters
+labels = ('L-None','L-WP','L-Direct','L-Shared','L-Auto','H-None','H-WP','H-Direct','H-Shared','H-Auto')
 box_colors = ['#b71c1c','#ff6f00','#1b5e20','#006064','#1a237e','#b71c1c','#ff6f00','#1b5e20','#006064','#1a237e']
 box_alpha = [0.5,0.5,0.5,0.5,0.5,None,None,None,None,None]
+figure_size = (6,3.55) # sets the size of the figure in inches
+xlabel = 'Experimental Condition'
 
-# -------------------------------------------------------------------
-# Lives boxplot
-# -------------------------------------------------------------------
-fig_lives, ax_lives = plt.subplots(figsize=figure_size)
-print(lives_all)
-bp = ax_lives.boxplot(lives_all, notch=0, medianprops=medianprops, labels=labels)#, patch_artist=True,boxprops=dict(facecolor=color_combine, color=c))
-plt.setp(bp['boxes'], color='black')
-plt.setp(bp['whiskers'], color='black')
-plt.setp(bp['fliers'], color='red', marker='+')
-# Add a horizontal grid to the plot, but make it very light in color
-# so we can use it for reading data values but not be distracting
-ax_lives.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
-               alpha=0.5)
+data = lives_all[:subnum,:]
+title = 'Aggregate Game Performance: Lives'
+ylabel = 'Number of lives at the end of the game'
+make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
+plt.savefig('overall_lives.png')
 
-# Hide these grid behind plot objects
-ax_lives.set_axisbelow(True)
-ax_lives.set_title('Aggregate Game Performance: Lives')#, fontsize=10, fontweight='bold')
-ax_lives.set_xlabel('Experimental Condition')
-ax_lives.set_ylabel('Number of lives at the end of the game')
-# for label in (ax_lives.get_xticklabels() + ax_lives.get_yticklabels()):
-#     label.set_fontsize(8)
+data = treasure_all[:subnum,:]
+title = 'Aggregate Game Performance: Treasure'
+ylabel = 'Number of treasures found'
+make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
+plt.savefig('overall_treas.png')
 
-medians = np.empty(10)
-for i in range(10):
-    box = bp['boxes'][i]
-    boxX = []
-    boxY = []
-    for j in range(5):
-        boxX.append(box.get_xdata()[j])
-        boxY.append(box.get_ydata()[j])
-    box_coords = np.column_stack([boxX, boxY])
-    ax_lives.add_patch(Polygon(box_coords, facecolor=box_colors[i], alpha=box_alpha[i]))
-
-x_coordinates = np.array([1,2,3,4,5,6,7,8,9,10])
-y_coordinates = np.mean(lives_all,axis=0)
-# print(np.mean(data_boxplot_low,axis=0))
-ax_lives.plot(x_coordinates, y_coordinates, 'o',
-             color='w', marker='o', markersize=7, markeredgecolor='black')#, linewidth=0)
-
-# Seperate the stroke and control means and draw lines
-plt.savefig('combined_lives.pdf')
-
-# -------------------------------------------------------------------
-# Treasure boxplot
-# -------------------------------------------------------------------
-fig_treas, ax_treas = plt.subplots(figsize=figure_size)
-print(treasure_all)
-bp = ax_treas.boxplot(treasure_all, notch=0, medianprops=medianprops, labels=labels)#, patch_artist=True,boxprops=dict(facecolor=color_combine, color=c))
-plt.setp(bp['boxes'], color='black')
-plt.setp(bp['whiskers'], color='black')
-plt.setp(bp['fliers'], color='red', marker='+')
-# Add a horizontal grid to the plot, but make it very light in color
-# so we can use it for reading data values but not be distracting
-ax_treas.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
-               alpha=0.5)
-
-# Hide these grid behind plot objects
-ax_treas.set_axisbelow(True)
-ax_treas.set_title('Aggregate Game Performance: Treasure')#, fontsize=10, fontweight='bold')
-ax_treas.set_xlabel('Experimental Condition')
-ax_treas.set_ylabel('Number of treasures at the end of the game')
-# for label in (ax_treas.get_xticklabels() + ax_treas.get_yticklabels()):
-#     label.set_fontsize(8)
-
-medians = np.empty(10)
-for i in range(10):
-    box = bp['boxes'][i]
-    boxX = []
-    boxY = []
-    for j in range(5):
-        boxX.append(box.get_xdata()[j])
-        boxY.append(box.get_ydata()[j])
-    box_coords = np.column_stack([boxX, boxY])
-    ax_treas.add_patch(Polygon(box_coords, facecolor=box_colors[i], alpha=box_alpha[i]))
-
-x_coordinates = np.array([1,2,3,4,5,6,7,8,9,10])
-y_coordinates = np.mean(treasure_all,axis=0)
-# print(np.mean(data_boxplot_low,axis=0))
-ax_treas.plot(x_coordinates, y_coordinates, 'o',
-             color='w', marker='o', markersize=7, markeredgecolor='black')#, linewidth=0)
-
-# Seperate the stroke and control means and draw lines
-plt.savefig('combined_treas.pdf')
-
-# -------------------------------------------------------------------
-# Score boxplot
-# -------------------------------------------------------------------
-fig_score, ax_score = plt.subplots(figsize=figure_size)
-print(score_all)
-bp = ax_score.boxplot(score_all, notch=0, medianprops=medianprops, labels=labels)#, patch_artist=True,boxprops=dict(facecolor=color_combine, color=c))
-plt.setp(bp['boxes'], color='black')
-plt.setp(bp['whiskers'], color='black')
-plt.setp(bp['fliers'], color='red', marker='+')
-# Add a horizontal grid to the plot, but make it very light in color
-# so we can use it for reading data values but not be distracting
-ax_score.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
-               alpha=0.5)
-
-# Hide these grid behind plot objects
-ax_score.set_axisbelow(True)
-ax_score.set_title('Aggregate Game Performance: Score')#, fontsize=10, fontweight='bold')
-ax_score.set_xlabel('Experimental Condition')
-ax_score.set_ylabel('Score = #Lives*3 + #Treasures')
-# for label in (ax_score.get_xticklabels() + ax_score.get_yticklabels()):
-#     label.set_fontsize(8)
-
-medians = np.empty(10)
-for i in range(10):
-    box = bp['boxes'][i]
-    boxX = []
-    boxY = []
-    for j in range(5):
-        boxX.append(box.get_xdata()[j])
-        boxY.append(box.get_ydata()[j])
-    box_coords = np.column_stack([boxX, boxY])
-    ax_score.add_patch(Polygon(box_coords, facecolor=box_colors[i], alpha=box_alpha[i]))
-
-x_coordinates = np.array([1,2,3,4,5,6,7,8,9,10])
-y_coordinates = np.mean(score_all,axis=0)
-# print(np.mean(data_boxplot_low,axis=0))
-ax_score.plot(x_coordinates, y_coordinates, 'o',
-             color='w', marker='o', markersize=7, markeredgecolor='black')#, linewidth=0)
-
-# Seperate the stroke and control means and draw lines
-plt.savefig('combined_score.pdf')
+data = score_all[:subnum,:]
+title = 'Aggregate Game Performance: Score'
+ylabel = 'Final score = #lives*3+#treasure'
+make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
+plt.savefig('overall_score.png')
 
 
-# plt.show()
+############################################
+# Method Plots
+############################################
+# Plot parameters
+labels = ('L-None','L-WP','L-Ergodic','H-None','H-WP','H-Ergodic')
+box_colors = ['#b71c1c','#ff6f00','#006064','#b71c1c','#ff6f00','#006064']
+box_alpha = [0.5,0.5,0.5,None,None,None]
+figure_size = (6,3.55) # sets the size of the figure in inches
+xlabel = 'Experimental Condition'
+
+data = lives_method[:subnum,:]
+title = 'Lives Leftover for Different Control Methods'
+ylabel = 'Number of lives at the end of the game'
+make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
+plt.savefig('method_lives.png')
+
+data = treasure_method[:subnum,:]
+title = 'Treasures Found for Different Control Methods'
+ylabel = 'Number of treasures found'
+make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
+plt.savefig('method_treas.png')
+
+data = score_method[:subnum,:]
+title = 'Final Score for Different Control Methods'
+ylabel = 'Final score = #lives*3+#treasure'
+make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
+plt.savefig('method_score.png')
+
+############################################
+# Autonomy Plots
+############################################
+# Plot parameters
+labels = ('L-Direct','L-Shared','L-Auto','H-Direct','H-Shared','H-Auto')
+box_colors = ['#1b5e20','#006064','#1a237e','#1b5e20','#006064','#1a237e']
+box_alpha = [0.5,0.5,0.5,None,None,None]
+figure_size = (6,3.55) # sets the size of the figure in inches
+xlabel = 'Experimental Condition'
+
+data = lives_autonomy[:subnum,:]
+title = 'Lives Leftover for the Different Levels of Autonomy'
+ylabel = 'Number of lives at the end of the game'
+make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
+plt.savefig('autonomy_lives.png')
+
+data = treasure_autonomy[:subnum,:]
+title = 'Treasures Found for the Different Levels of Autonomy'
+ylabel = 'Number of treasures found'
+make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
+plt.savefig('autonomy_treas.png')
+
+data = score_autonomy[:subnum,:]
+title = 'Final Score for the Different Levels of Autonomy'
+ylabel = 'Final score = #lives*3+#treasure'
+make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
+plt.savefig('autonomy_score.png')
+
+autonomy_count = np.zeros(3)
+method_count = np.zeros(4)
+print('here')
+with open(file_subdata,'r') as csvfile:
+    subdata = csv.reader(csvfile)#,delimiter=',')
+    for row in subdata:
+        # print(row[3])
+        if row[3]=="direct'":
+            autonomy_count[0] +=1
+        elif row[3]=="shared'":
+            autonomy_count[1] +=1
+        elif row[3]=="auto'":
+            autonomy_count[2] +=1
+
+        if row[4]=="none'":
+            method_count[0] +=1
+        elif row[4]=="path'":
+            method_count[1] +=1
+        elif row[4]=="shade'":
+            method_count[2] +=1
+        elif row[4]=="no control'":
+            method_count[3] +=1
+    print('The number of participants who gave method feedback is '+str(np.sum(method_count)))
+    print('The number of participants who gave autonomy feedback is '+str(np.sum(autonomy_count)))
+
+
+plt.figure(50,dpi=150)
+width = 0.5
+ind = np.arange(4)
+p1 = plt.bar(ind,method_count,width)
+plt.ylabel('Number of Participants')
+plt.title('Participant feedback for preferred method of commanding swarm')
+labels = ('no control','pathways','shading','no drones')
+plt.xticks(ind, labels, rotation=25)
+plt.savefig('method_feedback.png')
+
+plt.figure(51,dpi=150)
+width = 0.5
+ind = np.arange(3)
+p1 = plt.bar(ind,autonomy_count,width)
+plt.ylabel('Number of Participants')
+plt.title('Participant feedback for preferred level of autonomy')
+labels = ('direct','shared','fully autonomous')
+plt.xticks(ind, labels, rotation=15)
+plt.savefig('autonomy_feedback.png')

@@ -13,6 +13,10 @@ class parse_bag:
         # self.topic_list = ['/tresasure_info','/adversary_1_position','/adversary_2_position','/hi','/person_position','/player_info','/client_count']
         self.disttolooselife = 1.5
         self.disttoreposition = 8
+        # self.end1 = ((5.0/3)*1)*60  # + 40
+        # self.end2 = ((5.0/3)*2)*60  # + 40
+        # self.end1_on = True
+        # self.end2_on = True
         self.end_time = 5*60# + 40
         self.building_array = populate_building_array(env)
         self.reset_game()
@@ -93,8 +97,28 @@ class parse_bag:
                         self.client_connected = False
 
             game_time = t.secs-self.start_time
-            if game_time>self.end_time:
-                self.game_on = False
+            if self.game_on:
+                if game_time>self.end_time:
+                    # old_treas = self.treasures
+                    # self.treasures = self.treasures-self.end1_treas-self.end2_treas
+                    # print(self.end1_treas,self.end2_treas,self.treasures,old_treas)
+                    self.game_on = False
+                #     print('end found at time ', game_time)
+                # if game_time>self.end1 and self.end1_on==True:
+                #     self.end1_lives = self.lives
+                #     self.end1_treas = self.treasures
+                #     self.lives = 8
+                #     self.treasures = 0
+                #     self.end1_on = False
+                #     print('end1 found at time ', game_time)
+                # if game_time>self.end2 and self.end2_on==True:
+                #     print(self.treasures)
+                #     self.end2_lives = self.lives
+                #     self.end2_treas = self.treasures-self.end1_treas
+                #     self.lives = 8
+                #     self.treasures = 0
+                #     self.end2_on = False
+                #     print('end2 found at time ', game_time)
 
     def is_player_found(self,found,adversary_x,adversary_y,adversary_x_prev,adversary_y_prev,t):
         is_adv_close = False
