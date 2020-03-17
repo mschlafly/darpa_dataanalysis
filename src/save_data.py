@@ -51,10 +51,6 @@ for sub in range(minsub, maxsub+1):
             for con in range(0, len(control)):
                 try:
                     filename = '/home/murpheylab/Desktop/exp_data/sub' + subID + '/' + subID + '_' + control[con] + '_' + environments[env] + '.bag'
-                    # filename = '/home/murpheylab/Desktop/exp_data/sub08/2topic.bag'
-                    # filename = '/media/murpheylab/Elements/sub' + subID + '/' + subID + '_' + control[con] + '_' + environments[env] + '.bag'
-                    # filename = '/home/murpheylab/Desktop/sub' + subID + '/' + subID + '_' + control[con] + '_' + environments[env] + '.bag'
-                    # filename = '/home/murpheylab/Desktop/sub' + subID + '/repaired.bag'
                     print(filename)
 
                     # Get game data by parsing the bag using performance.py
@@ -102,48 +98,3 @@ for sub in range(minsub, maxsub+1):
                     with open(file_missingbags,'a') as csvfile:
                         testwriter = csv.writer(csvfile,delimiter=',')
                         testwriter.writerow(row)
-
-        # width = 0.5
-        # ind = np.arange(10)
-        # plt.figure(sub)
-        # p1 = plt.bar(ind,player_lives,width)
-        # p2 = plt.bar(ind,treasures_found,width,bottom=player_lives)
-        # plt.ylabel('Score')
-        # plt.title('Game Performance for Subject ' + subID)
-        # labels = ('LN','LW','LD','LS','LA','HN','HW','HD','HS','HA')
-        # plt.xticks(ind, labels)
-        # plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
-        # plt.savefig(subID+'_performance.pdf')
-
-        # for i in range(10):
-        #     if player_lives[i]>0:
-        #         player_lives_all[i,num_combined[i]] = player_lives[i]
-        #         treasures_found_all[i,num_combined[i]] = treasures_found[i]
-        #         num_combined[i] += numeach[i]
-
-
-# if (numsubs - minsub)>0:
-#     width = 0.5
-#     ind = np.arange(10)
-#     plt.figure(100)
-#     player_lives_mean = np.zeros(10)
-#     player_lives_std = np.zeros(10)
-#     treasures_found_mean = np.zeros(10)
-#     treasures_found_std = np.zeros(10)
-#     for i in range(10):
-#         player_lives_mean[i] = np.mean(player_lives_all[i,0:num_combined[i]])
-#         print(num_combined[i],player_lives_all[i,0:num_combined[i]],player_lives_mean[i])
-#         player_lives_std[i] = np.std(player_lives_all[i,0:num_combined[i]])/np.sqrt(num_combined[i])
-#         treasures_found_mean[i] = np.mean(treasures_found_all[i,0:num_combined[i]])
-#         treasures_found_std[i] = np.std(treasures_found_all[i,0:num_combined[i]])/np.sqrt(num_combined[i])
-#
-#     p1 = plt.bar(ind,player_lives_mean,width,yerr=player_lives_std)
-#     p2 = plt.bar(ind,treasures_found_mean,width,bottom=player_lives_mean,yerr=treasures_found_std)
-#     plt.ylabel('Score')
-#     plt.title('Aggregate Game Performance')
-#     labels = ('LN','LW','LD','LS','LA','HN','HW','HD','HS','HA')
-#     plt.xticks(ind, labels)
-#     plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
-#     plt.savefig('combined_performance.pdf')
-
-# plt.show()
