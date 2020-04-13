@@ -57,8 +57,8 @@ class parse_bag:
             print('new treasure')
 
     def update_adv_1(self, msg):
-        self.adversary_1_x_prev2 = self.adversary_1_x
-        self.adversary_1_y_prev2 = self.adversary_1_y
+        self.adversary_1_x_prev = self.adversary_1_x
+        self.adversary_1_y_prev = self.adversary_1_y
         self.adversary_1_x = msg.xpos
         self.adversary_1_y = msg.ypos
         if self.client_connected==True:
@@ -75,8 +75,8 @@ class parse_bag:
             self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t)
 
     def update_adv_3(self, msg):
-        self.adversary_3_x_prev2 = self.adversary_3_x
-        self.adversary_3_y_prev2 = self.adversary_3_y
+        self.adversary_3_x_prev = self.adversary_3_x
+        self.adversary_3_y_prev = self.adversary_3_y
         self.adversary_3_x = msg.xpos
         self.adversary_3_y = msg.ypos
         if self.client_connected==True:

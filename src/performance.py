@@ -10,13 +10,8 @@ class parse_bag:
 
         self.bag = rosbag.Bag(filename)
         self.topic_list = ['/treasure_info','/adversary_1_position','/adversary_2_position','/adversary_3_position','/person_position','/player_info','/client_count']
-        # self.topic_list = ['/tresasure_info','/adversary_1_position','/adversary_2_position','/hi','/person_position','/player_info','/client_count']
         self.disttolooselife = 1.5
         self.disttoreposition = 8
-        # self.end1 = ((5.0/3)*1)*60  # + 40
-        # self.end2 = ((5.0/3)*2)*60  # + 40
-        # self.end1_on = True
-        # self.end2_on = True
         self.end_time = 5*60# + 40
         self.building_array = populate_building_array(env)
         self.reset_game()
@@ -54,8 +49,8 @@ class parse_bag:
                 if (msg.treasure_count>self.treasures):
                     self.treasures = msg.treasure_count
             elif topic == self.topic_list[1]:
-                self.adversary_1_x_prev2 = self.adversary_1_x
-                self.adversary_1_y_prev2 = self.adversary_1_y
+                self.adversary_1_x_prev = self.adversary_1_x
+                self.adversary_1_y_prev = self.adversary_1_y
                 self.adversary_1_x = msg.xpos
                 self.adversary_1_y = msg.ypos
                 if self.game_on==True:
@@ -68,8 +63,8 @@ class parse_bag:
                 if self.game_on==True:
                     self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t.secs)
             elif topic == self.topic_list[3]:
-                self.adversary_3_x_prev2 = self.adversary_3_x
-                self.adversary_3_y_prev2 = self.adversary_3_y
+                self.adversary_3_x_prev = self.adversary_3_x
+                self.adversary_3_y_prev = self.adversary_3_y
                 self.adversary_3_x = msg.xpos
                 self.adversary_3_y = msg.ypos
                 if self.game_on==True:
@@ -99,26 +94,8 @@ class parse_bag:
             game_time = t.secs-self.start_time
             if self.game_on:
                 if game_time>self.end_time:
-                    # old_treas = self.treasures
-                    # self.treasures = self.treasures-self.end1_treas-self.end2_treas
-                    # print(self.end1_treas,self.end2_treas,self.treasures,old_treas)
                     self.game_on = False
-                #     print('end found at time ', game_time)
-                # if game_time>self.end1 and self.end1_on==True:
-                #     self.end1_lives = self.lives
-                #     self.end1_treas = self.treasures
-                #     self.lives = 8
-                #     self.treasures = 0
-                #     self.end1_on = False
-                #     print('end1 found at time ', game_time)
-                # if game_time>self.end2 and self.end2_on==True:
-                #     print(self.treasures)
-                #     self.end2_lives = self.lives
-                #     self.end2_treas = self.treasures-self.end1_treas
-                #     self.lives = 8
-                #     self.treasures = 0
-                #     self.end2_on = False
-                #     print('end2 found at time ', game_time)
+
 
     def is_player_found(self,found,adversary_x,adversary_y,adversary_x_prev,adversary_y_prev,t):
         is_adv_close = False
