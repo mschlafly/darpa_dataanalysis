@@ -11,18 +11,16 @@
 #     To run in the terminal
 #     $ R
 #     Then run the script by executing the following
-#     > source('stat-test.r')
+#     > source('stat-test-rm.r')
 #     If running from console on windows computer, use setwd
 #     for example - setwd('C:/Users/numur/Desktop/darpa_dataanalysis/src')
 ################################################################################
 # COMMENTS:
+# - To test a different metric, Ctrl replace the name of the metric
 # There are two equivalent ways of performing a repeated measures ANOVA:
 #   1. aov(Score~(SupportLevel*SL_setnum) + Error(wid = .(Subject)/(SupportLevel*SL_setnum)))
 #   2. ezANOVA(data,dv=Score,wid=wid = .(Subject),within = .(SupportLevel,SL_setnum),between = NULL, type = 2, detailed = TRUE)
 # The second also tests for sphericity, but sometimes gives errors if nothing is significant.
-
-# to test experts, replace "between = Expertise, type = 3," with "between = NULL, type = 2," and ">-1" with ">999"
-
 ################################################################################
 
 options(contrasts=c("contr.sum","contr.poly"))
@@ -34,7 +32,7 @@ library(rstatix) # for the %>% function
 
 # parameters 
 DIR = 'C:/Users/numur/Desktop/darpa_dataanalysis/src' 
-skill = "novice" # either "expert", "novice", or "all"
+skill = "expert" # either "expert", "novice", or "all"
 
 ################################################################################
 ################################################################################
@@ -117,7 +115,7 @@ posthoc<-pairwise.t.test(data_all$Score,
 print(posthoc)
 # Compare all group/factor combinations for putting asterisks on plots
 data_all$combo <- paste(data_all$Control,data_all$Complexity)
-posthoc<-pairwise.t.test(data_all$Lives,
+posthoc<-pairwise.t.test(data_all$Score,
                          data_all$combo,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
@@ -198,7 +196,7 @@ print(posthoc)
 # ################################################################################
 # 
 # # define file to save data to
-# sink(paste(DIR,"stattests",paste("avgmethod","Lives",skill,"2.txt",sep="-"),sep="/"))
+# sink(paste(DIR,"stattests",paste("avgmethod","Score",skill,"2.txt",sep="-"),sep="/"))
 # 
 # cat("\n")
 # cat("########################################################################### \n")
@@ -232,7 +230,7 @@ print(posthoc)
 #                          p.adjust.method = "bonferroni")
 # print(posthoc)
 # data_all$combo <- paste(data_all$Method,data_all$Complexity)
-# posthoc<-pairwise.t.test(data_all$Lives,
+# posthoc<-pairwise.t.test(data_all$Score,
 #                          data_all$combo,
 #                          paired = TRUE,
 #                          p.adjust.method = "bonferroni")
@@ -308,7 +306,7 @@ print(posthoc)
 ################################################################################
 ################################################################################
 
-sink(paste(DIR,"stattests",paste("directmethod","Lives",skill,"2.txt",sep="-"),sep="/"))
+sink(paste(DIR,"stattests",paste("directmethod","Score",skill,"2.txt",sep="-"),sep="/"))
 
 
 cat("\n")
@@ -343,7 +341,7 @@ posthoc<-pairwise.t.test(data_all$Score,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
 data_all$combo <- paste(data_all$Control,data_all$Complexity)
-posthoc<-pairwise.t.test(data_all$Lives,
+posthoc<-pairwise.t.test(data_all$Score,
                          data_all$combo,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
@@ -417,7 +415,7 @@ print(posthoc)
 ################################################################################
 ################################################################################
 
-sink(paste(DIR,"stattests",paste("sharedmethod","Lives",skill,"2.txt",sep="-"),sep="/"))
+sink(paste(DIR,"stattests",paste("sharedmethod","Score",skill,"2.txt",sep="-"),sep="/"))
 
 cat("\n")
 cat("########################################################################### \n")
@@ -451,7 +449,7 @@ posthoc<-pairwise.t.test(data_all$Score,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
 data_all$combo <- paste(data_all$Control,data_all$Complexity)
-posthoc<-pairwise.t.test(data_all$Lives,
+posthoc<-pairwise.t.test(data_all$Score,
                          data_all$combo,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
@@ -525,7 +523,7 @@ print(posthoc)
 ################################################################################
 ################################################################################
 
-sink(paste(DIR,"stattests",paste("automethod","Lives",skill,"2.txt",sep="-"),sep="/"))
+sink(paste(DIR,"stattests",paste("automethod","Score",skill,"2.txt",sep="-"),sep="/"))
 
 cat("\n")
 cat("########################################################################### \n")
@@ -559,7 +557,7 @@ posthoc<-pairwise.t.test(data_all$Score,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
 data_all$combo <- paste(data_all$Control,data_all$Complexity)
-posthoc<-pairwise.t.test(data_all$Lives,
+posthoc<-pairwise.t.test(data_all$Score,
                          data_all$combo,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
@@ -634,7 +632,7 @@ print(posthoc)
 ################################################################################
 
 # define file to save data to
-sink(paste(DIR,"stattests",paste("autonomy","Lives",skill,"2.txt",sep="-"),sep="/"))
+sink(paste(DIR,"stattests",paste("autonomy","Score",skill,"2.txt",sep="-"),sep="/"))
 
 cat("\n")
 cat("########################################################################### \n")
@@ -668,7 +666,7 @@ posthoc<-pairwise.t.test(data_all$Score,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
 data_all$combo <- paste(data_all$Control,data_all$Complexity)
-posthoc<-pairwise.t.test(data_all$Lives,
+posthoc<-pairwise.t.test(data_all$Score,
                          data_all$combo,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")

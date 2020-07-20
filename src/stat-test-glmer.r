@@ -8,7 +8,7 @@
 #     To run in the terminal
 #     $ R
 #     Then run the script by executing the following
-#     > source('stat-test-overall.r')
+#     > source('stat-test-glmer.r')
 #     If running from console in RStudio on windows computer, use setwd
 #     for example - setwd('C:/Users/numur/Desktop/darpa_dataanalysis/src')
 ################################################################################
