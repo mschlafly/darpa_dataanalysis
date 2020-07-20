@@ -15,7 +15,7 @@ save_method_average = False # Saves method comparison data into csv files for st
 plot_each = False # Creates and saves a plot for each participant
 
 # Booleans for analyzing subsets of the data
-only_experts = False # Only plots experts
+only_experts = True # Only plots experts
 only_novices = False # Only plots novices
 plot_autonomy = False # Plot the levels of autonomy
 plot_method_average = False # metrics for the ergodic control trials are
@@ -338,45 +338,38 @@ if only_experts:
     sig_matrix = np.array([[1,4,0.0533/2],
                             [3,4,0.0156/2],
                             [5,8,0.0693/2],
-                            [4,9,.092/2]])
+                            [4,9,.092/2]]) # wrong
 elif only_novices:
     title = 'Lives Leftover for Novices'
     sig_matrix = np.array([])
 else:
     title = 'Lives Leftover'
-    sig_matrix = np.array([[1,4,.0255],
-                            [3,4,.0454],
-                            [6,9,.0335],
-                            [4,9,.0041]])
 [fig,ax]=make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
 add_stats(data,sig_matrix,ax)
-if only_experts:
-    fig.savefig('aggregateplots/'+'overall_lives_experts.pdf')
-elif only_novices:
-    fig.savefig('aggregateplots/'+'overall_lives_novices.pdf')
-else:
-    fig.savefig('aggregateplots/'+'overall_lives.pdf')
+# if only_experts:
+#     fig.savefig('aggregateplots/'+'overall_lives_experts.pdf')
+# elif only_novices:
+#     fig.savefig('aggregateplots/'+'overall_lives_novices.pdf')
+# else:
+#     fig.savefig('aggregateplots/'+'overall_lives.pdf')
 
 
 data = treasure_all[:subnum,:]
 ylabel = 'Number of targets collected'
 if only_experts:
     title = 'Targets Collected for Experts'
-    # sig_matrix = np.array([[1,3,0.00206],
-    #                         [3,4,0.0109],
-    #                         [3,8,0.025]])
     sig_matrix = np.array([[0,1,.08296/2],
                             [0,3,.0881/2],
                             [1,3,.00206/2],
                             [2,3,.0695/2],
                             [3,4,.0109/2],
                             [5,6,.08296/2],
-                            [3,8,.024998/2]])
+                            [3,8,.024998/2]]) # wrong
 elif only_novices:
     title = 'Targets Collected for Novices'
     sig_matrix = np.array([[2,3,.015],
                             [5,9,.015],
-                            [6,9,.000482]])
+                            [6,9,.000482]]) # wrong
 else:
     title = 'Targets Collected'
     sig_matrix = np.array([[0,1,.0432],
@@ -385,43 +378,50 @@ else:
                             [2,3,.00459],
                             [3,4,.00797],
                             [5,6,.0231],
-                            [3,8,.00975]])
+                            [3,8,.00975]]) # wrong
 [fig,ax]=make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
 add_stats(data,sig_matrix,ax)
-if only_experts:
-    fig.savefig('aggregateplots/'+'overall_treas_experts.pdf')
-elif only_novices:
-    fig.savefig('aggregateplots/'+'overall_treas_novices.pdf')
-else:
-    fig.savefig('aggregateplots/'+'overall_treas.pdf')
+# if only_experts:
+#     fig.savefig('aggregateplots/'+'overall_treas_experts.pdf')
+# elif only_novices:
+#     fig.savefig('aggregateplots/'+'overall_treas_novices.pdf')
+# else:
+#     fig.savefig('aggregateplots/'+'overall_treas.pdf')
 
 data = score_all[:subnum,:]
 ylabel = 'Final score = #lives*3+#treasure'
 if only_experts:
     title = 'Final Score for Experts'
-    sig_matrix = np.array([[3,4,0.00437],
-                            [4,9,0.0294]])
-    sig_matrix = np.array([[2,3,.0818/2],
-                            [3,4,.00437/2],
-                            [4,9,.0294/2]])
+    sig_matrix = np.array([
+                            # [7,8,.0653/2] # high autoergodic - low autoergodic
+                            # [7,8,.0026/2] # low autoergodic - high sharedergodic
+                            [4,3,.0089/2], # low autoergodic - low sharedergodic
+                            # [7,8,.0352/2] # high sharedergodic - low waypoint
+                            [3,1,.0956/2] # low sharedergodic - low waypoint
+                            ])
 elif only_novices:
-    title = 'Final Score For novices'
-    sig_matrix = np.array([[6,9,.0266],
-                            [7,8,.0473],
-                            [8,9,.0456]])
+    title = 'Final Score for Novices'
+    sig_matrix = np.array([
+                            [9,7,.000001/2], # high autoergodic - high directergodic
+                            [9,5,.0844/2], # high autoergodic - high none
+                            # [9,3,.0238/2], # high autoergodic - low sharedergodic
+                            [9,6,.0178/2], # high autoergodic - high waypoint
+                            # [4,7,.0679/2], # low autoergodic - high directergodic
+                            # [7,2,.0632/2], # high directergodic - low directergodic
+                            [7,8,.0294/2], # high directergodic - high sharedergodic
+                            # [7,6,.0092/2], # high directergodic - low waypoint
+                            ])
 else:
     title = 'Final Score'
-    sig_matrix = np.array([[3,4,.0189],
-                            [6,9,.0194],
-                            [4,9,.00342]])
+    sig_matrix = np.array([])
 [fig,ax]=make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size)
 add_stats(data,sig_matrix,ax)
 if only_experts:
-    fig.savefig('aggregateplots/'+'overall_score_experts.pdf')
+    fig.savefig('aggregateplots/'+'overall_score_experts.png')
 elif only_novices:
-    fig.savefig('aggregateplots/'+'overall_score_novices.pdf')
+    fig.savefig('aggregateplots/'+'overall_score_novices.png')
 else:
-    fig.savefig('aggregateplots/'+'overall_score.pdf')
+    fig.savefig('aggregateplots/'+'overall_score.png')
 
 ############################################
 # Method Plots

@@ -16,7 +16,7 @@ def add_stats(data,sig_matrix,ax):
 
     [ymin,ymax]=ax.get_ylim()
     min_dist = (ymax-ymin)/30.0
-    sig_fill = np.zeros((5,10))
+    sig_fill = np.zeros((10,10))
     for i in range(sig_matrix.shape[0]):
         fac1 = int(sig_matrix[i,0])
         fac2 = int(sig_matrix[i,1])
@@ -24,25 +24,40 @@ def add_stats(data,sig_matrix,ax):
         fac1_max = np.max(data[:,fac1])
         fac2_max = np.max(data[:,fac2])
         if fac1_max>fac2_max:
-            y_topline = fac1_max+min_dist*2
+            y_topline = fac1_max+min_dist
         else:
-            y_topline = fac2_max+min_dist*2
+            y_topline = fac2_max+min_dist
 
-        # decides how far up to place the sig line so that there is no overlap
-        level = 0
+        if fac1>fac2:
+            step = -1
+        else:
+            step = 1
         found = False
         while found==False:
-            if sig_fill[level,fac1]==0 and sig_fill[level,fac2]==0:
-                sig_fill[level,fac1] = 1
-                sig_fill[level,fac2] = 1
-                found = True
-            level+=1
-        y_topline += min_dist * level
+            # Check if there is a line at height y_topline
+            found=True
+            y_topline += min_dist
+            for ii in range(fac1,fac2+1,step):
+                for j in range(i):
+                    if abs(y_topline-sig_fill[j,ii])<min_dist:
+                        found=False
+                        break
+        # fill array for later
+        for ii in range(fac1,fac2+1,step):
+            sig_fill[i,ii] = y_topline
 
         ax.plot([fac1+1,fac1+1,fac2+1,fac2+1],
                 [fac1_max+min_dist,y_topline,y_topline,fac2_max+min_dist],
                  '-k', markersize=5)
         xloc = fac1+1.0+((fac2-fac1)/2.0)
+        found = False
+        if abs(round(xloc)-xloc)<.3:
+            ii = int(round(xloc)-1)
+            for j in range(i):
+                if sig_fill[j,ii]>y_topline:
+                    found = True
+        if found==True:
+            xloc -= (min_dist/4)
         yloc = y_topline - (min_dist/3)
         if pval<0.001:
             ax.text(xloc,yloc,'***',horizontalalignment='center',fontsize=8,fontweight='bold')
@@ -51,6 +66,8 @@ def add_stats(data,sig_matrix,ax):
         elif pval<0.05:
             ax.text(xloc,yloc,'*',horizontalalignment='center',fontsize=8,fontweight='bold')
 
+        if i==3:
+            return
     return
 
 def make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size):
@@ -95,8 +112,9 @@ def make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_siz
     for i in range(numboxes):
         ax.plot([x_coordinates[i],x_coordinates[i]],
                 [y_coordinates[i]-std_all[i],y_coordinates[i]+std_all[i]]
-                ,'r',markersize=7)
-
+                ,'black',markersize=7,zorder=2)
     ax.plot(x_coordinates, y_coordinates, 'o',
-                 color='w', marker='o', markersize=7, markeredgecolor='black')#, linewidth=0)
+                 color='w', marker='o', markersize=7, markeredgecolor='black',zorder=3)#, linewidth=0)
+
+
     return [fig,ax]
