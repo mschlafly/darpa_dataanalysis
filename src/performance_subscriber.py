@@ -7,6 +7,7 @@ import csv
 from populate_buildings import populate_building_array
 from user_input.msg import treasure_info, person_position, player_info
 from std_msgs.msg import Int32
+from datetime import datetime
 
 class parse_bag:
 
@@ -44,69 +45,89 @@ class parse_bag:
         self.adversary_3_y_prev = 0
         self.player_x = 30
         self.player_y = 30
+        self.player_x_prev = 30
+        self.player_y_prev = 30
         self.found1 = False
         self.found2 = False
         self.found3 = False
+        self.treas_loc_x = 0
+        self.treas_loc_y = 0
+        self.treas_loc_x_prev = 0
+        self.treas_loc_y_prev = 0
         self.treasures = 0
-        self.start_time = 0#rospy.get_time()
+        self.game_treasures = 0
+        self.start_time = 0
+        self.time_connected = 0
         self.client_connected = False
+        self.game_on = False
 
     def update_treasure(self, msg):
-        if (msg.treasure_count>self.treasures):
-            self.treasures = msg.treasure_count
-            print('new treasure')
+        self.treas_loc_x_prev = self.treas_loc_x
+        self.treas_loc_y_prev = self.treas_loc_y
+        self.treas_loc_x = msg.xpos
+        self.treas_loc_y = msg.ypos
+        if self.game_on:
+            if self.treas_loc_x_prev!=self.treas_loc_x or self.treas_loc_y_prev!=self.treas_loc_y:
+                self.treasures += 1
+            if (msg.treasure_count>self.game_treasures):
+                self.game_treasures = msg.treasure_count
 
     def update_adv_1(self, msg):
-        self.adversary_1_x_prev = self.adversary_1_x
-        self.adversary_1_y_prev = self.adversary_1_y
-        self.adversary_1_x = msg.xpos
-        self.adversary_1_y = msg.ypos
-        if self.client_connected==True:
-            t=rospy.get_time()
-            self.found1 = self.is_player_found(self.found1, self.adversary_1_x, self.adversary_1_y, self.adversary_1_x_prev, self.adversary_1_y_prev, t)
+        if msg.xpos!=self.adversary_1_x and msg.ypos!=self.adversary_1_y:
+            self.adversary_1_x_prev = self.adversary_1_x
+            self.adversary_1_y_prev = self.adversary_1_y
+            self.adversary_1_x = msg.xpos
+            self.adversary_1_y = msg.ypos
+            if self.game_on:
+                t=rospy.get_time()
+                self.found1 = self.is_player_found(self.found1, self.adversary_1_x, self.adversary_1_y, self.adversary_1_x_prev, self.adversary_1_y_prev, t)
 
     def update_adv_2(self, msg):
-        self.adversary_2_x_prev = msg.xpos
-        self.adversary_2_y_prev = msg.ypos
-        self.adversary_2_x = msg.xpos
-        self.adversary_2_y = msg.ypos
-        if self.client_connected==True:
-            t=rospy.get_time()
-            self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t)
+        if msg.xpos!=self.adversary_2_x and msg.ypos!=self.adversary_2_y:
+            self.adversary_2_x_prev = msg.xpos
+            self.adversary_2_y_prev = msg.ypos
+            self.adversary_2_x = msg.xpos
+            self.adversary_2_y = msg.ypos
+            if self.game_on:
+                t=rospy.get_time()
+                self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t)
 
     def update_adv_3(self, msg):
-        self.adversary_3_x_prev = self.adversary_3_x
-        self.adversary_3_y_prev = self.adversary_3_y
-        self.adversary_3_x = msg.xpos
-        self.adversary_3_y = msg.ypos
-        if self.client_connected==True:
-            t=rospy.get_time()
-            self.found3 = self.is_player_found(self.found3, self.adversary_3_x, self.adversary_3_y, self.adversary_3_x_prev, self.adversary_3_y_prev, t)
+        if msg.xpos!=self.adversary_3_x and msg.ypos!=self.adversary_3_y:
+            self.adversary_3_x_prev = self.adversary_3_x
+            self.adversary_3_y_prev = self.adversary_3_y
+            self.adversary_3_x = msg.xpos
+            self.adversary_3_y = msg.ypos
+            if self.game_on:
+                t=rospy.get_time()
+                self.found3 = self.is_player_found(self.found3, self.adversary_3_x, self.adversary_3_y, self.adversary_3_x_prev, self.adversary_3_y_prev, t)
 
     def update_client(self, msg):
         if self.client_connected==False:
             if msg.data==1:
-                self.start_time = rospy.get_time()
+                # print('Unity connected')
+                self.time_connected = rospy.get_time()
                 self.client_connected = True
-                print('Client connected')
         if self.client_connected==True:
             if msg.data==0:
-                print('Client disconnected')
+                # print('Unity disconnected')
                 # If the full trial didn't happen, reset metrics
-                if (rospy.get_time()-self.start_time)/60.0<4.5: # isn't the full trial
+                if (rospy.get_time()-self.start_time)/60.0<4: # isn't the full trial
                     self.reset_game()
+                    print('Reset game')
                 self.client_connected = False
 
     def update_person(self, msg):
-        self.player_x_prev = self.player_x
-        self.player_y_prev = self.player_y
-        self.player_x = msg.xpos
-        self.player_y = msg.ypos
+        if msg.xpos!=self.player_x and msg.ypos!=self.player_y:
+            self.player_x_prev = self.player_x
+            self.player_y_prev = self.player_y
+            self.player_x = msg.xpos
+            self.player_y = msg.ypos
 
     def update_player_info(self, msg):
         if (msg.lives_count<self.game_lives):
             self.game_lives = msg.lives_count
-            print('Game now shows player has ',self.game_lives,' self.lives at time',(rospy.get_time()-self.start_time)/60.0)
+            # print('Game now shows player has ',self.game_lives,' self.lives at time',(rospy.get_time()-self.start_time)/60.0)
 
     def is_player_found(self,found,adversary_x,adversary_y,adversary_x_prev,adversary_y_prev,t):
         is_adv_close = False
@@ -160,7 +181,8 @@ if __name__ == '__main__':
     # 1. Make sure to $ rosparam set use_sim_time true
     # 2. Run this script $ rosrun darpa_dataanalysis performance_subscriber.py
     # 3. Play rosbag adding file to end $ rosbag play -r 20 --clock
-    file = "/home/murpheylab/catkin_ws/src/VR_exp_ROS/darpa_dataanalysis/src/performance.csv"
+    file = "/home/murpheylab/catkin_ws/src/darpa_dataanalysis/src/performance.csv"
+    file_game = "/home/murpheylab/catkin_ws/src/darpa_dataanalysis/src/gametime.csv"
 
     sub = 39
     control = ['none','waypoint','directergodic','sharedergodic','autoergodic']
@@ -190,53 +212,59 @@ if __name__ == '__main__':
     # Listen to trial and save once finished
     if row_found==False:
         game_data = parse_bag(environments[env])
-        end_time = 5*60
-        end1 = ((5.0/3)*1)*60  # + 40
-        end2 = ((5.0/3)*2)*60  # + 40
-        end1_on = True
-        end2_on = True
+        if sub==17 or sub==18:
+            game_length = 5*60 - 32
+        elif sub==30:
+            game_length = 5*60 - 18
+        elif sub==38:
+            game_length = 5*60 - 15
+        else:
+            game_length = 5*60 - 13
         done = False
+        # game_complete = False
         while (not rospy.is_shutdown()) and done==False:
-            if game_data.start_time>0 and done==False:
+            # print(game_data.game_on)
+            if game_data.game_on:
                 game_time = rospy.get_time()-game_data.start_time
-                # print(game_data.start_time,rospy.get_time(),game_time)
-                if game_time>end_time:
-                    # print(game_time)
+                # print(game_time)
+                if game_time>game_length:
+                    print('game end found')
+                    game_data.game_on = False
+                    start_time = datetime.fromtimestamp(game_data.start_time)
+                    end_time = datetime.fromtimestamp(rospy.get_time())
                     done = True
-                # if game_time>end1 and end1_on==True:
-                #     # print(game_time,end1_on)
-                #     end1_treas = game_data.treasures
-                #     # Append data file
-                #     row = [subID,control[con],environments[env],game_data.lives,end1_treas]
-                #     with open(file, 'a') as csvfile:
-                #         testwriter = csv.writer(csvfile,delimiter=',')
-                #         testwriter.writerow(row)
-                #     print('Saved row to file: ', row)
-                #     end1_on = False
-                #     game_data.lives = 8
-                # if game_time>end2 and end2_on:
-                #     # print(game_time,end2_on)
-                #     end2_treas = game_data.treasures-end1_treas
-                #     # Append data file
-                #     row = [subID,control[con],environments[env],game_data.lives,end2_treas]
-                #     with open(file, 'a') as csvfile:
-                #         testwriter = csv.writer(csvfile,delimiter=',')
-                #         testwriter.writerow(row)
-                #     print('Saved row to file: ', row)
-                #     end2_on = False
-                #     game_data.lives = 8
-
+            elif game_data.game_on == False:
+                if game_data.client_connected: # If the unity play button has been pressed
+                    if sub>=15:
+                        calibration_time = rospy.get_time()-game_data.time_connected
+                    else:
+                        calibration_time = 40
+                    if calibration_time>30: # If the subject number was at least 15, at least 30s of calibration time had passed
+                        if game_data.player_x!=game_data.player_x_prev or game_data.player_y!=game_data.player_y_prev:
+                            if game_data.adversary_1_x!=game_data.adversary_1_x_prev or game_data.adversary_1_y!=game_data.adversary_1_y_prev:
+                                print('Game starts')
+                                game_data.game_on = True
+                                game_data.start_time = rospy.get_time()
             rospy.sleep(.1)
 
+        # Prints discrepency in game lives between the number shown to player and counted lives
         if game_data.game_lives!=game_data.lives:
-            print('game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
-        else:
-            print('lives: ',game_data.lives)
+            print('Discrepency in lives-- game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
+        # Prints discrepency in treasures found between the number in ros and counted treasures
+        if game_data.treasures!=game_data.game_treasures:
+            print('Discrepency in treasure-- game_treasures: ',game_data.game_treasures,'treasures: ',game_data.treasures)
 
-        # game_data.treasures = game_data.treasures-end1_treas-end2_treas
-        # Append data file
+        # Append data files
         row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
         with open(file, 'a') as csvfile:
-            testwriter = csv.writer(csvfile,delimiter=',')
-            testwriter.writerow(row)
+            writer = csv.writer(csvfile,delimiter=',')
+            writer.writerow(row)
+        print('Saved row to file: ', row)
+
+        row = [subID,control[con],environments[env],
+                start_time.month,start_time.day,start_time.hour,start_time.minute,start_time.second,
+                end_time.month,end_time.day,end_time.hour,end_time.minute,end_time.second]
+        with open(file_game, 'a') as csvfile:
+            writer = csv.writer(csvfile,delimiter=',')
+            writer.writerow(row)
         print('Saved row to file: ', row)

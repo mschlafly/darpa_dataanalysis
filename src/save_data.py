@@ -3,6 +3,7 @@ import numpy as np
 from performance import parse_bag
 import csv
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 minsub = 1
 maxsub = 42
@@ -13,14 +14,20 @@ skipped_subjects = []#[2,3,4,5,6,10,12,16,19,15,38]
 file = "performance.csv"
 columns = ['Subject','Control','Complexity','Lives','Treasure']
 with open(file,'w') as csvfile:
-    testwriter = csv.writer(csvfile,delimiter=',')
-    testwriter.writerow(columns)
+    writer = csv.writer(csvfile,delimiter=',')
+    writer.writerow(columns)
+
+file_game = "gametime.csv"
+columns = ['Subject','Control','Complexity','Start-Month','Start-Day','Start-Hour','Start-Min','Start-Sec','End-Month','End-Day','End-Hour','End-Min','End-Sec']
+with open(file_game,'w') as csvfile:
+    writer = csv.writer(csvfile,delimiter=',')
+    writer.writerow(columns)
 
 file_missingbags = "missing_bags.csv"
 columns = ['Subject','Control','Complexity','Control','Complexity']
 with open(file_missingbags,'w') as csvfile:
-    testwriter = csv.writer(csvfile,delimiter=',')
-    testwriter.writerow(columns)
+    writer = csv.writer(csvfile,delimiter=',')
+    writer.writerow(columns)
 
 
 for sub in range(minsub, maxsub+1):
@@ -47,25 +54,45 @@ for sub in range(minsub, maxsub+1):
                     print(filename)
 
                     # Get game data by parsing the bag using performance.py
-                    game_data = parse_bag(filename,environments[env])
-                    print('Lives left: ',game_data.lives)
+                    game_data = parse_bag(filename,sub,environments[env])
+                    # print(game_data.game_complete)
+                    if game_data.game_complete == True:
 
-                    # Prints discrepency in game lives between the number shown to player and counted lives
-                    if game_data.game_lives!=game_data.lives:
-                        print('Discrepency in lives-- game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
+                        # # Prints discrepency in game lives between the number shown to player and counted lives
+                        # if game_data.game_lives!=game_data.lives:
+                        #     print('Discrepency in lives-- game_lives: ',game_data.game_lives,'lives: ',game_data.lives)
+                        # # Prints discrepency in treasures found between the number in ros and counted treasures
+                        # if game_data.treasures!=game_data.game_treasures:
+                        #     print('Discrepency in treasure-- game_treasures: ',game_data.game_treasures,'treasures: ',game_data.treasures)
 
-                    row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
-                    with open(file,'a') as csvfile:
-                        testwriter = csv.writer(csvfile,delimiter=',')
-                        testwriter.writerow(row)
+                        row = [subID,control[con],environments[env],game_data.lives,game_data.treasures]
+                        with open(file,'a') as csvfile:
+                            writer = csv.writer(csvfile,delimiter=',')
+                            writer.writerow(row)
+                        # print('Saved row to file: ', row)
+
+                        start_time = datetime.fromtimestamp(game_data.start_time)
+                        end_time = datetime.fromtimestamp(game_data.end_time)
+                        row = [subID,control[con],environments[env],
+                                start_time.month,start_time.day,start_time.hour,start_time.minute,start_time.second,
+                                end_time.month,end_time.day,end_time.hour,end_time.minute,end_time.second]
+                        with open(file_game,'a') as csvfile:
+                            writer = csv.writer(csvfile,delimiter=',')
+                            writer.writerow(row)
+                        # print('Saved row to file: ', row)
+                    elif game_data.game_time>250:
+                        row = [subID,control[con],environments[env],game_data.game_time]
+                        with open(file_game,'a') as csvfile:
+                            writer = csv.writer(csvfile,delimiter=',')
+                            writer.writerow(row)
 
                 except:
-                    print('------------------------------------------------------------')
-                    print('Was unable to open and search bag file for ', environments[env], control[con])
-                    print('------------------------------------------------------------')
+                    # print('------------------------------------------------------------')
+                    # print('Was unable to open and search bag file for ', environments[env], control[con])
+                    # print('------------------------------------------------------------')
 
                     # Save trial to list of missing bags
                     row = [subID,con,env,control[con],environments[env]]
                     with open(file_missingbags,'a') as csvfile:
-                        testwriter = csv.writer(csvfile,delimiter=',')
-                        testwriter.writerow(row)
+                        writer = csv.writer(csvfile,delimiter=',')
+                        writer.writerow(row)

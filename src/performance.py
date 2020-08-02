@@ -6,14 +6,23 @@ from populate_buildings import populate_building_array
 
 class parse_bag:
 
-    def __init__(self,filename,env):
+    def __init__(self,filename,sub,env):
 
         self.bag = rosbag.Bag(filename)
         self.topic_list = ['/treasure_info','/adversary_1_position','/adversary_2_position','/adversary_3_position','/person_position','/player_info','/client_count']
         self.disttolooselife = 1.5
         self.disttoreposition = 8
-        self.end_time = 5*60# + 40
+        if sub==17 or sub==18:
+            self.game_length = 5*60 - 32
+        elif sub==30:
+            self.game_length = 5*60 - 18
+        elif sub==38:
+            self.game_length = 5*60 - 15
+        else:
+            self.game_length = 5*60 - 13
+        self.game_complete = False
         self.building_array = populate_building_array(env)
+        self.sub = sub
         self.reset_game()
         self.loop_through_topics()
 
@@ -32,13 +41,22 @@ class parse_bag:
         self.adversary_3_y = 0
         self.adversary_3_x_prev = 0
         self.adversary_3_y_prev = 0
-        self.player_x = 30
-        self.player_y = 30
+        self.player_x = 0
+        self.player_y = 0
+        self.player_x_prev = 0
+        self.player_y_prev = 0
         self.found1 = False
         self.found2 = False
         self.found3 = False
+        self.treas_loc_x = 0
+        self.treas_loc_y = 0
+        self.treas_loc_x_prev = 0
+        self.treas_loc_y_prev = 0
         self.treasures = 0
+        self.game_treasures = 0
         self.start_time = 0 #5*60 + 60 # corresponds to the game being over
+        self.time_connected = 0
+        self.game_time = 0
         self.client_connected = False
         self.game_on = False
 
@@ -46,28 +64,35 @@ class parse_bag:
     def loop_through_topics(self):
         for topic, msg, t in self.bag.read_messages(topics=self.topic_list):
             if topic == self.topic_list[0]:
-                if (msg.treasure_count>self.treasures):
-                    self.treasures = msg.treasure_count
+                self.treas_loc_x_prev = self.treas_loc_x
+                self.treas_loc_y_prev = self.treas_loc_y
+                self.treas_loc_x = msg.xpos
+                self.treas_loc_y = msg.ypos
+                if self.game_on:
+                    if self.treas_loc_x_prev!=self.treas_loc_x or self.treas_loc_y_prev!=self.treas_loc_y:
+                        self.treasures += 1
+                    if (msg.treasure_count>self.game_treasures):
+                        self.game_treasures = msg.treasure_count
             elif topic == self.topic_list[1]:
                 self.adversary_1_x_prev = self.adversary_1_x
                 self.adversary_1_y_prev = self.adversary_1_y
                 self.adversary_1_x = msg.xpos
                 self.adversary_1_y = msg.ypos
-                if self.game_on==True:
+                if self.game_on:
                     self.found1 = self.is_player_found(self.found1, self.adversary_1_x, self.adversary_1_y, self.adversary_1_x_prev, self.adversary_1_y_prev, t.secs)
             elif topic == self.topic_list[2]:
                 self.adversary_2_x_prev = msg.xpos
                 self.adversary_2_y_prev = msg.ypos
                 self.adversary_2_x = msg.xpos
                 self.adversary_2_y = msg.ypos
-                if self.game_on==True:
+                if self.game_on:
                     self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t.secs)
             elif topic == self.topic_list[3]:
                 self.adversary_3_x_prev = self.adversary_3_x
                 self.adversary_3_y_prev = self.adversary_3_y
                 self.adversary_3_x = msg.xpos
                 self.adversary_3_y = msg.ypos
-                if self.game_on==True:
+                if self.game_on:
                     self.found3 = self.is_player_found(self.found3, self.adversary_3_x, self.adversary_3_y, self.adversary_3_x_prev, self.adversary_3_y_prev, t.secs)
             elif topic == self.topic_list[4]:
                 self.player_x_prev = self.player_x
@@ -77,25 +102,40 @@ class parse_bag:
             elif topic == self.topic_list[5]:
                 if (msg.lives_count<self.game_lives):
                     self.game_lives = msg.lives_count
-                    print('Game now shows player has ',self.game_lives,' self.lives at time',(t.secs-self.start_time)/60.0)
+                    # print('Game now shows player has ',self.game_lives,' self.lives at time',(t.secs-self.start_time)/60.0)
             elif topic == self.topic_list[6]:
                 if self.client_connected==False:
                     if msg.data==1:
-                        self.start_time = t.secs
+                        self.time_connected = t.secs
                         self.client_connected = True
-                        self.game_on = True
                 if self.client_connected==True:
                     if msg.data==0:
                         # If the full trial didn't happen, reset metrics
-                        if (t.secs-self.start_time)/60.0<4.5: # isn't the full trial
+                        if (t.secs-self.start_time)/60.0<4: # isn't the full trial
                             self.reset_game()
+                            print('Reset game')
                         self.client_connected = False
 
-            game_time = t.secs-self.start_time
             if self.game_on:
-                if game_time>self.end_time:
+                self.game_time = t.secs-self.start_time
+                # print(self.game_time)
+                if self.game_time>self.game_length:
+                    print('game end found')
                     self.game_on = False
-
+                    self.end_time = t.secs
+                    self.game_complete = True
+            elif self.game_complete==False:
+                if self.client_connected: # If the unity play button has been pressed
+                    if self.sub>=15:
+                        calibration_time = t.secs-self.time_connected
+                    else:
+                        calibration_time = 40
+                    if calibration_time>30: # If the subject number was at least 15, at least 30s of calibration time had passed
+                        if self.player_x!=self.player_x_prev or self.player_y!=self.player_y_prev:
+                            if self.adversary_1_x!=self.adversary_1_x_prev or self.adversary_1_y!=self.adversary_1_y_prev:
+                                print('Game starts')
+                                self.game_on = True
+                                self.start_time = t.secs
 
     def is_player_found(self,found,adversary_x,adversary_y,adversary_x_prev,adversary_y_prev,t):
         is_adv_close = False
