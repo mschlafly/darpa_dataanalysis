@@ -21,8 +21,8 @@ def add_stats(data,sig_matrix,ax):
         fac1 = int(sig_matrix[i,0])
         fac2 = int(sig_matrix[i,1])
         pval = sig_matrix[i,2]
-        fac1_max = np.max(data[:,fac1])
-        fac2_max = np.max(data[:,fac2])
+        fac1_max = np.max(data[fac1])
+        fac2_max = np.max(data[fac2])
         if fac1_max>fac2_max:
             y_topline = fac1_max+min_dist
         else:
@@ -70,6 +70,7 @@ def add_stats(data,sig_matrix,ax):
             return
     return
 
+# Takes data in the form of a list of numpy arrays
 def make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_size):
 
     fig, ax = plt.subplots(figsize=figure_size,dpi=150)
@@ -93,7 +94,7 @@ def make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_siz
         tick.set_rotation(45)
     fig.subplots_adjust(bottom=0.2)
 
-    numboxes = data.shape[1]
+    numboxes = len(data)
 
     medians = np.empty(numboxes)
     for i in range(numboxes):
@@ -106,15 +107,14 @@ def make_boxplot(data,title,xlabel,ylabel,labels,box_colors,box_alpha,figure_siz
         box_coords = np.column_stack([boxX, boxY])
         ax.add_patch(Polygon(box_coords, facecolor=box_colors[i], alpha=box_alpha[i]))
 
-    x_coordinates = np.arange(1,numboxes+1)# array([1,2,3,4,5,6,7,8,9,10])
-    y_coordinates = np.mean(data,axis=0)
-    std_all = np.std(data,axis=0)/np.sqrt(data.shape[0])
     for i in range(numboxes):
-        ax.plot([x_coordinates[i],x_coordinates[i]],
-                [y_coordinates[i]-std_all[i],y_coordinates[i]+std_all[i]]
+        x_coordinate = i+1
+        y_mean = np.mean(data[i])
+        y_std = np.std(data[i])/np.sqrt(data[i].shape[0])
+        ax.plot([x_coordinate,x_coordinate],
+                [y_mean-y_std,y_mean+y_std]
                 ,'black',markersize=7,zorder=2)
-    ax.plot(x_coordinates, y_coordinates, 'o',
-                 color='w', marker='o', markersize=7, markeredgecolor='black',zorder=3)#, linewidth=0)
-
+        ax.plot(x_coordinate, y_mean, 'o',
+                     color='w', marker='o', markersize=7, markeredgecolor='black',zorder=3)#, linewidth=0)
 
     return [fig,ax]
