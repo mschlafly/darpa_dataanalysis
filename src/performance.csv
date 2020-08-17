@@ -1,1 +1,7 @@
 Subject,Control,Complexity,Lives,Treasure
+01,none,low,7,5
+01,waypoint,low,7,4
+01,directergodic,low,7,4
+01,sharedergodic,low,8,5
+01,autoergodic,low,8,5
+01,none,high,8,4

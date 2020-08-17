@@ -1,10 +1,16 @@
+# Files for testing code
+src/test.py
+src/performance_test.py
+src/save_data_test.py
+
+# All generated files
+src/*.csv
+data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Files for testing code
-*src/test.py
 
 # C extensions
 *.so

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import rosbag
 import numpy as np
@@ -18,7 +18,6 @@ class parse_bag:
                            '/player_info',
                            '/input',
                            '/client_count']
-
         self.disttolooselife = 1.5
         self.disttoreposition = 8
         if sub == 17 or sub == 18:
@@ -68,9 +67,9 @@ class parse_bag:
         self.game_time = 0
         self.client_connected = False
         self.game_on = False
-        self.time_life_lost = []
-        self.time_treasure_found = []
         self.time_player_input = []
+        self.time_treasure_found = []
+        self.time_life_lost = []
         self.time_excitement = []
 
     def loop_through_topics(self):
@@ -83,10 +82,11 @@ class parse_bag:
                 if self.game_on:
                     if self.treas_loc_x_prev != self.treas_loc_x or self.treas_loc_y_prev != self.treas_loc_y:
                         self.treasures += 1
+                        # print('Number of treasures ', self.treasures)
                         # print('Time t is ', t.secs)
                         # print('Start time is ', self.start_time)
                         treasure_found = round((t.secs-self.start_time)/60.0, 2)
-                        # print(treasure_found)
+                        # print('Treasure found at time ', treasure_found)
                         # print('Treasure found at time ', (treasure_found))
                         self.time_treasure_found.append(treasure_found)
                     if (msg.treasure_count > self.game_treasures):
@@ -122,15 +122,12 @@ class parse_bag:
                     self.game_lives = msg.lives_count
                     # print('Game now shows player has ',self.game_lives,' self.lives at time',(t.secs-self.start_time)/60.0)
             elif topic == self.topic_list[6]:
-                # droneID == 10 means empty entry
-                # for waypoint, droneID can be 0, 1 or 2
-                # for direct or shared, droneID (encompassing all) is 5
+                # drone_ID = msg.droneID
                 if msg.droneID != 10:
-                    player_input = round((t-self.start_time)/60.0, 2)
+                    # print(drone_ID)
+                    player_input = round((t.secs-self.start_time)/60.0, 2)
+                    # print(player_input)
                     self.time_player_input.append(player_input)
-                    # print('Current drone command goes to drone ', msg.droneID)
-                    # print('Current drone list is ', self.drone_ID)
-                    # print('Current drone count is ', self.input_count)
             elif topic == self.topic_list[7]:
                 if self.client_connected is False:
                     if msg.data == 1:
@@ -139,7 +136,7 @@ class parse_bag:
                 if self.client_connected:
                     if msg.data == 0:
                         # If the full trial didn't happen, reset metrics
-                        if (t.secs-self.start_time)/60.0 < 4: # isn't the full trial
+                        if (t.secs-self.start_time)/60.0 < 4:
                             self.reset_game()
                             print('Reset game')
                         self.client_connected = False
@@ -148,7 +145,7 @@ class parse_bag:
                 self.game_time = t.secs-self.start_time
                 # print(self.game_time)
                 if self.game_time > self.game_length:
-                    print('game end found')
+                    print('Game end found')
                     self.time_excitement = sorted(self.time_life_lost + self.time_treasure_found + self.time_player_input)
                     # print('Lives lost at times ', self.time_life_lost)
                     # print('Treasures found at times ', self.time_treasure_found)
@@ -190,18 +187,18 @@ class parse_bag:
                     is_adv_facing = True
                     num_tests = 50
 
-                    v2player_step = vec_adv_to_player/num_tests;
+                    v2player_step = vec_adv_to_player/num_tests
                     prev_position = [adversary_x, adversary_y]
 
                     i = 0
                     is_path_on_building = False
                     # Check the length of the vector for buildings; stop if found
                     while ((is_path_on_building is False) and (i <= num_tests)):
-                        new_position = prev_position + v2player_step
+                        new_position = prev_position + v2player_step;
 
                         # Check for buildings only if you have entered a new grid space along the vector.
-                        if ((np.floor(new_position[0])!= np.floor(prev_position[0])) or (np.floor(new_position[1])!= np.floor(prev_position[1]))):
-                            if (self.building_array[int(np.floor(new_position[0])),int(np.floor(new_position[1]))] == 1):
+                        if ((np.floor(new_position[0]) != np.floor(prev_position[0])) or (np.floor(new_position[1]) != np.floor(prev_position[1]))):
+                            if (self.building_array[int(np.floor(new_position[0])), int(np.floor(new_position[1]))]==1):
                                 is_path_on_building = True
 
                         prev_position = new_position

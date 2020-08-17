@@ -1,8 +1,8 @@
-# import rosbag
-# import numpy as np
+import rosbag
+import numpy as np
 from performance import parse_bag
 import csv
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from datetime import datetime
 
 
@@ -52,28 +52,24 @@ for sub in range(minsub, maxsub+1):
             subID = str(sub)
 
         environments = ['low', 'high']
-
-        # controls used for getting perfromance data
         control = ['none',
                    'waypoint',
                    'directergodic',
                    'sharedergodic',
                    'autoergodic']
 
-        # udpdated controls relevant for player input only
-        # control = ['waypoint', 'directergodic', 'sharedergodic']
-
         # Loop through trials
         for env in range(0, len(environments)):
             for con in range(0, len(control)):
                 try:
+                    # filename = '/home/murpheylab/Desktop/exp_data/sub' + subID + '/' + subID + '_' + control[con] + '_' + environments[env] + '.bag'
                     filename = '/home/kpopovic/Desktop/VR_exp_ROS/vr_exp_ros/data/sub' + subID + '/' + subID + '_' + control[con] + '_' + environments[env] + '.bag'
                     print(filename)
 
                     # Get game data by parsing the bag using performance.py
-                    game_data = parse_bag(filename, sub, environments[env])
+                    game_data = parse_bag(filename, sub,environments[env])
                     # print(game_data.game_complete)
-                    if game_data.game_complete:
+                    if game_data.game_complete is True:
 
                         # # Prints discrepency in game lives between the number shown to player and counted lives
                         # if game_data.game_lives!=game_data.lives:
@@ -82,25 +78,12 @@ for sub in range(minsub, maxsub+1):
                         # if game_data.treasures!=game_data.game_treasures:
                         #     print('Discrepency in treasure-- game_treasures: ',game_data.game_treasures,'treasures: ',game_data.treasures)
 
-                        # # saving performance data
-                        # row = [subID, control[con], environments[env],
-                        #        game_data.lives, game_data.treasures]
-                        # with open(file, 'a') as csvfile:
-                        #     writer = csv.writer(csvfile, delimiter=',')
-                        #     writer.writerow(row)
-                        # print('Saved row to file: ', row)
-
-                        start_time = datetime.fromtimestamp(game_data.start_time)
-                        end_time = datetime.fromtimestamp(game_data.end_time)
                         row = [subID, control[con], environments[env],
-                               start_time.month, start_time.day,
-                               start_time.hour, start_time.minute, start_time.second,
-                               end_time.month, end_time.day,
-                               end_time.hour, end_time.minute, end_time.second]
-                        with open(file_game, 'a') as csvfile:
+                               game_data.lives, game_data.treasures]
+                        with open(file, 'a') as csvfile:
                             writer = csv.writer(csvfile, delimiter=',')
                             writer.writerow(row)
-                        print('Saved row to file: ', row)
+                        # print('Saved row to file: ', row)
 
                         # OPTION 1: saving excitement time data
                         row = [subID, control[con], environments[env],
@@ -115,9 +98,17 @@ for sub in range(minsub, maxsub+1):
                             writer = csv.writer(csvfile)
                             writer.writerow(game_data.time_excitement)
 
-                    elif game_data.game_time > 250:
+                        start_time = datetime.fromtimestamp(game_data.start_time)
+                        end_time = datetime.fromtimestamp(game_data.end_time)
                         row = [subID, control[con], environments[env],
-                              game_data.game_time]
+                                start_time.month,start_time.day, start_time.hour, start_time.minute, start_time.second,
+                                end_time.month, end_time.day, end_time.hour, end_time.minute, end_time.second]
+                        with open(file_game, 'a') as csvfile:
+                            writer = csv.writer(csvfile, delimiter=',')
+                            writer.writerow(row)
+                        # print('Saved row to file: ', row)
+                    elif game_data.game_time > 250:
+                        row = [subID, control[con], environments[env], game_data.game_time]
                         with open(file_game, 'a') as csvfile:
                             writer = csv.writer(csvfile, delimiter=',')
                             writer.writerow(row)
