@@ -5,7 +5,7 @@ src/save_data_test.py
 
 # All generated files
 src/*.csv
-data/
+data
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
