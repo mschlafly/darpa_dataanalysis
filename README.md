@@ -25,17 +25,17 @@ in terminal window.
 
 August 17, 2020
 * In performance.py
- * **line 19:** added topic */input* in order to get information about trajectories and drones
- * **line 38:** under *reset_game* added variables *self.time_XXX* in order to track list of all the important times
- * **line 91:**  updating *time_treasure_found*
- * **line 130:** updating *time_player_input*
- * **line 152:** concatenating and sorting all time stamps into the final *time_excitement* list
+  * **line 19:** added topic */input* in order to get information about trajectories and drones
+  * **line 38:** under *reset_game* added variables *self.time_XXX* in order to track list of all the important times
+  * **line 91:**  updating *time_treasure_found*
+  * **line 130:** updating *time_player_input*
+  * **line 152:** concatenating and sorting all time stamps into the final *time_excitement* list
  * **line 214:** updating *time_life_lost*
 * In save_data.py
- * **line 21:** added *excitement_data.csv* to record *time_excitement* for all the subjects & trials
- * **line 70:** updated path to all the saved rosbag files
- * **line 105:** saving data in one *.csv* file
- * **line 112:** saving data under folder *data* for each subject and control individually
+  * **line 21:** added *excitement_data.csv* to record *time_excitement* for all the subjects & trials
+  * **line 70:** updated path to all the saved rosbag files
+  * **line 105:** saving data in one *.csv* file
+  * **line 112:** saving data under folder *data* for each subject and control individually
 
 ## Authors
 
