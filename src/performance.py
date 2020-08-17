@@ -68,8 +68,6 @@ class parse_bag:
         self.game_time = 0
         self.client_connected = False
         self.game_on = False
-        self.input_count = 0
-        self.drone_ID = []
         self.time_life_lost = []
         self.time_treasure_found = []
         self.time_player_input = []
@@ -130,8 +128,6 @@ class parse_bag:
                 if msg.droneID != 10:
                     player_input = round((t-self.start_time)/60.0, 2)
                     self.time_player_input.append(player_input)
-                    self.drone_ID.append(msg.droneID)
-                    self.input_count += 1
                     # print('Current drone command goes to drone ', msg.droneID)
                     # print('Current drone list is ', self.drone_ID)
                     # print('Current drone count is ', self.input_count)

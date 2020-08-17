@@ -1,8 +1,8 @@
-import rosbag
-import numpy as np
+# import rosbag
+# import numpy as np
 from performance import parse_bag
 import csv
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from datetime import datetime
 
 
@@ -15,12 +15,6 @@ skipped_subjects = []  # [2,3,4,5,6,10,12,16,19,15,38]
 file = "performance.csv"
 columns = ['Subject', 'Control', 'Complexity', 'Lives', 'Treasure']
 with open(file, 'w') as csvfile:
-    writer = csv.writer(csvfile, delimiter=',')
-    writer.writerow(columns)
-
-file_input = "input_data.csv"
-columns = ['Subject', 'Control', 'Complexity', 'Input-Count', 'Drone-ID']
-with open(file_input, 'w') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(columns)
 
@@ -38,7 +32,7 @@ with open(file_game, 'w') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(columns)
 
-file_missingbags = "missing_bags_gametime.csv"
+file_missingbags = "missing_bags.csv"
 columns = ['Subject', 'Control', 'Complexity', 'Control', 'Complexity']
 with open(file_missingbags, 'w') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
@@ -96,14 +90,6 @@ for sub in range(minsub, maxsub+1):
                         #     writer.writerow(row)
                         # print('Saved row to file: ', row)
 
-                        # # saving input data
-                        # if control[con] == 'waypoint' or control[con] == 'directergodic' or control[con] == 'sharedergodic':
-                        #     row = [subID, control[con], environments[env],
-                        #            game_data.input_count, game_data.drone_ID]
-                        #     with open(file_input, 'a') as csvfile:
-                        #         writer = csv.writer(csvfile, delimiter=',')
-                        #         writer.writerow(row)
-
                         start_time = datetime.fromtimestamp(game_data.start_time)
                         end_time = datetime.fromtimestamp(game_data.end_time)
                         row = [subID, control[con], environments[env],
@@ -116,26 +102,25 @@ for sub in range(minsub, maxsub+1):
                             writer.writerow(row)
                         print('Saved row to file: ', row)
 
-
-                        # # OPTION 1: saving excitement time data
-                        # row = [subID, control[con], environments[env],
-                        #        game_data.time_excitement]
-                        # with open(file_excitement, 'a') as csvfile:
-                        #     writer = csv.writer(csvfile, delimiter=',')
-                        #     writer.writerow(row)
+                        # OPTION 1: saving excitement time data
+                        row = [subID, control[con], environments[env],
+                               game_data.time_excitement]
+                        with open(file_excitement, 'a') as csvfile:
+                            writer = csv.writer(csvfile, delimiter=',')
+                            writer.writerow(row)
 
                         # OPTION 2: saving excitement file for each Subject
-                        # file_individual = '../data/Sub' + subID + '_' + control[con] + '_' + environments[env] + '.csv'
-                        # with open(file_individual, 'wb') as csvfile:
-                        #     writer = csv.writer(csvfile)
-                        #     writer.writerow(game_data.time_excitement)
+                        file_individual = '../data/Sub' + subID + '_' + control[con] + '_' + environments[env] + '.csv'
+                        with open(file_individual, 'wb') as csvfile:
+                            writer = csv.writer(csvfile)
+                            writer.writerow(game_data.time_excitement)
 
-                    # elif game_data.game_time > 250:
-                    #     row = [subID, control[con], environments[env],
-                    #           game_data.game_time]
-                    #     with open(file_game, 'a') as csvfile:
-                    #         writer = csv.writer(csvfile, delimiter=',')
-                    #         writer.writerow(row)
+                    elif game_data.game_time > 250:
+                        row = [subID, control[con], environments[env],
+                              game_data.game_time]
+                        with open(file_game, 'a') as csvfile:
+                            writer = csv.writer(csvfile, delimiter=',')
+                            writer.writerow(row)
 
                 except:
                     # print('------------------------------------------------------------')
