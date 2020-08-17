@@ -1,4 +1,4 @@
-# DARPA Sprint 3: HST Data Analysis [excitement_time]
+# DARPA Sprint 3: HST Data Analysis [excitement_times]
 
 The excitement_time branch code base parses data from Sprint 3 HST experiments to gather excitement times. Primary goal is to record all the time stamps at which a player performed an action that might excite them in some way. These time stamps will be compared to determine if the excitement can be interpreted by changes in biometric data. In particular, times or the following events will be recorded
 
