@@ -7,12 +7,15 @@
 # complete one should run the add_difficulty_data script to append the
 # difficulty rating column.
 
-from difficulty import update_performance
+from utils.difficulty import update_performance
+import os
 
-drFileLoc = 'hst_info/difficulty_rating.csv'
-pFileLoc = 'performance_info/'
-tiFileLoc = 'hst_info/'
-tiFolderLoc = 'trial_info/'
-tiFolderLocNew = 'trial_info_dr/'
+drFileLoc = 'raw_data/difficulty_rating.csv'
+pFileLoc = 'raw_data/'
+tiFileLoc = 'temp_delete/'
+tiFolderLoc = 'HST_data_local/trial_info/'
+if not os.path.exists('temp_delete/trial_info_dr/'):
+    os.makedirs('temp_delete/trial_info_dr/')
+tiFolderLocNew = 'temp_delete/trial_info_dr/'
 
 update_performance(pFileLoc, drFileLoc, tiFileLoc, tiFolderLoc, tiFolderLocNew)

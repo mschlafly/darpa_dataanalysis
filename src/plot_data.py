@@ -1,23 +1,15 @@
-#!/usr/bin/env python
-
-# This program plots overall performance metrics for DAPRA HST. It also
+# This program plots overall performance metrics. It also
 # optionally saves the data for statistical testing in R. It relies upon
 # functions from make_boxplot.py for plotting data and statistical results
 # entered by hand. It can optionally look at only experts or novices or plot
 # various other comparisons.
-
-# NOTE: sub15 is missing waypoint LOW and sub38 is missing direct_ergodic HIGH
-
-# CAUTION: plot_data folder is used for testing purposes only. Move the newly
-# generated plots that you want to keep to relavant folders & perform git push
-# to update the github repo
 
 # Imports
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from plot_utils import *
+from utils.plot_utils import *
 
 ###############################################################################
 # Folder location from where to get necessary hst data
@@ -51,22 +43,24 @@ file_plot_ind = 'Plots/Indiv Plots/'
 ###############################################################################
 
 save_data = True  # Saves data into csv file for statistical processing
-plot_each = False  # Creates and saves a plot for each participant
+plot_each = True  # Creates and saves a plot for each participant
 
 # Booleans for analyzing subset of participants
 only_experts = False  # Only plots experts
-only_novices = True  # Only plots novices
+only_novices = False  # Only plots novices
+if only_experts or only_novices:
+    save_data = False
 
 # Boolean for plotting specific trial conditions
-combine_complexity = False
+combine_complexity = True # keep this as True
 
 # Booleans for plottings specific metrics
-plot_difficulty = False
-plot_input = False
-plot_lives = False
-plot_treasures = False
+plot_difficulty = True
+plot_input = True
+plot_lives = True
+plot_treasures = True
 plot_scorebar = True
-plot_scorebox = False
+plot_scorebox = True
 
 # Indicate range of subjects to include in plots within [1,42]
 minsub = 1
@@ -104,10 +98,14 @@ autonomy = ['direct', 'shared', 'auto']
 # indicated the number of actual subjects with full datasets stored. If a
 # subject's dataset is not full, their row is overwritten. These matrices are
 # in the format for boxplots
-subnum = 0
+subnum_input = 0
+subnum_performace = 0
+subnum_difficulty = 0
 
 # Keep track of subject IDs (with complete data) included in figures
-sub_list = []
+sub_list_input = []
+sub_list_performance = []
+sub_list_difficulty = []
 
 # These matrices are filled while looping through raw data
 maxsub += 1
@@ -185,6 +183,28 @@ for sub in range(minsub, maxsub):
                 plt.xticks(ind, labels)
                 plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
                 plt.savefig(file_plot_ind + subID + '_performance.png')
+
+                plt.figure(sub+1)
+                width = 0.5
+                ind = np.arange(10)
+                p1 = plt.bar(ind, input_all[sub, :], width)
+                plt.ylabel('Score')
+                plt.title('Inputs for Subject ' + subID)
+                labels = ('LN', 'LW', 'LD', 'LS', 'LA',
+                          'HN', 'HW', 'HD', 'HS', 'HA')
+                plt.xticks(ind, labels)
+                plt.savefig(file_plot_ind + subID + '_input.png')
+
+                plt.figure(sub+2)
+                width = 0.5
+                ind = np.arange(10)
+                p1 = plt.bar(ind, difficulty_all[sub, :], width)
+                plt.ylabel('Score')
+                plt.title('Difficulty for Subject ' + subID)
+                labels = ('LN', 'LW', 'LD', 'LS', 'LA',
+                          'HN', 'HW', 'HD', 'HS', 'HA')
+                plt.xticks(ind, labels)
+                plt.savefig(file_plot_ind + subID + '_difficulty.png')
                 plt.close('all')
 
             # Read subject_info.csv for the amount of video games played
@@ -242,6 +262,38 @@ for sub in range(minsub, maxsub):
             # and that is overwritten if we have lives data for every trial. If
             # we are only looking at either experts or novies, the participant
             # has to additionally belong to that group
+
+            # Input plots only include participants with data from all 10 trials,
+            # but performance plots include participants with at least 9 trials
+
+            ###############################
+            # Include data in input lists
+            ###############################
+            include_sub = False
+            if (all_low == 1) and (all_high == 1):
+                if only_experts:
+                    if expertise == "expert":
+                        include_sub = True
+                elif only_novices:
+                    if expertise == "novice":
+                        include_sub = True
+                else:
+                    include_sub = True
+
+            if include_sub:
+                subnum_input += 1
+                sub_list_input.append(subID)
+                for i in range(10):
+                    if trial_happened[i] == 1:
+                        if isinstance(lives_all_list[i], int):
+                            input_all_list[i] = input_all[sub, i]
+
+                        else:
+                            input_all_list[i] = np.append(input_all_list[i], input_all[sub, i])
+
+            ###############################
+            # Include data in performance lists
+            ###############################
             include_sub = False
             if (all_low == 1) or (all_high == 1):
                 if only_experts:
@@ -254,14 +306,16 @@ for sub in range(minsub, maxsub):
                     include_sub = True
 
             if include_sub:
-                subnum += 1
-                sub_list.append(subID)
+                subnum_performace += 1
+                sub_list_performance.append(subID)
+                if sub in dfID:
+                    subnum_difficulty += 1
+                    sub_list_difficulty.append(subID)
                 for i in range(10):
                     if trial_happened[i] == 1:
                         if isinstance(lives_all_list[i], int):
                             lives_all_list[i] = lives_all[sub, i]
                             treasure_all_list[i] = treasure_all[sub, i]
-                            input_all_list[i] = input_all[sub, i]
                             score_all_list[i] = score_all[sub, i]
                             if sub in dfID:
                                 difficulty_all_list[i] = difficulty_all[sub, i]
@@ -269,12 +323,17 @@ for sub in range(minsub, maxsub):
                         else:
                             lives_all_list[i] = np.append(lives_all_list[i], lives_all[sub, i])
                             treasure_all_list[i] = np.append(treasure_all_list[i], treasure_all[sub, i])
-                            input_all_list[i] = np.append(input_all_list[i], input_all[sub, i])
                             score_all_list[i] = np.append(score_all_list[i], score_all[sub, i])
                             if sub in dfID:
                                 difficulty_all_list[i] = np.append(difficulty_all_list[i], difficulty_all[sub, i])
 
-print('The number of subjects included in boxplots is ' + str(subnum) + '.')
+
+print('The number of subjects included in input plots is ' + str(subnum_input) + '.')
+print('These are the subjects: ',sub_list_input)
+print('The number of subjects included in performance plots is ' + str(subnum_performace) + '.')
+print('These are the subjects: ',sub_list_performance)
+print('The number of subjects included in difficulty plots is ' + str(subnum_difficulty) + '.')
+print('These are the subjects: ',sub_list_difficulty)
 
 ###############################################################################
 # PLOT BOXPLOTS
@@ -368,11 +427,11 @@ if plot_scorebar:
     add_labels(ax, x1, x2, y, name, text_buffer)
 
     if only_experts:
-        plt.savefig(file_plot_all + 'scorebar_experts.pdf')
+        plt.savefig(file_plot_all + 'Score/scorebar_experts.png')
     elif only_novices:
-        plt.savefig(file_plot_all + 'scorebar_novices.pdf')
+        plt.savefig(file_plot_all + 'Score/scorebar_novices.png')
     else:
-        plt.savefig(file_plot_all + 'scorebar.pdf')
+        plt.savefig(file_plot_all + 'Score/scorebar.png')
 
 ###############################################################################
 # [TEST] Plotting overall game score: box plot
@@ -409,11 +468,11 @@ if plot_scorebox:
                              colors_test, alphas_test, figure_size)
     add_stats(data, sig_matrix, ax)
     if only_experts:
-        fig.savefig(file_plot_all + 'overall_score_experts.png')
+        fig.savefig(file_plot_all + 'Score/overall_score_experts.png')
     elif only_novices:
-        fig.savefig(file_plot_all + 'overall_score_novices.png')
+        fig.savefig(file_plot_all + 'Score/overall_score_novices.png')
     else:
-        fig.savefig(file_plot_all + 'overall_score.png')
+        fig.savefig(file_plot_all + 'Score/overall_score.png')
 
 ###############################################################################
 # [TEST] Plotting overall lives
@@ -437,11 +496,11 @@ if plot_lives:
 
     if only_experts:
         add_stats(data, sig_matrix, ax)
-        fig.savefig(file_plot_all + 'overall_lives_experts.png')
+        fig.savefig(file_plot_all + 'Lives/overall_lives_experts.png')
     elif only_novices:
-        fig.savefig(file_plot_all + 'overall_lives_novices.png')
+        fig.savefig(file_plot_all + 'Lives/overall_lives_novices.png')
     else:
-        fig.savefig(file_plot_all + 'overall_lives.png')
+        fig.savefig(file_plot_all + 'Lives/overall_lives.png')
 
 ###############################################################################
 # [TEST] Plotting treasure data
@@ -463,11 +522,11 @@ if plot_treasures:
                              colors_test, alphas_test, figure_size)
     add_stats(data, sig_matrix, ax)
     if only_experts:
-        fig.savefig(file_plot_all + 'overall_treas_experts.png')
+        fig.savefig(file_plot_all + 'Treasures/overall_treas_experts.png')
     elif only_novices:
-        fig.savefig(file_plot_all + 'overall_treas_novices.png')
+        fig.savefig(file_plot_all + 'Treasures/overall_treas_novices.png')
     else:
-        fig.savefig(file_plot_all + 'overall_treas.png')
+        fig.savefig(file_plot_all + 'Treasures/overall_treas.png')
 
 ###############################################################################
 # [PAPER] Plotting command input counts
@@ -534,11 +593,11 @@ if plot_input:
 
     # Saving the plots ########################################################
     if only_experts:
-        fig.savefig(file_plot_all + 'inputs_experts.pdf')
+        fig.savefig(file_plot_all + 'Inputs/inputs_experts.pdf')
     elif only_novices:
-        fig.savefig(file_plot_all + 'inputs_novices.pdf')
+        fig.savefig(file_plot_all + 'Inputs/inputs_novices.pdf')
     else:
-        fig.savefig(file_plot_all + 'inputs.pdf')
+        fig.savefig(file_plot_all + 'Inputs/inputs.png')
 
 ###############################################################################
 # [PAPER] Plotting trial difficulty rating
@@ -602,8 +661,8 @@ if plot_difficulty:
     # Saving the plots ########################################################
 
     if only_experts:
-        fig.savefig(file_plot_all + 'difficulty_experts.png')
+        fig.savefig(file_plot_all + 'Difficulty/difficulty_experts.png')
     elif only_novices:
-        fig.savefig(file_plot_all + 'difficulty_novices.png')
+        fig.savefig(file_plot_all + 'Difficulty/difficulty_novices.png')
     else:
-        fig.savefig(file_plot_all + 'difficulty.pdf')
+        fig.savefig(file_plot_all + 'Difficulty/difficulty.png')

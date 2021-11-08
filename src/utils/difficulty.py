@@ -23,7 +23,7 @@ class update_performance:
     def __init__(self, pFileLoc, drFileLoc, tiFileLoc, tiFolderLoc, tiFolderLocNew):
 
         # read the performance csv files with pandas
-        self.dfP = pd.read_csv(pFileLoc + 'performance.csv')
+        self.dfP = pd.read_csv(pFileLoc + 'raw_data.csv')
 
         # read the difficulty rating csv files with pandas and get the list of
         # all the subject IDs that completed the trial ratings
@@ -118,7 +118,7 @@ class update_performance:
         # Perform sorting operation
         self.dfTD = self.dfTD.sort_values(['Subject', 'Complexity', 'Control'], ascending=[True, False, True])
 
-        filename = tiFileLoc + 'trial_info_all.csv'
+        filename = tiFileLoc + 'raw_data_diff.csv'
         self.dfTD.to_csv(filename, index=False)
 
     def new_performance(self,pFileLoc):
@@ -132,5 +132,5 @@ class update_performance:
         # necessary for plot_data.py to properly save info into control.csv
         merged_df['Subject'] = merged_df['Subject'].astype(str).str.zfill(2)
 
-        fileLocNew = pFileLoc + 'performance_update.csv'
+        fileLocNew = pFileLoc + 'raw_data_diff.csv'
         merged_df.to_csv(fileLocNew, index=False)

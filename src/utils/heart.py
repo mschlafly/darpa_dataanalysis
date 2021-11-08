@@ -1,3 +1,5 @@
+# Run this script with python3
+
 import numpy as np
 import pandas as pd
 import csv
@@ -50,24 +52,24 @@ def get_raw_heart(sub_list, measure, my_measure, measure_type="Raw"):
 
         if sub == 19:
             sub_str = subject_to_str(sub)
-            if not os.path.exists('Indiv Heart/Sub'+sub_str):
-                os.makedirs('Indiv Heart/Sub'+sub_str)
+            if not os.path.exists('temp_delete/Indiv Heart/Sub'+sub_str):
+                os.makedirs('temp_delete/Indiv Heart/Sub'+sub_str)
             # Part 1
             heart = 'Heart/Sub'+sub_str+'/Part1/'+measure_type+'/'+measure+' - Sub'+sub_str+'.txt'
-            csv_heart = 'Indiv Heart/Sub'+sub_str+'/Sub'+sub_str+'_'+my_measure+'.csv'
+            csv_heart = 'temp_delete/Indiv Heart/Sub'+sub_str+'/Sub'+sub_str+'_'+my_measure+'.csv'
             cleaning_to_csv(heart, csv_heart, my_measure, measure_type=measure_type)
             print(f'I put subject {sub} Part 1 into a CSV.')
             # Part 2
             heart = 'Heart/Sub'+sub_str+'/Part2/'+measure_type+'/'+measure+' - Sub'+sub_str+'.txt'
-            csv_heart = 'Indiv Heart/Sub'+sub_str+'/Sub'+sub_str+'_'+my_measure+'.csv'
+            csv_heart = 'temp_delete/Indiv Heart/Sub'+sub_str+'/Sub'+sub_str+'_'+my_measure+'.csv'
             cleaning_to_csv(heart, csv_heart, my_measure, measure_type=measure_type, mode='a', header=False)
             print(f'I put subject {sub} Part 2 into the same CSV.')
         else:
             sub_str = subject_to_str(sub)
-            if not os.path.exists('Indiv Heart/Sub'+sub_str):
-                os.makedirs('Indiv Heart/Sub'+sub_str)
-            heart = 'Heart/Sub'+sub_str+'/'+measure_type+'/'+measure+' - Sub'+sub_str+'.txt'
-            csv_heart = 'Indiv Heart/Sub'+sub_str+'/Sub'+sub_str+'_'+my_measure+'.csv'
+            if not os.path.exists('temp_delete/Indiv Heart/Sub'+sub_str):
+                os.makedirs('temp_delete/Indiv Heart/Sub'+sub_str)
+            heart = 'HST_data_local/Heart/Sub'+sub_str+'/'+measure_type+'/'+measure+' - Sub'+sub_str+'.txt'
+            csv_heart = 'temp_delete/Indiv Heart/Sub'+sub_str+'/Sub'+sub_str+'_'+my_measure+'.csv'
             # Cleans data file and adds header
             # Measure columns name is my_measure
             cleaning_to_csv(heart, csv_heart, my_measure, measure_type=measure_type)
@@ -102,14 +104,14 @@ def select_trials(sub_list, my_measure, threshold, frequency_step=0.25):
             complexity = df_sub.iloc[trial]['Complexity']
             trial_file = store_base+'/Sub'+sub_str+'_'+control+'_'+complexity+'.csv'
             # Read heart data
-            csv_heart = 'Indiv Heart/Sub'+sub_str+'/Sub'+sub_str+'_'+my_measure+'.csv'
+            csv_heart = 'temp_delete/Indiv Heart/Sub'+sub_str+'/Sub'+sub_str+'_'+my_measure+'.csv'
             df_heart = pd.read_csv(csv_heart)
             days = df_heart['day'].isin([start_day])
             # print(f"Start Hour: {start_hr}, Start Min: {start_min}, Start Sec: {start_sec}")
             # print(f"End Hour: {end_hr}, End Min: {end_min}, End Sec: {end_sec}")
             if start_hr == end_hr:
                 hours = df_heart['hour'].isin([start_hr])
-                mins = df_heart['minute'].isin([*range(start_min, end_min+1)])
+                mins = df_heart['minute'].isin([*range(int(start_min), int(end_min)+1)])
                 df_days_hrs_mins = df_heart[days & hours & mins]
                 # Remove beginning and ending seconds
                 if len(df_days_hrs_mins) < threshold:
@@ -122,7 +124,7 @@ def select_trials(sub_list, my_measure, threshold, frequency_step=0.25):
                                             start_sec, end_sec, start_min, end_min)
             else:
                 # print("Trial is on separate hours.")
-                hours = df_heart['hour'].isin([*range(start_hr, end_hr+1)])
+                hours = df_heart['hour'].isin([*range(int(start_hr), int(end_hr)+1)])
                 df_days_hrs = df_heart[days & hours]
                 # Remove beginning and end minutes and seconds
                 df_days_hrs_mins = drop_beg_and_end(df_days_hrs, 'minute', \

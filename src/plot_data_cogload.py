@@ -1,16 +1,9 @@
-#!/usr/bin/env python
-
-# This program plots overall performance metrics for DAPRA HST. It also
+# This program plots the RR interval. It also
 # optionally saves the data for statistical testing in R. It relies upon
 # functions from make_boxplot.py for plotting data and statistical results
 # entered by hand. It can optionally look at only experts or novices or plot
 # various other comparisons.
 
-# NOTE: sub15 is missing waypoint LOW and sub38 is missing direct_ergodic HIGH
-
-# CAUTION: plot_data folder is used for testing purposes only. Move the newly
-# generated plots that you want to keep to relavant folders & perform git push
-# to update the github repo
 
 # Imports
 import csv
@@ -50,7 +43,9 @@ plot_each = True  # Creates and saves a plot for each participant
 
 # Booleans for analyzing subset of participants
 only_experts = False  # Only plots experts
-only_novices = True  # Only plots novices
+only_novices = False  # Only plots novices
+if only_experts or only_novices:
+    save_data = False
 
 # Boolean for plotting specific trial conditions
 combine_complexity = True
@@ -232,7 +227,8 @@ for sub in range(minsub, maxsub):
                         else:
                             RR_all_list[i] = np.append(RR_all_list[i], RR_all[sub, i])
 
-print('The number of subjects included in boxplots is ' + str(subnum) + '.')
+print('The number of subjects included in plots is ' + str(subnum) + '.')
+print('These are the subjects: ',sub_list)
 
 ###############################################################################
 # PLOT BOXPLOTS

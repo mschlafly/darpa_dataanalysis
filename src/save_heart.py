@@ -1,3 +1,5 @@
+# Run this script with python3
+
 # This programs extracts 'RR' interval data and saves it to csv file.
 # Along the way, it creates a csv with raw, unformatted data.
 
