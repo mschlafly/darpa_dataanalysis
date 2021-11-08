@@ -1,0 +1,221 @@
+
+########################################################################### 
+################################### ALL ################################### 
+########################################################################### 
+Test for normality 
+# A tibble: 280 x 9
+# Groups:   Complexity, Control [10]
+   Subject Control  Complexity Expertise UseGLM Uselow Usehigh  Mean Zscore
+   <chr>   <chr>    <chr>      <chr>      <int>  <int>   <int> <dbl>  <dbl>
+ 1 Sub01   none     low        expert         1      1       1  735.  1.04 
+ 2 Sub01   none     high       expert         1      1       1  732.  0.743
+ 3 Sub01   waypoint low        expert         1      1       1  724. -0.228
+ 4 Sub01   waypoint high       expert         1      1       1  715. -1.27 
+ 5 Sub01   directe~ low        expert         1      1       1  728.  0.327
+ 6 Sub01   directe~ high       expert         1      1       1  718. -0.945
+ 7 Sub01   sharede~ low        expert         1      1       1  715. -1.30 
+ 8 Sub01   sharede~ high       expert         1      1       1  720. -0.639
+ 9 Sub01   autoerg~ low        expert         1      1       1  736.  1.17 
+10 Sub01   autoerg~ high       expert         1      1       1  735.  1.11 
+# ... with 270 more rows
+# A tibble: 10 x 5
+   Control       Complexity variable statistic     p
+   <chr>         <chr>      <chr>        <dbl> <dbl>
+ 1 autoergodic   high       Zscore       0.975 0.726
+ 2 directergodic high       Zscore       0.966 0.473
+ 3 none          high       Zscore       0.951 0.214
+ 4 sharedergodic high       Zscore       0.948 0.178
+ 5 waypoint      high       Zscore       0.959 0.324
+ 6 autoergodic   low        Zscore       0.942 0.125
+ 7 directergodic low        Zscore       0.967 0.502
+ 8 none          low        Zscore       0.952 0.227
+ 9 sharedergodic low        Zscore       0.992 0.998
+10 waypoint      low        Zscore       0.988 0.980
+$ANOVA
+                        Effect DFn DFd          SSn           SSd
+1                  (Intercept)   1  26 8.390804e-30 -2.120526e-15
+2                    Expertise   1  26 3.535294e-29 -2.120526e-15
+3                      Control   4 104 6.058363e+00  1.001640e+02
+5                   Complexity   1  26 1.278728e+00  1.383063e+01
+4            Expertise:Control   4 104 1.604788e+01  1.001640e+02
+6         Expertise:Complexity   1  26 1.191802e+00  1.383063e+01
+7           Control:Complexity   4 104 5.790747e+00  9.442637e+01
+8 Expertise:Control:Complexity   4 104 4.206181e+00  9.442637e+01
+              F           p p<.05          ges
+1 -1.028806e-13 1.000000000       4.025892e-32
+2 -4.334663e-13 1.000000000       1.696227e-31
+3  1.572595e+00 0.187114680       2.824684e-02
+5  2.403862e+00 0.133124292       6.097899e-03
+4  4.165616e+00 0.003603904     * 7.149266e-02
+6  2.240451e+00 0.146483780       5.685730e-03
+7  1.594464e+00 0.181316914       2.703282e-02
+8  1.158159e+00 0.333673035       1.978195e-02
+
+$`Mauchly's Test for Sphericity`
+                        Effect         W         p p<.05
+3                      Control 0.6963992 0.4537832      
+4            Expertise:Control 0.6963992 0.4537832      
+7           Control:Complexity 0.8443800 0.9029319      
+8 Expertise:Control:Complexity 0.8443800 0.9029319      
+
+$`Sphericity Corrections`
+                        Effect       GGe       p[GG] p[GG]<.05      HFe
+3                      Control 0.8753868 0.194853838           1.028313
+4            Expertise:Control 0.8753868 0.005557882         * 1.028313
+7           Control:Complexity 0.9168016 0.186625222           1.086010
+8 Expertise:Control:Complexity 0.9168016 0.333263799           1.086010
+        p[HF] p[HF]<.05
+3 0.187114680          
+4 0.003603904         *
+7 0.181316914          
+8 0.333673035          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$Zscore and data_all$Control 
+
+              autoergodic directergodic none   sharedergodic
+directergodic 1.0000      -             -      -            
+none          1.0000      1.0000        -      -            
+sharedergodic 0.8155      1.0000        1.0000 -            
+waypoint      0.0058      0.6368        0.3039 0.5572       
+
+P value adjustment method: bonferroni 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$Zscore and data_all$combo 
+
+                   autoergodic high autoergodic low directergodic high
+autoergodic low    1.00             -               -                 
+directergodic high 1.00             1.00            -                 
+directergodic low  1.00             1.00            1.00              
+none high          1.00             0.15            1.00              
+none low           1.00             1.00            1.00              
+sharedergodic high 1.00             1.00            1.00              
+sharedergodic low  1.00             1.00            1.00              
+waypoint high      1.00             0.14            1.00              
+waypoint low       1.00             0.06            0.47              
+                   directergodic low none high none low sharedergodic high
+autoergodic low    -                 -         -        -                 
+directergodic high -                 -         -        -                 
+directergodic low  -                 -         -        -                 
+none high          1.00              -         -        -                 
+none low           1.00              1.00      -        -                 
+sharedergodic high 1.00              1.00      1.00     -                 
+sharedergodic low  1.00              1.00      1.00     1.00              
+waypoint high      1.00              1.00      1.00     1.00              
+waypoint low       1.00              1.00      0.14     1.00              
+                   sharedergodic low waypoint high
+autoergodic low    -                 -            
+directergodic high -                 -            
+directergodic low  -                 -            
+none high          -                 -            
+none low           -                 -            
+sharedergodic high -                 -            
+sharedergodic low  -                 -            
+waypoint high      1.00              -            
+waypoint low       1.00              1.00         
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+################################### HIGH ################################## 
+########################################################################### 
+Test for normality 
+# A tibble: 5 x 4
+  Control       variable statistic     p
+  <chr>         <chr>        <dbl> <dbl>
+1 autoergodic   Zscore       0.976 0.730
+2 directergodic Zscore       0.968 0.497
+3 none          Zscore       0.953 0.214
+4 sharedergodic Zscore       0.941 0.106
+5 waypoint      Zscore       0.953 0.215
+$ANOVA
+             Effect DFn DFd        SSn        SSd        F          p
+1       (Intercept)   1  27  0.7012590   7.038659 2.690000 0.11258047
+2         Expertise   1  27  0.5498354   7.038659 2.109145 0.15794395
+3           Control   4 108  6.6741920 106.685916 1.689100 0.15777326
+4 Expertise:Control   4 108 12.1599696 106.685916 3.077437 0.01919674
+  p<.05         ges
+1       0.006128503
+2       0.004811536
+3       0.055434056
+4     * 0.096596207
+
+$`Mauchly's Test for Sphericity`
+             Effect         W         p p<.05
+3           Control 0.6071192 0.1783093      
+4 Expertise:Control 0.6071192 0.1783093      
+
+$`Sphericity Corrections`
+             Effect       GGe      p[GG] p[GG]<.05       HFe      p[HF]
+3           Control 0.8235923 0.17039543           0.9516973 0.16115067
+4 Expertise:Control 0.8235923 0.02758043         * 0.9516973 0.02118931
+  p[HF]<.05
+3          
+4         *
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_high$Zscore and data_high$Control 
+
+              autoergodic directergodic none sharedergodic
+directergodic 1.00        -             -    -            
+none          0.83        1.00          -    -            
+sharedergodic 1.00        1.00          1.00 -            
+waypoint      1.00        1.00          1.00 1.00         
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+################################### LOW ################################### 
+########################################################################### 
+Test for normality 
+# A tibble: 5 x 4
+  Control       variable statistic      p
+  <chr>         <chr>        <dbl>  <dbl>
+1 autoergodic   Zscore       0.956 0.223 
+2 directergodic Zscore       0.960 0.293 
+3 none          Zscore       0.939 0.0761
+4 sharedergodic Zscore       0.991 0.995 
+5 waypoint      Zscore       0.992 0.996 
+$ANOVA
+             Effect DFn DFd       SSn        SSd        F          p p<.05
+1       (Intercept)   1  29 0.7109847   7.673005 2.687155 0.11196538      
+2         Expertise   1  29 0.8765333   7.673005 3.312844 0.07907672      
+3           Control   4 116 6.2420708 104.691648 1.729078 0.14824651      
+4 Expertise:Control   4 116 7.6172430 104.691648 2.110006 0.08395743      
+          ges
+1 0.006287691
+2 0.007740411
+3 0.052628305
+4 0.063486603
+
+$`Mauchly's Test for Sphericity`
+             Effect         W         p p<.05
+3           Control 0.7367009 0.4973718      
+4 Expertise:Control 0.7367009 0.4973718      
+
+$`Sphericity Corrections`
+             Effect       GGe      p[GG] p[GG]<.05      HFe      p[HF]
+3           Control 0.8671672 0.15796131           0.999361 0.14829190
+4 Expertise:Control 0.8671672 0.09441741           0.999361 0.08400471
+  p[HF]<.05
+3          
+4          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_low$Zscore and data_low$Control 
+
+              autoergodic directergodic none  sharedergodic
+directergodic 0.244       -             -     -            
+none          1.000       1.000         -     -            
+sharedergodic 0.267       1.000         1.000 -            
+waypoint      0.014       1.000         0.087 1.000        
+
+P value adjustment method: bonferroni 

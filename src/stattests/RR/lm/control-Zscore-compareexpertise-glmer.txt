@@ -1,0 +1,133 @@
+
+########################################################################### 
+################################### ALL ################################### 
+########################################################################### 
+[1] "hi"
+[1] "Sum of squares"
+[1] 255.0367
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Zscore
+                    Chisq Df Pr(>Chisq)    
+(Intercept)        0.0000  1  0.9985844    
+Control            8.6858  4  0.0694508 .  
+Expertise          0.0010  1  0.9747341    
+Control:Expertise 21.4805  4  0.0002542 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Zscore ~ Control * Expertise + (1 | Subject), 
+    data = data_all)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)   
+directergodic - autoergodic == 0   -0.23778    0.16206  -1.467  0.58386   
+none - autoergodic == 0            -0.29596    0.16139  -1.834  0.35394   
+sharedergodic - autoergodic == 0   -0.27857    0.16270  -1.712  0.42633   
+waypoint - autoergodic == 0        -0.59009    0.16203  -3.642  0.00254 **
+none - directergodic == 0          -0.05818    0.16206  -0.359  0.99646   
+sharedergodic - directergodic == 0 -0.04079    0.16336  -0.250  0.99914   
+waypoint - directergodic == 0      -0.35231    0.16270  -2.165  0.19295   
+sharedergodic - none == 0           0.01739    0.16270   0.107  0.99997   
+waypoint - none == 0               -0.29413    0.16203  -1.815  0.36459   
+waypoint - sharedergodic == 0      -0.31152    0.16333  -1.907  0.31331   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+################################### HIGH ################################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 123.5282
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Zscore
+                    Chisq Df Pr(>Chisq)   
+(Intercept)        0.8895  1   0.345601   
+Control           10.0316  4   0.039898 * 
+Expertise          0.9706  1   0.324525   
+Control:Expertise 17.0459  4   0.001894 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Zscore ~ Control * Expertise + (1 | Subject), 
+    data = data_high)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0    0.08439    0.23121   0.365    0.996
+none - autoergodic == 0            -0.35851    0.22917  -1.564    0.520
+sharedergodic - autoergodic == 0   -0.04519    0.23306  -0.194    1.000
+waypoint - autoergodic == 0        -0.28544    0.22917  -1.245    0.725
+none - directergodic == 0          -0.44290    0.23121  -1.916    0.309
+sharedergodic - directergodic == 0 -0.12959    0.23506  -0.551    0.982
+waypoint - directergodic == 0      -0.36983    0.23121  -1.600    0.498
+sharedergodic - none == 0           0.31331    0.23306   1.344    0.663
+waypoint - none == 0                0.07307    0.22917   0.319    0.998
+waypoint - sharedergodic == 0      -0.24024    0.23306  -1.031    0.841
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+################################### LOW ################################### 
+########################################################################### 
+[1] "Sum of squares"
+[1] 118.2245
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Zscore
+                   Chisq Df Pr(>Chisq)  
+(Intercept)       0.9265  1     0.3358  
+Control           7.6288  4     0.1062  
+Expertise         1.0894  1     0.2966  
+Control:Expertise 8.4733  4     0.0757 .
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Zscore ~ Control * Expertise + (1 | Subject), 
+    data = data_low)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0   -0.55345    0.22269  -2.485   0.0941
+none - autoergodic == 0            -0.23341    0.22269  -1.048   0.8328
+sharedergodic - autoergodic == 0   -0.51946    0.22269  -2.333   0.1345
+waypoint - autoergodic == 0        -0.89870    0.22450  -4.003   <0.001
+none - directergodic == 0           0.32004    0.22269   1.437   0.6035
+sharedergodic - directergodic == 0  0.03399    0.22269   0.153   0.9999
+waypoint - directergodic == 0      -0.34525    0.22450  -1.538   0.5377
+sharedergodic - none == 0          -0.28606    0.22269  -1.285   0.7008
+waypoint - none == 0               -0.66530    0.22450  -2.963   0.0253
+waypoint - sharedergodic == 0      -0.37924    0.22450  -1.689   0.4406
+                                      
+directergodic - autoergodic == 0   .  
+none - autoergodic == 0               
+sharedergodic - autoergodic == 0      
+waypoint - autoergodic == 0        ***
+none - directergodic == 0             
+sharedergodic - directergodic == 0    
+waypoint - directergodic == 0         
+sharedergodic - none == 0             
+waypoint - none == 0               *  
+waypoint - sharedergodic == 0         
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+

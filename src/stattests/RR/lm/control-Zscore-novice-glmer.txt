@@ -1,0 +1,209 @@
+
+########################################################################### 
+################################### ALL ################################### 
+########################################################################### 
+[1] "hi"
+[1] "Sum of squares"
+[1] 52.64515
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Zscore
+                     Chisq Df Pr(>Chisq)   
+(Intercept)         0.0001  1   0.993430   
+Complexity          2.7067  1   0.099927 . 
+Control            14.0102  4   0.007263 **
+Complexity:Control  6.0614  4   0.194607   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Zscore ~ Complexity * Control + (1 | Subject), 
+    data = data_all)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)   
+directergodic - autoergodic == 0     0.4344     0.3588   1.211  0.74510   
+none - autoergodic == 0             -0.8583     0.3478  -2.468  0.09795 . 
+sharedergodic - autoergodic == 0    -0.5026     0.3588  -1.401  0.62699   
+waypoint - autoergodic == 0          0.2419     0.3478   0.696  0.95748   
+none - directergodic == 0           -1.2927     0.3588  -3.603  0.00284 **
+sharedergodic - directergodic == 0  -0.9371     0.3695  -2.536  0.08263 . 
+waypoint - directergodic == 0       -0.1925     0.3588  -0.536  0.98357   
+sharedergodic - none == 0            0.3556     0.3588   0.991  0.85940   
+waypoint - none == 0                 1.1002     0.3478   3.163  0.01352 * 
+waypoint - sharedergodic == 0        0.7446     0.3588   2.075  0.23076   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+ contrast                                estimate    SE   df t.ratio
+ high autoergodic - low autoergodic      -0.56947 0.440 61.0 -1.294 
+ high autoergodic - high directergodic   -0.67437 0.456 61.8 -1.478 
+ high autoergodic - low directergodic    -0.28403 0.440 61.0 -0.646 
+ high autoergodic - high none             0.91089 0.440 61.0  2.070 
+ high autoergodic - low none              0.13088 0.440 61.0  0.297 
+ high autoergodic - high sharedergodic    0.56339 0.456 61.8  1.235 
+ high autoergodic - low sharedergodic    -0.24908 0.440 61.0 -0.566 
+ high autoergodic - high waypoint        -0.41686 0.440 61.0 -0.948 
+ high autoergodic - low waypoint         -0.28665 0.440 61.0 -0.652 
+ low autoergodic - high directergodic    -0.10489 0.456 61.8 -0.230 
+ low autoergodic - low directergodic      0.28544 0.440 61.0  0.649 
+ low autoergodic - high none              1.48037 0.440 61.0  3.365 
+ low autoergodic - low none               0.70035 0.440 61.0  1.592 
+ low autoergodic - high sharedergodic     1.13286 0.456 61.8  2.483 
+ low autoergodic - low sharedergodic      0.32040 0.440 61.0  0.728 
+ low autoergodic - high waypoint          0.15261 0.440 61.0  0.347 
+ low autoergodic - low waypoint           0.28282 0.440 61.0  0.643 
+ high directergodic - low directergodic   0.39033 0.456 61.8  0.855 
+ high directergodic - high none           1.58526 0.456 61.8  3.474 
+ high directergodic - low none            0.80524 0.456 61.8  1.765 
+ high directergodic - high sharedergodic  1.23775 0.472 62.7  2.621 
+ high directergodic - low sharedergodic   0.42529 0.456 61.8  0.932 
+ high directergodic - high waypoint       0.25750 0.456 61.8  0.564 
+ high directergodic - low waypoint        0.38771 0.456 61.8  0.850 
+ low directergodic - high none            1.19493 0.440 61.0  2.716 
+ low directergodic - low none             0.41491 0.440 61.0  0.943 
+ low directergodic - high sharedergodic   0.84742 0.456 61.8  1.857 
+ low directergodic - low sharedergodic    0.03496 0.440 61.0  0.079 
+ low directergodic - high waypoint       -0.13283 0.440 61.0 -0.302 
+ low directergodic - low waypoint        -0.00262 0.440 61.0 -0.006 
+ high none - low none                    -0.78002 0.440 61.0 -1.773 
+ high none - high sharedergodic          -0.34751 0.456 61.8 -0.762 
+ high none - low sharedergodic           -1.15997 0.440 61.0 -2.637 
+ high none - high waypoint               -1.32776 0.440 61.0 -3.018 
+ high none - low waypoint                -1.19755 0.440 61.0 -2.722 
+ low none - high sharedergodic            0.43251 0.456 61.8  0.948 
+ low none - low sharedergodic            -0.37995 0.440 61.0 -0.864 
+ low none - high waypoint                -0.54774 0.440 61.0 -1.245 
+ low none - low waypoint                 -0.41753 0.440 61.0 -0.949 
+ high sharedergodic - low sharedergodic  -0.81246 0.456 61.8 -1.781 
+ high sharedergodic - high waypoint      -0.98025 0.456 61.8 -2.148 
+ high sharedergodic - low waypoint       -0.85004 0.456 61.8 -1.863 
+ low sharedergodic - high waypoint       -0.16779 0.440 61.0 -0.381 
+ low sharedergodic - low waypoint        -0.03758 0.440 61.0 -0.085 
+ high waypoint - low waypoint             0.13021 0.440 61.0  0.296 
+ p.value
+ 0.9512 
+ 0.8957 
+ 0.9997 
+ 0.5546 
+ 1.0000 
+ 0.9636 
+ 0.9999 
+ 0.9940 
+ 0.9997 
+ 1.0000 
+ 0.9997 
+ 0.0402 
+ 0.8468 
+ 0.2980 
+ 0.9992 
+ 1.0000 
+ 0.9997 
+ 0.9972 
+ 0.0297 
+ 0.7539 
+ 0.2301 
+ 0.9947 
+ 0.9999 
+ 0.9974 
+ 0.1905 
+ 0.9942 
+ 0.6967 
+ 1.0000 
+ 1.0000 
+ 1.0000 
+ 0.7489 
+ 0.9989 
+ 0.2236 
+ 0.0973 
+ 0.1882 
+ 0.9940 
+ 0.9970 
+ 0.9616 
+ 0.9940 
+ 0.7444 
+ 0.5021 
+ 0.6930 
+ 1.0000 
+ 1.0000 
+ 1.0000 
+
+Degrees-of-freedom method: kenward-roger 
+P value adjustment: tukey method for comparing a family of 10 estimates 
+
+########################################################################### 
+################################### HIGH ################################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 29.56717
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Zscore
+              Chisq Df Pr(>Chisq)   
+(Intercept)  1.1492  1   0.283713   
+Control     14.6967  4   0.005373 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Zscore ~ Control + (1 | Subject), data = data_high)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)  
+directergodic - autoergodic == 0     0.6744     0.4899   1.377   0.6426  
+none - autoergodic == 0             -0.9109     0.4733  -1.925   0.3041  
+sharedergodic - autoergodic == 0    -0.5634     0.4899  -1.150   0.7796  
+waypoint - autoergodic == 0          0.4169     0.4733   0.881   0.9040  
+none - directergodic == 0           -1.5853     0.4899  -3.236   0.0106 *
+sharedergodic - directergodic == 0  -1.2378     0.5060  -2.446   0.1031  
+waypoint - directergodic == 0       -0.2575     0.4899  -0.526   0.9848  
+sharedergodic - none == 0            0.3475     0.4899   0.709   0.9544  
+waypoint - none == 0                 1.3278     0.4733   2.805   0.0402 *
+waypoint - sharedergodic == 0        0.9802     0.4899   2.001   0.2652  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+################################### LOW ################################### 
+########################################################################### 
+[1] "Sum of squares"
+[1] 23.07798
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Zscore
+             Chisq Df Pr(>Chisq)
+(Intercept) 1.6181  1     0.2034
+Control     3.0286  4     0.5531
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Zscore ~ Control + (1 | Subject), data = data_low)
+
+Linear Hypotheses:
+                                    Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0   -0.285442   0.406008  -0.703    0.956
+none - autoergodic == 0            -0.700351   0.406008  -1.725    0.418
+sharedergodic - autoergodic == 0   -0.320400   0.406008  -0.789    0.934
+waypoint - autoergodic == 0        -0.282820   0.406008  -0.697    0.957
+none - directergodic == 0          -0.414909   0.406008  -1.022    0.845
+sharedergodic - directergodic == 0 -0.034958   0.406008  -0.086    1.000
+waypoint - directergodic == 0       0.002622   0.406008   0.006    1.000
+sharedergodic - none == 0           0.379952   0.406008   0.936    0.883
+waypoint - none == 0                0.417532   0.406008   1.028    0.842
+waypoint - sharedergodic == 0       0.037580   0.406008   0.093    1.000
+(Adjusted p values reported -- single-step method)
+

@@ -1,0 +1,92 @@
+
+########################################################################### 
+################################### ALL ################################### 
+########################################################################### 
+[1] "Sum of squares"
+[1] 34.54826
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Zscore
+                    Chisq Df Pr(>Chisq)
+(Intercept)        0.6883  1     0.4067
+Complexity         1.4489  1     0.2287
+Control            3.6854  2     0.1584
+Complexity:Control 3.5141  2     0.1726
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Zscore ~ Complexity * Control + (1 | Subject), 
+    data = data_all)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)  
+directergodic - autoergodic == 0     0.4344     0.3790   1.146    0.486  
+sharedergodic - autoergodic == 0    -0.5026     0.3790  -1.326    0.380  
+sharedergodic - directergodic == 0  -0.9371     0.3903  -2.401    0.043 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+################################### HIGH ################################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 18.32555
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Zscore
+             Chisq Df Pr(>Chisq)  
+(Intercept) 0.0599  1    0.80661  
+Control     5.5757  2    0.06155 .
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Zscore ~ Control + (1 | Subject), data = data_high)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)  
+directergodic - autoergodic == 0     0.6744     0.5083   1.327   0.3801  
+sharedergodic - autoergodic == 0    -0.5634     0.5083  -1.108   0.5088  
+sharedergodic - directergodic == 0  -1.2378     0.5249  -2.358   0.0483 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+################################### LOW ################################### 
+########################################################################### 
+[1] "Sum of squares"
+[1] 16.22271
+[1] "Sum of all model error"
+[1] 174.3868
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Zscore
+             Chisq Df Pr(>Chisq)
+(Intercept) 2.4214  1     0.1197
+Control     0.6398  2     0.7262
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Zscore ~ Control + (1 | Subject), data = data_low)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0   -0.28544    0.43946  -0.650    0.793
+sharedergodic - autoergodic == 0   -0.32040    0.43946  -0.729    0.746
+sharedergodic - directergodic == 0 -0.03496    0.43946  -0.080    0.997
+(Adjusted p values reported -- single-step method)
+
