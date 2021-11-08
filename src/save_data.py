@@ -6,19 +6,23 @@
 
 # Specify the folder with the rosbags by changing the variable readDataDIR
 
+# it uses python 2.7.17
+
 import csv
 from datetime import datetime
 import numpy as np
 import os
-from parse_rosbag import parse_bag
+import utils
+from utils.parse_rosbag import parse_bag
 
 
 ###############################################################################
 # Decide master folder where to save the data
 ###############################################################################
 
+localDIR = '/home/murpheylab/Desktop/VR_exp_ROS/darpa_dataanalysis/src/'
 writeDataDIR = 'raw_data/'
-readDataDIR = '/home/kpopovic/darpa_ws/src/VR_exp_ROS/vr_exp_ros/data/sub'
+readDataDIR = localDIR+'HST_data_local/rosbags/'
 
 ###############################################################################
 # Functions for csv file manipulation
@@ -102,12 +106,12 @@ for sub in range(minsub, maxsub+1):
             for con in range(0, len(control)):
                 try:
                     trialInfo = subID + '_' + control[con] + '_' + environments[env]
-                    filename = readDataDIR + subID + '/' + trialInfo + '.bag'
+                    filename = readDataDIR + 'sub' + subID + '/' + trialInfo + '.bag'
                     print(filename)
 
-                    # Get game data by parsing the bag using performance.py
+                    # Get game data by parsing the bag using parse_bag.py
                     game_data = parse_bag(filename, sub, environments[env])
-
+                    # print(game_data.game_time)
                     if game_data.game_complete is True:
 
                         # saving performance data

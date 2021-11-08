@@ -22,13 +22,9 @@ Subject,Control,Complexity,Control,Complexity
 04,1,1,waypoint,high
 04,3,1,sharedergodic,high
 04,4,1,autoergodic,high
-05,0,0,none,low
 05,1,0,waypoint,low
-05,2,0,directergodic,low
 05,3,0,sharedergodic,low
 05,4,0,autoergodic,low
-05,0,1,none,high
-05,1,1,waypoint,high
 05,2,1,directergodic,high
 05,3,1,sharedergodic,high
 05,4,1,autoergodic,high

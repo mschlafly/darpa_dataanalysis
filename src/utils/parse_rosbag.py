@@ -9,7 +9,6 @@ class parse_bag:
     """Analyze ROS bags directly to save desired performance metrics."""
 
     def __init__(self, filename, sub, env):
-
         self.bag = rosbag.Bag(filename)
         self.topic_list = ['/player_info',
                            '/treasure_info',

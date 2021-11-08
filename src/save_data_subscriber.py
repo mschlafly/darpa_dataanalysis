@@ -13,7 +13,7 @@
 # * On ROS side, make sure to
 #   * set use_sim_time to true via $ rosparam set use_sim_time true
 #   * start $ roscore
-#   * run this script $ rosrun darpa_data_analysis performance_subscriber.py
+#   * run this script $ rosrun darpa_data_analysis save_data_subscriber.py
 #   * play rosbag file in a separate terminal following print instructions. NOTE:
 #   this assumes you are in the folder where the particular ROS bag is located.
 
@@ -21,7 +21,7 @@
 import rospy
 import numpy as np
 import csv
-from populate_buildings import populate_building_array
+from utils.populate_buildings import populate_building_array
 from user_input.msg import treasure_info, person_position, player_info
 from user_input.msg import input_array
 from std_msgs.msg import Int32
@@ -210,10 +210,10 @@ class parse_bag:
 
 if __name__ == '__main__':
 
-    # update the specific location of the performance and gametime csv files
+    # update the specific location of the raw_data and gametime csv files
     # that correspond to the filepath on your computer
-    file = "/home/kpopovic/darpa_ws/src/darpa_data_analysis/src/performance.csv"
-    file_game = "/home/kpopovic/darpa_ws/src/darpa_data_analysis/src/gametime.csv"
+    file = '/home/murpheylab/catkin_ws/src/darpa_dataanalysis/src/raw_data/raw_data.csv'
+    file_game = '/home/murpheylab/catkin_ws/src/darpa_dataanalysis/src/raw_data/gametime.csv'
 
     # Update this info based on the particular ROS bag trial to be parsed. NOTE
     # that all the relavant info is stored in a missing_bags.csv file.
@@ -244,7 +244,7 @@ if __name__ == '__main__':
     # Run the command in a separate terminal to play the specific rosbag from
     # the folder where those bags are saved at. NOTE: Make sure you have
     # (1) started roscore ahead of time and (2) rosparam set use_sim_time true.
-    print('Run this: rosbag play -r 35 --clock '+subID+'_'+control[con]+'_'+environments[env]+'.bag')
+    print('Run this: rosbag play -r 35 --clock '+'sub'+subID+'/'+subID+'_'+control[con]+'_'+environments[env]+'.bag')
 
     row_found = False
     # Listen to trial and save once finished
