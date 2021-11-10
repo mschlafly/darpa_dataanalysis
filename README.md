@@ -4,32 +4,9 @@ A human subject experiment was conducted to test the impact of swarm control par
 * code for extracting raw data from rosbags and Somnomedics software
 * raw data files
 * code for data analysis and plotting
-* plots for individual participants ????
+* plots for individual participants
 * code for statistical analyses
 * full, annotated statistical output files
-
-## System Architecture
-. \
-├── ... \
-├── src                   # \
-│   ├── aggregateplots    # ... \
-│   ├── hst_info          # ... \
-│   ├── hst_data          # \
-│   ├── individualplots   # \
-│   ├── stattests         # Results from statistical analysis performed in R \
-│   ├── trial_info        # Experimental trial info for each subject \
-│   ├── vis_data          # Relevant trial data for visualization in .csv format  \
-│   ├── vis_figures       # Figures of each trial broken by time instance\
-│   ├── vis_mp4           # Videos of trial visualization\
-│   └── ...               # ... \
-├── .gitignore \
-├── ... \
-└── README.md
-
-## Getting Started
-
-These instructions outline all the software that one needs to have installed on
-the local machine to be able to run this code and reproduce the results.
 
 ## Robot Operating System (ROS)
 
@@ -76,8 +53,7 @@ installation from a terminal window from the root code are:
 * install.packages("mvtnorm") OR 'sudo apt-get install -y r-cran-mvtnorm'
 
 ## Python
-save_data.py and save_data_subscriber.py were run using python version 2.7.18. The remaining python scripts use python version 3.....*check*
-au
+save_data.py and save_data_subscriber.py were run using python version 2.7.18. The remaining python scripts use python version 3.9
 
 
 ## Statistical output files
@@ -135,100 +111,25 @@ During the experiment, data is saved using rosbags and the Somnomedics software.
   - save_heart.py extracts the RR interval data from Somnomedics files into raw_data/RR_raw.csv. Along the way, it saves some files in the temp_delete folder.
 
 
-## To do
-* delete commented code in save_heart.py and heart.py
-
-## List of data not shared
-* HST_data_local/trial_info/*
-* difficulty_rating.csv (the raw one)
-* scanned human subject sheets
-* HST_data_local/rosbags/*
-* HST_data_local/Heart/*
-* pupil data/
-
-# Folders not pushed to github
-* temp_delete *** add to github ***
-
-### add_difficulty_data.py
-
-### performance_subscriber.py
-
-For extracting performance info from the faulty ROS bags (see missing_bags.csv
-  file) that exist but weren't able to be processed via performance.py you will
-  need to run performance_subscriber. Here are the instructions for doing so:
-
-* Update basic info within the script
-  * **line 202 and 203:** file folder path location
-  * **lines 207:** subject and trial info for the particular missing bag
-* On ROS side, make sure to
-  * set use_sim_time to true via $ rosparam set use_sim_time true
-  * start $ roscore
-  * run this script $ rosrun darpa_data_analysis performance_subscriber.py
-  * play rosbag file in a separate terminal following print instructions. NOTE:
-  this assumes you are in the folder where the particular ROS bag is located.
-
-### plot_data.py
-
-This script plots figures based on data located in the hst_info and hst_data
-folders. The main variables pertaining to running this code are in the following
-lines:
-* **line 23:** make sure that the DIR location of the files necessary for running
-this code is correct
-* **line 38:** change DIR location where the control.csv file and figures will be saved
-* **line 49:** decide on what population of the subject, trial conditions and
-corresponding metrics will be plotted based on specified boolean values
-
-### save_data.py
-
-Before running this code, make sure to review the following information and
-make edits accordingly based on the folder structure and the analysis need:
-* **line 53:** Determine DIR(ectory) location where the files will be and specify
-location of the ROS bag files to be read
-* **line 59:** Decide what type of data (performance and/or visualization) should be saved
-* **line 86:** Specify what subjects and what trial conditions should be analyzed
-
-### save_vis.py
-
-This script (1) generates figures of each instance of a trial using data
-generated with save_data.py script and (2) creates videos using those figures.
-Before running the code, main variables that should be reviewed and updated
-accordingly are:
-* **line 180:** Specify desired DIR location from where to read and where to
-write data
-* **line 193:** Define what is being saved: figures and/or videos
-* **line 200:** Determine what components of experimental trial to display
-* **line 211:** Specify video settings. For more information on ffmpeg go
-[here](https://hamelot.io/visualization/using-ffmpeg-to-convert-a-set-of-images-into-a-video/) .
-* **line 225:** Specify what subjects and what trial instances to analyze
-
-### stat-test-rm.r
-
-## Built With
-
-* [PurpleBooth](https://github.com/PurpleBooth/a-good-readme-template) - The README.md template
-
-
-## Versioning
-
-January, 2021
-* **performance.py**
-  * line 23, 58, 168: added /swarm_pos topic for drone trajectories
-* **plot_data.py**
-  * partitioned script for better readability
-  * line 33, 264, 272: updated difficulty list based on the questionnaire info
-* **plot_utils.py**
-  * **fixed add_stats function and added spread_factor variable
-* **save_data.py**
-  * partitioned script for better readability
-  * line 169: streamlined saving process for visualization purposes
-  * line 204: added drone csv files functionality
-* **save_vis.py**
-  * initial upload of the script
+## System Architecture
+. \
+├── ... \
+├── src                   # \
+│   ├── Plots    # ... \
+│   ├── raw_data          # ... \
+│   ├── raw_data_formatted          # \
+│   ├── Stats   # \
+│   ├── utils   # \     
+│   ├── ...     # \      
+├── .gitignore \
+├── ... \
+└── README.md
 
 ## Authors
 
-* Millicent Schlafly (master forked version)
+* Millicent Schlafly
 * Katarina Popovic
+* Geneva Schlafly
 
 ## License
 
