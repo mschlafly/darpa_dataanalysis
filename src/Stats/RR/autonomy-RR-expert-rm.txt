@@ -1,0 +1,129 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+Test for normality 
+[38;5;246m# A tibble: 6 x 5[39m
+  Control       Complexity variable statistic      p
+  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m      [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m autoergodic   high       RR           0.943 0.212 
+[38;5;250m2[39m directergodic high       RR           0.960 0.462 
+[38;5;250m3[39m sharedergodic high       RR           0.933 0.128 
+[38;5;250m4[39m autoergodic   low        RR           0.951 0.310 
+[38;5;250m5[39m directergodic low        RR           0.919 0.062[4m0[24m
+[38;5;250m6[39m sharedergodic low        RR           0.929 0.106 
+$ANOVA
+              Effect DFn DFd          SSn         SSd            F            p p<.05          ges
+1        (Intercept)   1  22 9.308700e+07 2007025.716 1020.3725668 6.286874e-20     * 0.9781823183
+2            Control   2  44 5.913380e+02   31605.758    0.4116160 6.651034e-01       0.0002847307
+3         Complexity   1  22 3.888605e+02    6438.622    1.3286899 2.614098e-01       0.0001872556
+4 Control:Complexity   2  44 7.870257e+02   31171.198    0.5554668 5.777753e-01       0.0003789191
+
+$`Mauchly's Test for Sphericity`
+              Effect         W         p p<.05
+2            Control 0.9538842 0.6091221      
+4 Control:Complexity 0.9559127 0.6228615      
+
+$`Sphericity Corrections`
+              Effect       GGe     p[GG] p[GG]<.05      HFe     p[HF] p[HF]<.05
+2            Control 0.9559171 0.6561075           1.044699 0.6651034          
+4 Control:Complexity 0.9577743 0.5705626           1.047019 0.5777753          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$RR and data_all$Control 
+
+              autoergodic directergodic
+directergodic 1           -            
+sharedergodic 1           1            
+
+P value adjustment method: bonferroni 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$RR and data_all$combo 
+
+                   autoergodic high autoergodic low directergodic high directergodic low
+autoergodic low    1                -               -                  -                
+directergodic high 1                1               -                  -                
+directergodic low  1                1               1                  -                
+sharedergodic high 1                1               1                  1                
+sharedergodic low  1                1               1                  1                
+                   sharedergodic high
+autoergodic low    -                 
+directergodic high -                 
+directergodic low  -                 
+sharedergodic high -                 
+sharedergodic low  1                 
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+Test for normality 
+[38;5;246m# A tibble: 3 x 4[39m
+  Control       variable statistic     p
+  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<dbl>[39m[23m [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m autoergodic   RR           0.943 0.212
+[38;5;250m2[39m directergodic RR           0.960 0.462
+[38;5;250m3[39m sharedergodic RR           0.933 0.128
+$ANOVA
+       Effect DFn DFd          SSn        SSd            F            p p<.05          ges
+1 (Intercept)   1  22 4.673395e+07 1040687.35 987.94986627 8.902810e-20     * 0.9774477063
+2     Control   2  44 8.833793e+01   37588.03   0.05170355 9.496679e-01       0.0000819185
+
+$`Mauchly's Test for Sphericity`
+   Effect         W         p p<.05
+2 Control 0.8938028 0.3076365      
+
+$`Sphericity Corrections`
+   Effect       GGe     p[GG] p[GG]<.05       HFe     p[HF] p[HF]<.05
+2 Control 0.9039979 0.9365041           0.9801876 0.9472104          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_high$RR and data_high$Control 
+
+              autoergodic directergodic
+directergodic 1           -            
+sharedergodic 1           1            
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+Test for normality 
+[38;5;246m# A tibble: 3 x 4[39m
+  Control       variable statistic      p
+  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<dbl>[39m[23m  [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m autoergodic   RR           0.951 0.310 
+[38;5;250m2[39m directergodic RR           0.919 0.062[4m0[24m
+[38;5;250m3[39m sharedergodic RR           0.929 0.106 
+$ANOVA
+       Effect DFn DFd          SSn       SSd           F            p p<.05         ges
+1 (Intercept)   1  22 46353436.663 972776.99 1048.313869 4.698432e-20     * 0.978924259
+2     Control   2  44     1290.026  25188.93    1.126708 3.332691e-01       0.001290986
+
+$`Mauchly's Test for Sphericity`
+   Effect         W         p p<.05
+2 Control 0.8987031 0.3258145      
+
+$`Sphericity Corrections`
+   Effect       GGe     p[GG] p[GG]<.05       HFe     p[HF] p[HF]<.05
+2 Control 0.9080203 0.3296539           0.9851619 0.3327313          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_low$RR and data_low$Control 
+
+              autoergodic directergodic
+directergodic 0.75        -            
+sharedergodic 0.69        1.00         
+
+P value adjustment method: bonferroni 

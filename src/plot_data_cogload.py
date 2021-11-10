@@ -38,8 +38,8 @@ file_plot_ind = 'Plots/Indiv Plots/'
 # Set booleans that determine what instances of data to plot
 ###############################################################################
 
-save_data = True  # Saves data into csv file for statistical processing
-plot_each = True  # Creates and saves a plot for each participant
+save_data = False  # Saves data into csv file for statistical processing
+plot_each = False  # Creates and saves a plot for each participant
 
 # Booleans for analyzing subset of participants
 only_experts = False  # Only plots experts
@@ -68,7 +68,7 @@ if save_data:
     # data for all of the low or all of the high complexity trials
     columns = ['Subject', 'Control', 'Complexity', 'Trial',
                'Skill', 'Perweek', 'Lifetime', 'Expertise',
-               'Uselow', 'Usehigh', 'Zscore']
+               'Alllow', 'Allhigh', 'RR']
 
     # type of control
     with open(file_control, 'w') as csvfile:
@@ -128,7 +128,7 @@ for sub in range(minsub, maxsub):
                         for i in range(len(control)):
                             if row[1] == control[i]:
                                 if float(row[8]) > 0:
-                                    RR_all[sub, i] = row[9]
+                                    RR_all[sub, i] = row[9]#(1/float(row[8]))*1000*60
                                     RRMean_all[sub, i] = row[8]
                                     trial_happened[i] = 1
                     # If the row is for a high complexity trial,
@@ -137,7 +137,7 @@ for sub in range(minsub, maxsub):
                         for i in range(len(control)):
                             if row[1] == control[i]:
                                 if float(row[8]) > 0:
-                                    RR_all[sub, i+5] = row[9]
+                                    RR_all[sub, i+5] = row[9]#(1/float(row[8]))*1000*60
                                     RRMean_all[sub, i+5] = row[8]
                                     trial_happened[i+5] = 1
 
@@ -182,7 +182,7 @@ for sub in range(minsub, maxsub):
                 all_high = 0
             # if all of the experimental trials are there
             # for either all high or all low environmental complexity
-            if (all_high == 1 or all_low == 1):
+            if (all_high == 1 and all_low == 1):
                 # Saves data for statistical tests in R
                 if save_data:
                     with open(file_control, 'a') as csvfile:
@@ -198,7 +198,7 @@ for sub in range(minsub, maxsub):
                             row_save = ["Sub" + subID, control[con],
                                         environments[env], 'trial' + str(i),
                                         skill, perweek, lifetime, expertise,
-                                        all_low, all_high, RR_all[sub, i]]
+                                        all_low, all_high, RRMean_all[sub, i]]
                             testwriter.writerow(row_save)
 
             # Decide whether the subject should be included, default is to skip
@@ -206,7 +206,7 @@ for sub in range(minsub, maxsub):
             # we are only looking at either experts or novies, the participant
             # has to additionally belong to that group
             include_sub = False
-            if (all_low == 1) and (all_high == 1):
+            if (all_low == 1) or (all_high == 1):
                 if only_experts:
                     if expertise == "expert":
                         include_sub = True

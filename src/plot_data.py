@@ -42,8 +42,8 @@ file_plot_ind = 'Plots/Indiv Plots/'
 # Set booleans that determine what instances of data to plot
 ###############################################################################
 
-save_data = True  # Saves data into csv file for statistical processing
-plot_each = True  # Creates and saves a plot for each participant
+save_data = False  # Saves data into csv file for statistical processing
+plot_each = False  # Creates and saves a plot for each participant
 
 # Booleans for analyzing subset of participants
 only_experts = False  # Only plots experts
@@ -80,7 +80,7 @@ if save_data:
     # data for all of the low or all of the high complexity trials
     columns = ['Subject', 'Control', 'Complexity', 'Trial',
                'Skill', 'Perweek', 'Lifetime', 'Expertise',
-               'Uselow', 'Usehigh',
+               'Alllow', 'Allhigh',
                'Lives', 'Treasure', 'Input', 'Difficulty', 'Score']
 
     # type of control
@@ -344,7 +344,7 @@ print('These are the subjects: ',sub_list_difficulty)
 figure_size = (6, 3.55)
 
 # Plot parameters for testing
-labels_test = ('L-None', 'L-WP', 'L-Direct', 'L-Shared', 'L-Auto',
+labels_test = ('L-None', 'L-WP', 'L-User', 'L-Shared', 'L-Auto',
                'H-None', 'H-WP', 'H-Direct', 'H-Shared', 'H-Auto')
 colors_test = ['#b71c1c', '#ff6f00', '#1b5e20', '#006064', '#1a237e',
                '#b71c1c', '#ff6f00', '#1b5e20', '#006064', '#1a237e']
@@ -371,7 +371,7 @@ colors_difficulty = ['#BA4900','#BA0071','#0071BA','#00BA49','#00BAA6']
 labels_difficulty = ['No Swarm','Waypoint\nControl','User','Shared','Autonomous']
 
 ###############################################################################
-# [PAPER] Plotting overall game score: bar plot
+# Plotting overall game score: bar plot
 ###############################################################################
 
 if plot_scorebar:

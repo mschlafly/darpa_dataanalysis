@@ -22,9 +22,11 @@ options(contrasts=c("contr.sum","contr.poly"))
 remove(list = ls())
 
 # parameters 
-DIR = 'C:/Users/numur/Desktop/darpa_data_analysis/src' 
-skill = "novice" # either "expert", "novice", "compareexpertise", or "all"
-                 # for "compareexpertise", test a model using just expertise and control
+DIR = 'C:/Users/milli/OneDrive/Documents/darpa_dataanalysis/src'
+# DIR = 'C:/Users/numur/Desktop/darpa_data_analysis/src' 
+skill = "expert" # either "expert", "novice", "compareexpertise", or "all" 
+                 # (but "all" has convergence problems)
+                 # instead, use "compareexpertise", test a model using just expertise and control
 onlySubset = "F" # "T" for true and "F" for false
                  # use a type II anova for T and III for false
 modelerrorsum = 0
@@ -40,8 +42,7 @@ library(multcomp)
 #               Import Data 
 ################################################################################
 ################################################################################
-data_control_original = read.csv(paste(DIR,paste("performance_stat",".csv",sep=""),sep="/"))
-data_control_original = subset(data_control_original, Score!=0) # remove incorrectly added trials
+data_control_original = read.csv(paste(DIR,"raw_data_formatted","raw_data_formatted.csv",sep="/"))
 if (skill=="expert"){
   data_control = subset(data_control_original, Lifetime>999)
 } else if (skill=="novice"){
@@ -49,9 +50,6 @@ if (skill=="expert"){
 } else {
   data_control = data_control_original
 }
-data_method_direct = subset(data_control, Control!='sharedergodic' & Control!='autoergodic')
-data_method_shared = subset(data_control, Control!='directergodic' & Control!='autoergodic')
-data_method_auto = subset(data_control, Control!='directergodic' & Control!='sharedergodic')
 data_autonomy = subset(data_control,Control!='none' & Control!='waypoint')
 
 ################################################################################
@@ -61,20 +59,21 @@ data_autonomy = subset(data_control,Control!='none' & Control!='waypoint')
 ################################################################################
 
 # define file to save data to
-sink(paste(DIR,"stattests",paste("control","Score",skill,"glmer.txt",sep="-"),sep="/"))
+sink(paste(DIR,"Stats","Score",paste("control","Score",skill,"glmer.txt",sep="-"),sep="/"))
 
 # This plot shows that the input data is left-skewed
 # library(rcompanion)
 # plotNormalHistogram(data_control$Score)
 
 cat("\n")
-cat("########################################################################### \n")
-cat("################################### ALL ################################### \n")
-cat("########################################################################### \n")
+cat("################################################################################ \n")
+cat("###############               All Experimental Factors            ############## \n")
+cat("####### Complexity=(low/high buiding density) Control=5 control paradigms ###### \n")
+cat("################################################################################ \n")
 
 # Select subset of the data for analysis
 if (onlySubset=="T") {
-  data_all = subset(data_control,Uselow==1 & Usehigh==1)
+  data_all = subset(data_control,Alllow==1 & Allhigh==1)
 } else {
   data_all = data_control
 }
@@ -93,12 +92,12 @@ data_all$Score = (-data_all$Score)+max(data_all$Score)+1
 if (skill=="compareexpertise") {
   glmer_model = glmer(Score ~ Control * Expertise + (1|Subject),
                       data = data_all,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 } else {
   glmer_model = glmer(Score ~  Complexity * Control + (1|Subject),
                       data = data_all,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 }
 print("Sum of squares")
@@ -114,14 +113,20 @@ plot(glmer_model)
 # library(sjPlot)
 # plot_model(glmer_model, type = "pred", show.data = TRUE)
 
+# print(summary(glmer_model))
+
 # Calculate anova
-anov = Anova(glmer_model,type="III")
+anov = Anova(glmer_model,type="III",
+             test.statistic = "Chisq")
 print(anov)
 
-# Post-hoc tukey tests
+# Post-hoc tukey 
+dof = nrow(data_all)-5
+print("degrees of freedom:")
+print(dof)
 print(summary(glht(glmer_model,
                    linfct=mcp(Control = "Tukey",
-                              interaction_average = TRUE))))
+                              interaction_average = TRUE),df=dof)))
 
 # Alternate methods of doing a post-hoc tests
 if (skill!="compareexpertise") {
@@ -132,17 +137,19 @@ if (skill!="compareexpertise") {
 
 # # Post-hoc t-test with bonferroni correction - assumes normality
 # data_all$combo <- paste(data_all$Control,data_all$Complexity)
+# 
+# print(data_all$combo)
 # posthoc<-pairwise.t.test(data_all$Score,data_all$combo,paired = TRUE, p.adjust.method = "bonferroni")
 # print(posthoc)
 
 cat("\n")
 cat("########################################################################### \n")
-cat("################################### HIGH ################################## \n")
+cat("######################### HIGH BUILDING DENSITY  ########################## \n")
 cat("########################################################################### \n")
 
 # Select subset of the data for analysis
 if (onlySubset=="T") {
-  data_high = subset(data_control,Complexity=='high' & Usehigh==1)
+  data_high = subset(data_control,Complexity=='high' & Allhigh==1)
 } else {
   data_high = subset(data_control,Complexity=='high')
 }
@@ -155,12 +162,12 @@ data_high$Score = (-data_high$Score)+max(data_high$Score)+1
 if (skill=="compareexpertise") {
   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
                       data = data_high,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 } else {
   glmer_model = glmer(Score ~  Control + (1|Subject),
                       data = data_high,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 }
 print("Sum of squares")
@@ -183,12 +190,12 @@ print(summary(glht(glmer_model,
 
 cat("\n")
 cat("########################################################################### \n")
-cat("################################### LOW ################################### \n")
+cat("########################## LOW BUILDING DENSITY  ########################## \n")
 cat("########################################################################### \n")
 
 # Select subset of the data for analysis
 if (onlySubset=="T") {
-  data_low = subset(data_control,Complexity=='low' & Uselow==1)
+  data_low = subset(data_control,Complexity=='low' & Alllow==1)
 } else {
   data_low = subset(data_control,Complexity=='low')
 }
@@ -201,12 +208,12 @@ data_low$Score = (-data_low$Score)+max(data_low$Score)+1
 if (skill=="compareexpertise") {
   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
                       data = data_low,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 } else {
   glmer_model = glmer(Score ~  Control + (1|Subject),
                       data = data_low,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 }
 print("Sum of squares")
@@ -225,438 +232,6 @@ print(anov)
 print(summary(glht(glmer_model,
                    linfct=mcp(Control = "Tukey",
                               interaction_average = TRUE))))
- 
-# ################################################################################
-# ################################################################################
-# #               METHOD - DIRECT
-# ################################################################################
-# ################################################################################
-# 
-# # define file to save data to
-# sink(paste(DIR,"stattests",paste("directmethod","Score",skill,"glmer.txt",sep="-"),sep="/"))
-# 
-# cat("\n")
-# cat("########################################################################### \n")
-# cat("################################### ALL ################################### \n")
-# cat("########################################################################### \n")
-# 
-# # Select subset of the data for analysis
-# if (onlySubset=="T") {
-#   data_all = subset(data_method_direct,Uselow==1 & Usehigh==1)
-# } else {
-#   data_all = data_method_direct
-# }
-# data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# # Transform left-skewed data so that it is right-skewed
-# data_all$Score = (-data_all$Score)+max(data_all$Score)+1
-# 
-# # Build generalized linear mixed-effects model (GLMM)
-# if (skill=="compareexpertise") {
-#   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
-#                       data = data_all,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# } else {
-#   glmer_model = glmer(Score ~  Complexity * Control + (1|Subject),
-#                       data = data_all,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# }
-# print("Sum of squares")
-# sos = sum(resid(glmer_model)^2)
-# print(sos)
-# modelerrorsum = modelerrorsum + sos
-# 
-# # plotting to evaluate assumptions
-# plot(glmer_model)
-# 
-# # Calculate anova
-# anov = Anova(glmer_model,type="III")
-# print(anov)
-# 
-# # Post-hoc tukey tests
-# print(summary(glht(glmer_model,
-#                    linfct=mcp(Control = "Tukey",
-#                               interaction_average = TRUE))))
-# 
-# cat("\n")
-# cat("########################################################################### \n")
-# cat("################################### HIGH ################################## \n")
-# cat("########################################################################### \n")
-# 
-# # Select subset of the data for analysis
-# if (onlySubset=="T") {
-#   data_high = subset(data_method_direct,Complexity=='high' & Usehigh==1)
-# } else {
-#   data_high = subset(data_method_direct,Complexity=='high')
-# }
-# data_high[] <- lapply(data_high, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# # Transform left-skewed data so that it is right-skewed
-# data_high$Score = (-data_high$Score)+max(data_high$Score)+1
-# 
-# # Build generalized linear mixed-effects model (GLMM)
-# if (skill=="compareexpertise") {
-#   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
-#                       data = data_high,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# } else {
-#   glmer_model = glmer(Score ~  Control + (1|Subject),
-#                       data = data_high,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# }
-# print("Sum of squares")
-# sos = sum(resid(glmer_model)^2)
-# print(sos)
-# modelerrorsum = modelerrorsum + sos
-# 
-# # plotting to evaluate assumptions
-# plot(glmer_model)
-# 
-# # Calculate anova
-# anov = Anova(glmer_model,type="III")
-# print(anov)
-# 
-# # Post-hoc tukey tests
-# print(summary(glht(glmer_model,
-#                    linfct=mcp(Control = "Tukey",
-#                               interaction_average = TRUE))))
-# 
-# cat("\n")
-# cat("########################################################################### \n")
-# cat("################################### LOW ################################### \n")
-# cat("########################################################################### \n")
-# 
-# # Select subset of the data for analysis
-# if (onlySubset=="T") {
-#   data_low = subset(data_method_direct,Complexity=='low' & Uselow==1)
-# } else {
-#   data_low = subset(data_method_direct,Complexity=='low')
-# }
-# data_low[] <- lapply(data_low, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# # Transform left-skewed data so that it is right-skewed
-# data_low$Score = (-data_low$Score)+max(data_low$Score)+1
-# 
-# # Build generalized linear mixed-effects model (GLMM)
-# if (skill=="compareexpertise") {
-#   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
-#                       data = data_low,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# } else {
-#   glmer_model = glmer(Score ~  Control + (1|Subject),
-#                       data = data_low,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# }
-# print("Sum of squares")
-# sos = sum(resid(glmer_model)^2)
-# print(sos)
-# modelerrorsum = modelerrorsum + sos
-# 
-# # plotting to evaluate assumptions
-# plot(glmer_model)
-# 
-# # Calculate anova
-# anov = Anova(glmer_model,type="III")
-# print(anov)
-# 
-# # Post-hoc tukey tests
-# print(summary(glht(glmer_model,
-#                    linfct=mcp(Control = "Tukey",
-#                               interaction_average = TRUE))))
-# 
-# ################################################################################
-# ################################################################################
-# #               METHOD - SHARED
-# ################################################################################
-# ################################################################################
-# 
-# # define file to save data to
-# sink(paste(DIR,"stattests",paste("sharedmethod","Score",skill,"glmer.txt",sep="-"),sep="/"))
-# 
-# cat("\n")
-# cat("########################################################################### \n")
-# cat("################################### ALL ################################### \n")
-# cat("########################################################################### \n")
-# 
-# # Select subset of the data for analysis
-# if (onlySubset=="T") {
-#   data_all = subset(data_method_shared,Uselow==1 & Usehigh==1)
-# } else {
-#   data_all = data_method_shared
-# }
-# data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# # Transform left-skewed data so that it is right-skewed
-# data_all$Score = (-data_all$Score)+max(data_all$Score)+1
-# 
-# # Build generalized linear mixed-effects model (GLMM)
-# if (skill=="compareexpertise") {
-#   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
-#                       data = data_all,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# } else {
-#   glmer_model = glmer(Score ~  Complexity * Control + (1|Subject),
-#                       data = data_all,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# }
-# print("Sum of squares")
-# sos = sum(resid(glmer_model)^2)
-# print(sos)
-# modelerrorsum = modelerrorsum + sos
-# 
-# # plotting to evaluate assumptions
-# plot(glmer_model)
-# 
-# # Calculate anova
-# anov = Anova(glmer_model,type="III")
-# print(anov)
-# 
-# # Post-hoc tukey tests
-# print(summary(glht(glmer_model,
-#                    linfct=mcp(Control = "Tukey",
-#                               interaction_average = TRUE))))
-# 
-# cat("\n")
-# cat("########################################################################### \n")
-# cat("################################### HIGH ################################## \n")
-# cat("########################################################################### \n")
-# 
-# # Select subset of the data for analysis
-# if (onlySubset=="T") {
-#   data_high = subset(data_method_shared,Complexity=='high' & Usehigh==1)
-# } else {
-#   data_high = subset(data_method_shared,Complexity=='high')
-# }
-# data_high[] <- lapply(data_high, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# # Transform left-skewed data so that it is right-skewed
-# data_high$Score = (-data_high$Score)+max(data_high$Score)+1
-# 
-# # Build generalized linear mixed-effects model (GLMM)
-# if (skill=="compareexpertise") {
-#   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
-#                       data = data_high,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# } else {
-#   glmer_model = glmer(Score ~  Control + (1|Subject),
-#                       data = data_high,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# }
-# print("Sum of squares")
-# sos = sum(resid(glmer_model)^2)
-# print(sos)
-# modelerrorsum = modelerrorsum + sos
-# 
-# # plotting to evaluate assumptions
-# plot(glmer_model)
-# 
-# # Calculate anova
-# anov = Anova(glmer_model,type="III")
-# print(anov)
-# 
-# # Post-hoc tukey tests
-# print(summary(glht(glmer_model,
-#                    linfct=mcp(Control = "Tukey",
-#                               interaction_average = TRUE))))
-# 
-# cat("\n")
-# cat("########################################################################### \n")
-# cat("################################### LOW ################################### \n")
-# cat("########################################################################### \n")
-# 
-# # Select subset of the data for analysis
-# if (onlySubset=="T") {
-#   data_low = subset(data_method_shared,Complexity=='low' & Uselow==1)
-# } else {
-#   data_low = subset(data_method_shared,Complexity=='low')
-# }
-# data_low[] <- lapply(data_low, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# # Transform left-skewed data so that it is right-skewed
-# data_low$Score = (-data_low$Score)+max(data_low$Score)+1
-# 
-# # Build generalized linear mixed-effects model (GLMM)
-# if (skill=="compareexpertise") {
-#   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
-#                       data = data_low,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# } else {
-#   glmer_model = glmer(Score ~  Control + (1|Subject),
-#                       data = data_low,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# }
-# print("Sum of squares")
-# sos = sum(resid(glmer_model)^2)
-# print(sos)
-# modelerrorsum = modelerrorsum + sos
-# 
-# # plotting to evaluate assumptions
-# plot(glmer_model)
-# 
-# # Calculate anova
-# anov = Anova(glmer_model,type="III")
-# print(anov)
-# 
-# # Post-hoc tukey tests
-# print(summary(glht(glmer_model,
-#                    linfct=mcp(Control = "Tukey",
-#                               interaction_average = TRUE))))
-# 
-# ################################################################################
-# ################################################################################
-# #               METHOD - AUTO
-# ################################################################################
-# ################################################################################
-# 
-# # define file to save data to
-# sink(paste(DIR,"stattests",paste("automethod","Score",skill,"glmer.txt",sep="-"),sep="/"))
-# 
-# cat("\n")
-# cat("########################################################################### \n")
-# cat("################################### ALL ################################### \n")
-# cat("########################################################################### \n")
-# 
-# # Select subset of the data for analysis
-# if (onlySubset=="T") {
-#   data_all = subset(data_method_auto,Uselow==1 & Usehigh==1)
-# } else {
-#   data_all = data_method_auto
-# }
-# data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# # Transform left-skewed data so that it is right-skewed
-# data_all$Score = (-data_all$Score)+max(data_all$Score)+1
-# 
-# # Build generalized linear mixed-effects model (GLMM)
-# if (skill=="compareexpertise") {
-#   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
-#                       data = data_all,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# } else {
-#   glmer_model = glmer(Score ~  Complexity * Control + (1|Subject),
-#                       data = data_all,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# }
-# print("Sum of squares")
-# sos = sum(resid(glmer_model)^2)
-# print(sos)
-# modelerrorsum = modelerrorsum + sos
-# 
-# # plotting to evaluate assumptions
-# plot(glmer_model)
-# 
-# # Calculate anova
-# anov = Anova(glmer_model,type="III")
-# print(anov)
-# 
-# # Post-hoc tukey tests
-# print(summary(glht(glmer_model,
-#                    linfct=mcp(Control = "Tukey",
-#                               interaction_average = TRUE))))
-# 
-# cat("\n")
-# cat("########################################################################### \n")
-# cat("################################### HIGH ################################## \n")
-# cat("########################################################################### \n")
-# 
-# # Select subset of the data for analysis
-# if (onlySubset=="T") {
-#   data_high = subset(data_method_auto,Complexity=='high' & Usehigh==1)
-# } else {
-#   data_high = subset(data_method_auto,Complexity=='high')
-# }
-# data_high[] <- lapply(data_high, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# # Transform left-skewed data so that it is right-skewed
-# data_high$Score = (-data_high$Score)+max(data_high$Score)+1
-# 
-# # Build generalized linear mixed-effects model (GLMM)
-# if (skill=="compareexpertise") {
-#   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
-#                       data = data_high,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# } else {
-#   glmer_model = glmer(Score ~  Control + (1|Subject),
-#                       data = data_high,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# }
-# print("Sum of squares")
-# sos = sum(resid(glmer_model)^2)
-# print(sos)
-# modelerrorsum = modelerrorsum + sos
-# 
-# # plotting to evaluate assumptions
-# plot(glmer_model)
-# 
-# # Calculate anova
-# anov = Anova(glmer_model,type="III")
-# print(anov)
-# 
-# # Post-hoc tukey tests
-# print(summary(glht(glmer_model,
-#                    linfct=mcp(Control = "Tukey",
-#                               interaction_average = TRUE))))
-# 
-# cat("\n")
-# cat("########################################################################### \n")
-# cat("################################### LOW ################################### \n")
-# cat("########################################################################### \n")
-# 
-# # Select subset of the data for analysis
-# if (onlySubset=="T") {
-#   data_low = subset(data_method_auto,Complexity=='low' & Uselow==1)
-# } else {
-#   data_low = subset(data_method_auto,Complexity=='low')
-# }
-# data_low[] <- lapply(data_low, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# # Transform left-skewed data so that it is right-skewed
-# data_low$Score = (-data_low$Score)+max(data_low$Score)+1
-# 
-# # Build generalized linear mixed-effects model (GLMM)
-# if (skill=="compareexpertise") {
-#   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
-#                       data = data_low,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# } else {
-#   glmer_model = glmer(Score ~  Control + (1|Subject),
-#                       data = data_low,
-#                       family = poisson(link = "identity"),
-#                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
-# }
-# print("Sum of squares")
-# sos = sum(resid(glmer_model)^2)
-# print(sos)
-# modelerrorsum = modelerrorsum + sos
-# 
-# # plotting to evaluate assumptions
-# plot(glmer_model)
-# 
-# # Calculate anova
-# anov = Anova(glmer_model,type="III")
-# print(anov)
-# 
-# # Post-hoc tukey tests
-# print(summary(glht(glmer_model,
-#                    linfct=mcp(Control = "Tukey",
-#                               interaction_average = TRUE))))
 
 ################################################################################
 ################################################################################
@@ -665,7 +240,7 @@ print(summary(glht(glmer_model,
 ################################################################################
 
 # define file to save data to
-sink(paste(DIR,"stattests",paste("autonomy","Score",skill,"glmer.txt",sep="-"),sep="/"))
+sink(paste(DIR,"Stats","Score",paste("autonomy","Score",skill,"glmer.txt",sep="-"),sep="/"))
 
 cat("\n")
 cat("########################################################################### \n")
@@ -674,7 +249,7 @@ cat("###########################################################################
 
 # Select subset of the data for analysis
 if (onlySubset=="T") {
-  data_all = subset(data_autonomy,Uselow==1 & Usehigh==1)
+  data_all = subset(data_autonomy,Alllow==1 & Allhigh==1)
 } else {
   data_all = data_autonomy
 }
@@ -687,12 +262,12 @@ data_all$Score = (-data_all$Score)+max(data_all$Score)+1
 if (skill=="compareexpertise") {
   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
                       data = data_all,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 } else {
   glmer_model = glmer(Score ~  Complexity * Control + (1|Subject),
                       data = data_all,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 }
 print("Sum of squares")
@@ -714,12 +289,12 @@ print(summary(glht(glmer_model,
 
 cat("\n")
 cat("########################################################################### \n")
-cat("################################### HIGH ################################## \n")
+cat("######################### HIGH BUILDING DENSITY  ########################## \n")
 cat("########################################################################### \n")
 
 # Select subset of the data for analysis
 if (onlySubset=="T") {
-  data_high = subset(data_autonomy,Complexity=='high' & Usehigh==1)
+  data_high = subset(data_autonomy,Complexity=='high' & Allhigh==1)
 } else {
   data_high = subset(data_autonomy,Complexity=='high')
 }
@@ -732,12 +307,12 @@ data_high$Score = (-data_high$Score)+max(data_high$Score)+1
 if (skill=="compareexpertise") {
   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
                       data = data_high,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 } else {
   glmer_model = glmer(Score ~  Control + (1|Subject),
                       data = data_high,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 }
 print("Sum of squares")
@@ -759,12 +334,12 @@ print(summary(glht(glmer_model,
 
 cat("\n")
 cat("########################################################################### \n")
-cat("################################### LOW ################################### \n")
+cat("######################### LOW BUILDING DENSITY  ########################## \n")
 cat("########################################################################### \n")
 
 # Select subset of the data for analysis
 if (onlySubset=="T") {
-  data_low = subset(data_autonomy,Complexity=='low' & Uselow==1)
+  data_low = subset(data_autonomy,Complexity=='low' & Alllow==1)
 } else {
   data_low = subset(data_autonomy,Complexity=='low')
 }
@@ -777,12 +352,12 @@ data_low$Score = (-data_low$Score)+max(data_low$Score)+1
 if (skill=="compareexpertise") {
   glmer_model = glmer(Score ~  Control * Expertise + (1|Subject),
                       data = data_low,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 } else {
   glmer_model = glmer(Score ~  Control + (1|Subject),
                       data = data_low,
-                      family = poisson(link = "identity"),
+                      poisson(link = "identity"),
                       control=glmerControl(check.conv.singular = .makeCC(action = "ignore",  tol = 1e-4)))
 }
 print("Sum of squares")

@@ -62,6 +62,7 @@ remove(list = ls())
 # loads packages and dependencies
 library(ez)
 library(rstatix)
+library(multcomp)
 
 ################################################################################
 ################################################################################
@@ -70,13 +71,12 @@ library(rstatix)
 ################################################################################
 
 # Specify DIR where data is located
-DIR = 'C:/Users/numur/Desktop/darpa_data_analysis/src' 
-# DIR = '/home/kpopovic/darpa_ws/src/darpa_data_analysis/src'
+DIR = 'C:/Users/milli/OneDrive/Documents/darpa_dataanalysis/src'
 
 # Parameters
-skill = "all" # either "expert", "novice", or "all"
+skill = "expert" # either "expert", "novice", or "all"
 
-# Metric to be analyzed:
+# Metric to be analyzed:n
 #   'Input' for section line 110 - line 277
 #   'Difficulty' for the rest of the file
 # ctrl-f in order to replace all the instances of desired metric
@@ -87,8 +87,7 @@ skill = "all" # either "expert", "novice", or "all"
 ################################################################################
 ################################################################################
 
-data_control_original = read.csv(paste(DIR,paste("performance_stat",".csv",sep=""),sep="/"))
-data_control_original = subset(data_control_original, Score!=0) # remove incorrectly added trials
+data_control_original = read.csv(paste(DIR,"raw_data_formatted","raw_data_formatted.csv",sep="/"))
 if (skill=="expert"){
   data_control = subset(data_control_original, Lifetime>999)
 } else if (skill=="novice"){
@@ -97,9 +96,6 @@ if (skill=="expert"){
   data_control = data_control_original
 }
 
-data_method_direct = subset(data_control, Control!='sharedergodic' & Control!='autoergodic')
-data_method_shared = subset(data_control, Control!='directergodic' & Control!='autoergodic')
-data_method_auto = subset(data_control, Control!='directergodic' & Control!='sharedergodic')
 data_autonomy = subset(data_control,Control!='none' & Control!='waypoint')
 data_inputs = subset(data_control, Control!='none' & Control!='autoergodic')
 
@@ -110,15 +106,16 @@ data_inputs = subset(data_control, Control!='none' & Control!='autoergodic')
 ################################################################################
 
 # define file to save data to
-sink(paste(DIR,"stattests",paste("inputs","Input",skill,"rm.txt",sep="-"),sep="/"))
+sink(paste(DIR,"Stats","Input",paste("inputs",skill,"rm.txt",sep="-"),sep="/"))
 
 cat("\n")
 cat("################################################################################ \n")
-cat("##################################### ALL ###################################### \n")
+cat("###############               All Experimental Factors            ############## \n")
+cat("####### Complexity=(low/high buiding density) Control=5 control paradigms ###### \n")
 cat("################################################################################ \n")
 
 # Select subset of the data for analysis
-data_all = subset(data_inputs,Uselow==1 & Usehigh==1)
+data_all = subset(data_inputs,Alllow==1 & Allhigh==1)
 data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
 
 # Check assumptions
@@ -166,23 +163,38 @@ cat("###########################################################################
 cat("T-test for group difference \n")
 cat("################################################################################ \n")
 
+data_wp = subset(data_all, Control=='waypoint')
+data_user = subset(data_all, Control=='directergodic')
+data_shared = subset(data_all, Control=='sharedergodic')
+
+
+posthoc<-t.test(data_wp$Input,data_user$Input,
+                paired = TRUE,detailed = TRUE)
+print(posthoc)
+print("Adjusted p-val bonferroni")
+print(posthoc$p.value*3)
+posthoc<-t.test(data_wp$Input,data_shared$Input,
+                paired = TRUE,detailed = TRUE)
+print(posthoc)
+print("Adjusted p-val bonferroni")
+print(posthoc$p.value*3)
+
+posthoc<-t.test(data_user$Input,data_shared$Input,
+                paired = TRUE,detailed = TRUE)
+print(posthoc)
+print("Adjusted p-val bonferroni")
+print(posthoc$p.value*3)
+
+cat("Identical method of performing post-hoc tests \n")
 posthoc<-pairwise.t.test(data_all$Input,
                          data_all$Control,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
+
 print(posthoc)
 
-# Compare all group/factor combinations for putting asterisks on plots
-
-cat("\n")
-cat("################################################################################ \n")
-cat("Comparison for marking plots with asterisks \n")
-cat("################################################################################ \n")
-
+cat("Post-hoc test across all experimental conditions\n")
 data_all$combo <- paste(data_all$Control,data_all$Complexity)
-cat("################################################################################ \n")
-cat("T-test for group difference \n")
-cat("################################################################################ \n")
 posthoc<-pairwise.t.test(data_all$Input,
                          data_all$combo,
                          paired = TRUE,
@@ -194,10 +206,10 @@ print(posthoc)
 
 cat("\n")
 cat("################################################################################ \n")
-cat("##################################### HIGH ##################################### \n")
+cat("############################## HIGH BUILDING DENSITY  ########################## \n")
 cat("################################################################################ \n")
 
-data_high = subset(data_inputs, Complexity=='high' & Usehigh==1)
+data_high = subset(data_inputs, Complexity=='high' & Allhigh==1)
 data_high[] <- lapply(data_high, function(x) if(is.factor(x)) factor(x) else x)
 
 cat("\n")
@@ -239,9 +251,9 @@ print(posthoc)
 
 cat("\n")
 cat("################################################################################ \n")
-cat("##################################### LOW ###################################### \n")
+cat("############################## LOW BUILDING DENSITY  ########################## \n")
 cat("################################################################################ \n")
-data_low = subset(data_inputs,Complexity=='low' & Uselow==1)
+data_low = subset(data_inputs,Complexity=='low' & Alllow==1)
 data_low[] <- lapply(data_low, function(x) if(is.factor(x)) factor(x) else x)
 
 cat("\n")
@@ -281,22 +293,24 @@ posthoc<-pairwise.t.test(data_low$Input,
                          p.adjust.method = "bonferroni")
 print(posthoc)
 
+
 ################################################################################
 ################################################################################
-#                                 CONTROL                                      #
+#                       DIFFICULTY RATING                                      #
 ################################################################################
 ################################################################################
 
 # Define directory and file where to save the data to
-sink(paste(DIR,"stattests",paste("control","Difficulty",skill,"rm.txt",sep="-"),sep="/"))
+sink(paste(DIR,"Stats","Difficulty",paste("control","difficulty",skill,"rm.txt",sep="-"),sep="/"))
 
 cat("\n")
 cat("################################################################################ \n")
-cat("##################################### ALL ###################################### \n")
+cat("###############               All Experimental Factors            ############## \n")
+cat("####### Complexity=(low/high buiding density) Control=5 control paradigms ###### \n")
 cat("################################################################################ \n")
 
 # Select subset of the data for analysis
-data_all = subset(data_control,Uselow==1 & Usehigh==1)
+data_all = subset(data_control,Alllow==1 & Allhigh==1)
 data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
 
 # Check assumptions
@@ -345,6 +359,7 @@ posthoc<-pairwise.t.test(data_all$Difficulty,
                          paired = TRUE,
                          p.adjust.method = "bonferroni")
 print(posthoc)
+
 # Compare all group/factor combinations for putting asterisks on plots
 cat("\n")
 cat("################################################################################ \n")
@@ -362,10 +377,10 @@ print(posthoc)
 
 cat("\n")
 cat("################################################################################ \n")
-cat("##################################### HIGH ##################################### \n")
+cat("############################## HIGH BUILDING DENSITY  ########################## \n")
 cat("################################################################################ \n")
 
-data_high = subset(data_control, Complexity=='high' & Usehigh==1)
+data_high = subset(data_control, Complexity=='high' & Allhigh==1)
 data_high[] <- lapply(data_high, function(x) if(is.factor(x)) factor(x) else x)
 
 cat("\n")
@@ -405,9 +420,9 @@ print(posthoc)
 
 cat("\n")
 cat("################################################################################ \n")
-cat("##################################### LOW ###################################### \n")
+cat("############################## LOW BUILDING DENSITY  ########################## \n")
 cat("################################################################################ \n")
-data_low = subset(data_control,Complexity=='low' & Uselow==1)
+data_low = subset(data_control,Complexity=='low' & Alllow==1)
 data_low[] <- lapply(data_low, function(x) if(is.factor(x)) factor(x) else x)
 
 cat("\n")
@@ -445,423 +460,6 @@ posthoc<-pairwise.t.test(data_low$Difficulty,
                          p.adjust.method = "bonferroni")
 print(posthoc)
 
-# ################################################################################
-# ################################################################################
-# #                               METHOD - DIRECT                                #
-# ################################################################################
-# ################################################################################
-# 
-# sink(paste(DIR,"stattests",paste("directmethod","Difficulty",skill,"rm.txt",sep="-"),sep="/"))
-# 
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("##################################### ALL ###################################### \n")
-# cat("################################################################################ \n")
-# 
-# data_all = subset(data_method_direct,Uselow==1 & Usehigh==1)
-# data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for normality: Shapiro test\n")
-# cat("################################################################################ \n")
-# normality = data_all %>%
-#   group_by(Complexity,Control) %>%
-#   shapiro_test(Difficulty)
-# print(normality)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for Sphericity: ezANOVA \n")
-# cat("################################################################################ \n")
-# if (skill=="all") {
-#   mod.ez<-ezANOVA(data_all,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control,Complexity),
-#                   between = Expertise, type = 3, detailed = TRUE)
-# } else {
-#   mod.ez<-ezANOVA(data_all,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control,Complexity),
-#                   between = NULL, type = 2, detailed = TRUE)
-# }
-# print(mod.ez)
-# 
-# cat("################################################################################ \n")
-# cat("T-test for group difference \n")
-# cat("################################################################################ \n")
-# posthoc<-pairwise.t.test(data_all$Difficulty,
-#                          data_all$Control,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# data_all$combo <- paste(data_all$Control,data_all$Complexity)
-# posthoc<-pairwise.t.test(data_all$Difficulty,
-#                          data_all$combo,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("##################################### HIGH ##################################### \n")
-# cat("################################################################################ \n")
-# 
-# data_high = subset(data_method_direct, Complexity=='high' & Usehigh==1)
-# data_high[] <- lapply(data_high, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for normality: Shapiro test\n")
-# cat("################################################################################ \n")
-# normality = data_high %>%
-#   group_by(Control) %>%
-#   shapiro_test(Difficulty)
-# print(normality)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for Sphericity: ezANOVA \n")
-# cat("################################################################################ \n")
-# if (skill=="all") {
-#   mod.ez<-ezANOVA(data_high,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = Expertise, type = 3, detailed = TRUE)
-# } else {
-#   mod.ez<-ezANOVA(data_high,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = NULL, type = 2, detailed = TRUE)
-# }
-# print(mod.ez)
-# 
-# cat("################################################################################ \n")
-# cat("T-test for group difference \n")
-# cat("################################################################################ \n")
-# posthoc<-pairwise.t.test(data_high$Difficulty,
-#                          data_high$Control,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# print(posthoc)
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("##################################### LOW ###################################### \n")
-# cat("################################################################################ \n")
-# data_low = subset(data_method_direct,Complexity=='low' & Uselow==1)
-# data_low[] <- lapply(data_low, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for normality: Shapiro test\n")
-# cat("################################################################################ \n")
-# normality = data_low %>%
-#   group_by(Control) %>%
-#   shapiro_test(Difficulty)
-# print(normality)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for Sphericity: ezANOVA \n")
-# cat("################################################################################ \n")
-# if (skill=="all") {
-#   mod.ez<-ezANOVA(data_low,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = Expertise, type = 3, detailed = TRUE)
-# } else {
-#   mod.ez<-ezANOVA(data_low,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = NULL, type = 2, detailed = TRUE)
-# }
-# print(mod.ez)
-# 
-# cat("################################################################################ \n")
-# cat("T-test for group difference \n")
-# cat("################################################################################ \n")
-# posthoc<-pairwise.t.test(data_low$Difficulty,
-#                          data_low$Control,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# print(posthoc)
-# 
-# ################################################################################
-# ################################################################################
-# #                               METHOD - SHARED                                #
-# ################################################################################
-# ################################################################################
-# 
-# sink(paste(DIR,"stattests",paste("sharedmethod","Difficulty",skill,"rm.txt",sep="-"),sep="/"))
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("##################################### ALL ###################################### \n")
-# cat("################################################################################ \n")
-# 
-# data_all = subset(data_method_shared,Uselow==1 & Usehigh==1)
-# data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for normality: Shapiro test\n")
-# cat("################################################################################ \n")
-# normality = data_all %>%
-#   group_by(Complexity,Control) %>%
-#   shapiro_test(Difficulty)
-# print(normality)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for Sphericity: ezANOVA \n")
-# cat("################################################################################ \n")
-# if (skill=="all") {
-#   mod.ez<-ezANOVA(data_all,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control,Complexity),
-#                   between = Expertise, type = 3, detailed = TRUE)
-# } else {
-#   mod.ez<-ezANOVA(data_all,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control,Complexity),
-#                   between = NULL, type = 2, detailed = TRUE)
-# }
-# print(mod.ez)
-# 
-# cat("################################################################################ \n")
-# cat("T-test for group difference \n")
-# cat("################################################################################ \n")
-# posthoc<-pairwise.t.test(data_all$Difficulty,
-#                          data_all$Control,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# data_all$combo <- paste(data_all$Control,data_all$Complexity)
-# posthoc<-pairwise.t.test(data_all$Difficulty,
-#                          data_all$combo,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("##################################### HIGH ##################################### \n")
-# cat("################################################################################ \n")
-# 
-# data_high = subset(data_method_shared, Complexity=='high' & Usehigh==1)
-# data_high[] <- lapply(data_high, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for normality: Shapiro test\n")
-# cat("################################################################################ \n")
-# normality = data_high %>%
-#   group_by(Control) %>%
-#   shapiro_test(Difficulty)
-# print(normality)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for Sphericity: ezANOVA \n")
-# cat("################################################################################ \n")
-# if (skill=="all") {
-#   mod.ez<-ezANOVA(data_high,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = Expertise, type = 3, detailed = TRUE)
-# } else {
-#   mod.ez<-ezANOVA(data_high,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = NULL, type = 2, detailed = TRUE)
-# }
-# print(mod.ez)
-# 
-# cat("################################################################################ \n")
-# cat("T-test for group difference \n")
-# cat("################################################################################ \n")
-# posthoc<-pairwise.t.test(data_high$Difficulty,
-#                          data_high$Control,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# print(posthoc)
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("##################################### LOW ###################################### \n")
-# cat("################################################################################ \n")
-# data_low = subset(data_method_shared,Complexity=='low' & Uselow==1)
-# data_low[] <- lapply(data_low, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for normality: Shapiro test\n")
-# cat("################################################################################ \n")
-# normality = data_low %>%
-#   group_by(Control) %>%
-#   shapiro_test(Difficulty)
-# print(normality)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for Sphericity: ezANOVA \n")
-# cat("################################################################################ \n")
-# if (skill=="all") {
-#   mod.ez<-ezANOVA(data_low,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = Expertise, type = 3, detailed = TRUE)
-# } else {
-#   mod.ez<-ezANOVA(data_low,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = NULL, type = 2, detailed = TRUE)
-# }
-# print(mod.ez)
-# 
-# cat("################################################################################ \n")
-# cat("T-test for group difference \n")
-# cat("################################################################################ \n")
-# posthoc<-pairwise.t.test(data_low$Difficulty,
-#                          data_low$Control,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# print(posthoc)
-# 
-# ################################################################################
-# ################################################################################
-# #                               METHOD - AUTO                                  #
-# ################################################################################
-# ################################################################################
-# 
-# sink(paste(DIR,"stattests",paste("automethod","Difficulty",skill,"rm.txt",sep="-"),sep="/"))
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("##################################### ALL ###################################### \n")
-# cat("################################################################################ \n")
-# 
-# data_all = subset(data_method_auto,Uselow==1 & Usehigh==1)
-# data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for normality: Shapiro test\n")
-# cat("################################################################################ \n")
-# normality = data_all %>%
-#   group_by(Complexity,Control) %>%
-#   shapiro_test(Difficulty)
-# print(normality)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for Sphericity: ezANOVA \n")
-# cat("################################################################################ \n")
-# if (skill=="all") {
-#   mod.ez<-ezANOVA(data_all,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control,Complexity),
-#                   between = Expertise, type = 3, detailed = TRUE)
-# } else {
-#   mod.ez<-ezANOVA(data_all,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control,Complexity),
-#                   between = NULL, type = 2, detailed = TRUE)
-# }
-# print(mod.ez)
-# 
-# cat("################################################################################ \n")
-# cat("T-test for group difference \n")
-# cat("################################################################################ \n")
-# posthoc<-pairwise.t.test(data_all$Difficulty,
-#                          data_all$Control,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# data_all$combo <- paste(data_all$Control,data_all$Complexity)
-# posthoc<-pairwise.t.test(data_all$Difficulty,
-#                          data_all$combo,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("##################################### HIGH ##################################### \n")
-# cat("################################################################################ \n")
-# 
-# data_high = subset(data_method_auto, Complexity=='high' & Usehigh==1)
-# data_high[] <- lapply(data_high, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for normality: Shapiro test\n")
-# cat("################################################################################ \n")
-# normality = data_high %>%
-#   group_by(Control) %>%
-#   shapiro_test(Difficulty)
-# print(normality)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for Sphericity: ezANOVA \n")
-# cat("################################################################################ \n")
-# if (skill=="all") {
-#   mod.ez<-ezANOVA(data_high,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = Expertise, type = 3, detailed = TRUE)
-# } else {
-#   mod.ez<-ezANOVA(data_high,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = NULL, type = 2, detailed = TRUE)
-# }
-# print(mod.ez)
-# 
-# cat("################################################################################ \n")
-# cat("T-test for group difference \n")
-# cat("################################################################################ \n")
-# posthoc<-pairwise.t.test(data_high$Difficulty,
-#                          data_high$Control,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# print(posthoc)
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("##################################### LOW ###################################### \n")
-# cat("################################################################################ \n")
-# data_low = subset(data_method_auto,Complexity=='low' & Uselow==1)
-# data_low[] <- lapply(data_low, function(x) if(is.factor(x)) factor(x) else x)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for normality: Shapiro test\n")
-# cat("################################################################################ \n")
-# normality = data_low %>%
-#   group_by(Control) %>%
-#   shapiro_test(Difficulty)
-# print(normality)
-# 
-# cat("\n")
-# cat("################################################################################ \n")
-# cat("Test for Sphericity: ezANOVA \n")
-# cat("################################################################################ \n")
-# if (skill=="all") {
-#   mod.ez<-ezANOVA(data_low,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = Expertise, type = 3, detailed = TRUE)
-# } else {
-#   mod.ez<-ezANOVA(data_low,Difficulty,
-#                   wid = .(Subject),
-#                   within = .(Control),
-#                   between = NULL, type = 2, detailed = TRUE)
-# }
-# print(mod.ez)
-# 
-# cat("################################################################################ \n")
-# cat("T-test for group difference \n")
-# cat("################################################################################ \n")
-# posthoc<-pairwise.t.test(data_low$Difficulty,
-#                          data_low$Control,
-#                          paired = TRUE,
-#                          p.adjust.method = "bonferroni")
-# print(posthoc)
 
 ################################################################################
 ################################################################################
@@ -870,14 +468,15 @@ print(posthoc)
 ################################################################################
 
 # define file to save data to
-sink(paste(DIR,"stattests",paste("autonomy","Difficulty",skill,"rm.txt",sep="-"),sep="/"))
+sink(paste(DIR,"Stats","Difficulty",paste("autonomy","difficulty",skill,"rm.txt",sep="-"),sep="/"))
 
 cat("\n")
 cat("################################################################################ \n")
-cat("##################################### ALL ###################################### \n")
+cat("###############               All Experimental Factors            ############## \n")
+cat("####### Complexity=(low/high buiding density) Control=5 control paradigms ###### \n")
 cat("################################################################################ \n")
 
-data_all = subset(data_autonomy,Uselow==1 & Usehigh==1)
+data_all = subset(data_autonomy,Alllow==1 & Allhigh==1)
 data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
 
 cat("\n")
@@ -922,10 +521,10 @@ print(posthoc)
 
 cat("\n")
 cat("################################################################################ \n")
-cat("##################################### HIGH ##################################### \n")
+cat("############################## HIGH BUILDING DENSITY  ########################## \n")
 cat("################################################################################ \n")
 
-data_high = subset(data_autonomy, Complexity=='high' & Usehigh==1)
+data_high = subset(data_autonomy, Complexity=='high' & Allhigh==1)
 data_high[] <- lapply(data_high, function(x) if(is.factor(x)) factor(x) else x)
 
 cat("\n")
@@ -965,9 +564,9 @@ print(posthoc)
 
 cat("\n")
 cat("################################################################################ \n")
-cat("##################################### LOW ###################################### \n")
+cat("############################### LOW BUILDING DENSITY  ########################## \n")
 cat("################################################################################ \n")
-data_low = subset(data_autonomy,Complexity=='low' & Uselow==1)
+data_low = subset(data_autonomy,Complexity=='low' & Alllow==1)
 data_low[] <- lapply(data_low, function(x) if(is.factor(x)) factor(x) else x)
 
 cat("\n")

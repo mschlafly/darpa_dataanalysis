@@ -1,0 +1,126 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+[1] "Sum of squares"
+[1] 53.78218
+Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: Difficulty
+                    Chisq Df Pr(>Chisq)    
+Control           22.0994  4  0.0001915 ***
+Expertise          0.1992  1  0.6553333    
+Control:Expertise  3.3754  4  0.4970774    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "degrees of freedom:"
+[1] 305
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = Difficulty ~ Control * Expertise + (1 | Subject), 
+    data = data_all, family = Gamma(link = "log"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error t value Pr(>|t|)   
+directergodic - autoergodic == 0    0.06720    0.07433   0.904   0.8952   
+none - autoergodic == 0             0.28570    0.07444   3.838   0.0014 **
+sharedergodic - autoergodic == 0    0.04672    0.07448   0.627   0.9706   
+waypoint - autoergodic == 0         0.23295    0.07456   3.124   0.0166 * 
+none - directergodic == 0           0.21849    0.07463   2.928   0.0298 * 
+sharedergodic - directergodic == 0 -0.02049    0.07443  -0.275   0.9987   
+waypoint - directergodic == 0       0.16575    0.07455   2.223   0.1739   
+sharedergodic - none == 0          -0.23898    0.07484  -3.193   0.0133 * 
+waypoint - none == 0               -0.05274    0.07480  -0.705   0.9552   
+waypoint - sharedergodic == 0       0.18623    0.07466   2.494   0.0946 . 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 23.0612
+Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: Difficulty
+                    Chisq Df Pr(>Chisq)    
+Control           15683.3  4  < 2.2e-16 ***
+Expertise          1071.5  1  < 2.2e-16 ***
+Control:Expertise  5799.5  4  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = Difficulty ~ Control * Expertise + (1 | Subject), 
+    data = data_high, family = Gamma(link = "log"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                    Estimate Std. Error z value Pr(>|z|)    
+directergodic - autoergodic == 0    0.089787   0.003464  25.922  < 1e-04 ***
+none - autoergodic == 0             0.313989   0.003609  86.996  < 1e-04 ***
+sharedergodic - autoergodic == 0    0.097692   0.023976   4.075 0.000185 ***
+waypoint - autoergodic == 0         0.348541   0.024391  14.290  < 1e-04 ***
+none - directergodic == 0           0.224203   0.003509  63.889  < 1e-04 ***
+sharedergodic - directergodic == 0  0.007905   0.023987   0.330 0.990696    
+waypoint - directergodic == 0       0.258754   0.024386  10.611  < 1e-04 ***
+sharedergodic - none == 0          -0.216297   0.023988  -9.017  < 1e-04 ***
+waypoint - none == 0                0.034551   0.024404   1.416 0.473322    
+waypoint - sharedergodic == 0       0.250849   0.047695   5.259  < 1e-04 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 26.55039
+Analysis of Deviance Table (Type II Wald chisquare tests)
+
+Response: Difficulty
+                    Chisq Df Pr(>Chisq)  
+Control           11.3808  4     0.0226 *
+Expertise          0.0533  1     0.8174  
+Control:Expertise  4.7126  4     0.3181  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = Difficulty ~ Control * Expertise + (1 | Subject), 
+    data = data_low, family = Gamma(link = "log"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)  
+directergodic - autoergodic == 0    0.06968    0.10164   0.686   0.9596  
+none - autoergodic == 0             0.30278    0.10206   2.967   0.0252 *
+sharedergodic - autoergodic == 0    0.02184    0.10249   0.213   0.9995  
+waypoint - autoergodic == 0         0.13427    0.10259   1.309   0.6857  
+none - directergodic == 0           0.23309    0.10173   2.291   0.1476  
+sharedergodic - directergodic == 0 -0.04785    0.10212  -0.469   0.9901  
+waypoint - directergodic == 0       0.06458    0.10242   0.631   0.9702  
+sharedergodic - none == 0          -0.28094    0.10202  -2.754   0.0465 *
+waypoint - none == 0               -0.16851    0.10272  -1.640   0.4714  
+waypoint - sharedergodic == 0       0.11243    0.10267   1.095   0.8092  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+

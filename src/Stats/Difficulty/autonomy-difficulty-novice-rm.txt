@@ -1,0 +1,149 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+
+################################################################################ 
+Test for normality: Shapiro test
+################################################################################ 
+[38;5;246m# A tibble: 6 x 5[39m
+  Control       Complexity variable   statistic        p
+  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m      [3m[38;5;246m<chr>[39m[23m          [3m[38;5;246m<dbl>[39m[23m    [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m autoergodic   high       Difficulty     0.679 0.002[4m1[24m[4m8[24m 
+[38;5;250m2[39m directergodic high       Difficulty     0.624 0.000[4m5[24m[4m2[24m[4m3[24m
+[38;5;250m3[39m sharedergodic high       Difficulty     0.760 0.016[4m0[24m  
+[38;5;250m4[39m autoergodic   low        Difficulty     0.663 0.001[4m4[24m[4m5[24m 
+[38;5;250m5[39m directergodic low        Difficulty     0.722 0.006[4m4[24m[4m4[24m 
+[38;5;250m6[39m sharedergodic low        Difficulty     0.836 0.091[4m6[24m  
+
+################################################################################ 
+Test for Sphericity: ezANOVA 
+################################################################################ 
+$ANOVA
+              Effect DFn DFd         SSn        SSd          F           p p<.05         ges
+1        (Intercept)   1   6 2362.500000 418.000000 33.9114833 0.001127609     * 0.842911389
+2            Control   2  12    1.714286   5.285714  1.9459459 0.185367616       0.003878474
+3         Complexity   1   6    1.166667   7.333333  0.9545455 0.366296675       0.002642792
+4 Control:Complexity   2  12    1.333333   9.666667  0.8275862 0.460579229       0.003019193
+
+$`Mauchly's Test for Sphericity`
+              Effect         W         p p<.05
+2            Control 0.5062089 0.1823159      
+4 Control:Complexity 0.9463224 0.8711598      
+
+$`Sphericity Corrections`
+              Effect       GGe     p[GG] p[GG]<.05       HFe     p[HF] p[HF]<.05
+2            Control 0.6694377 0.2041535           0.7908099 0.1973759          
+4 Control:Complexity 0.9490569 0.4559796           1.3758057 0.4605792          
+
+################################################################################ 
+T-test for group difference 
+################################################################################ 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$Difficulty and data_all$combo 
+
+                   autoergodic high autoergodic low directergodic high directergodic low
+autoergodic low    1                -               -                  -                
+directergodic high 1                1               -                  -                
+directergodic low  1                1               1                  -                
+sharedergodic high 1                1               1                  1                
+sharedergodic low  1                1               1                  1                
+                   sharedergodic high
+autoergodic low    -                 
+directergodic high -                 
+directergodic low  -                 
+sharedergodic high -                 
+sharedergodic low  1                 
+
+P value adjustment method: bonferroni 
+
+################################################################################ 
+############################## HIGH BUILDING DENSITY  ########################## 
+################################################################################ 
+
+################################################################################ 
+Test for normality: Shapiro test
+################################################################################ 
+[38;5;246m# A tibble: 3 x 4[39m
+  Control       variable   statistic        p
+  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m          [3m[38;5;246m<dbl>[39m[23m    [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m autoergodic   Difficulty     0.679 0.002[4m1[24m[4m8[24m 
+[38;5;250m2[39m directergodic Difficulty     0.624 0.000[4m5[24m[4m2[24m[4m3[24m
+[38;5;250m3[39m sharedergodic Difficulty     0.760 0.016[4m0[24m  
+
+################################################################################ 
+Test for Sphericity: ezANOVA 
+################################################################################ 
+$ANOVA
+       Effect DFn DFd         SSn        SSd        F           p p<.05         ges
+1 (Intercept)   1   6 1234.333333 219.333333 33.76596 0.001140303     * 0.845571685
+2     Control   2  12    1.238095   6.095238  1.21875 0.329712561       0.005462185
+
+$`Mauchly's Test for Sphericity`
+   Effect         W         p p<.05
+2 Control 0.4101562 0.1077391      
+
+$`Sphericity Corrections`
+   Effect       GGe     p[GG] p[GG]<.05       HFe     p[HF] p[HF]<.05
+2 Control 0.6289926 0.3197154           0.7176166 0.3233739          
+
+################################################################################ 
+T-test for group difference 
+################################################################################ 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_high$Difficulty and data_high$Control 
+
+              autoergodic directergodic
+directergodic 0.23        -            
+sharedergodic 1.00        0.84         
+
+P value adjustment method: bonferroni 
+
+################################################################################ 
+############################### LOW BUILDING DENSITY  ########################## 
+################################################################################ 
+
+################################################################################ 
+Test for normality: Shapiro test
+################################################################################ 
+[38;5;246m# A tibble: 3 x 4[39m
+  Control       variable   statistic        p
+  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m          [3m[38;5;246m<dbl>[39m[23m    [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m autoergodic   Difficulty     0.651 0.000[4m6[24m[4m1[24m[4m4[24m
+[38;5;250m2[39m directergodic Difficulty     0.784 0.019[4m4[24m  
+[38;5;250m3[39m sharedergodic Difficulty     0.883 0.199   
+
+################################################################################ 
+Test for Sphericity: ezANOVA 
+################################################################################ 
+$ANOVA
+       Effect DFn DFd         SSn     SSd         F           p p<.05        ges
+1 (Intercept)   1   7 1247.041667 208.625 41.842021 0.000344185     * 0.85011078
+2     Control   2  14    4.083333  11.250  2.540741 0.114448899       0.01823256
+
+$`Mauchly's Test for Sphericity`
+   Effect         W         p p<.05
+2 Control 0.9402469 0.8312387      
+
+$`Sphericity Corrections`
+   Effect      GGe     p[GG] p[GG]<.05      HFe     p[HF] p[HF]<.05
+2 Control 0.943616 0.1185484           1.280897 0.1144489          
+
+################################################################################ 
+T-test for group difference 
+################################################################################ 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_low$Difficulty and data_low$Control 
+
+              autoergodic directergodic
+directergodic 0.54        -            
+sharedergodic 0.26        1.00         
+
+P value adjustment method: bonferroni 

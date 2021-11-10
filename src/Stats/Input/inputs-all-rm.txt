@@ -1,0 +1,228 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+
+################################################################################ 
+Test for normality: Shapiro test
+################################################################################ 
+[38;5;246m# A tibble: 6 x 5[39m
+  Control       Complexity variable statistic     p
+  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m      [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<dbl>[39m[23m [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m directergodic high       Input        0.959 0.272
+[38;5;250m2[39m sharedergodic high       Input        0.944 0.108
+[38;5;250m3[39m waypoint      high       Input        0.982 0.858
+[38;5;250m4[39m directergodic low        Input        0.961 0.305
+[38;5;250m5[39m sharedergodic low        Input        0.949 0.143
+[38;5;250m6[39m waypoint      low        Input        0.972 0.570
+
+################################################################################ 
+Test for Sphericity: ezANOVA 
+################################################################################ 
+$ANOVA
+                        Effect DFn DFd          SSn       SSd           F            p p<.05
+1                  (Intercept)   1  29 1.199591e+04 4083.3978 85.19412554 3.934581e-10     *
+2                    Expertise   1  29 1.944516e+02 4083.3978  1.38098171 2.494927e-01      
+3                      Control   2  58 2.188257e+02  721.1528  8.79972453 4.595910e-04     *
+5                   Complexity   1  29 3.897881e+00  418.8978  0.26984758 6.073765e-01      
+4            Expertise:Control   2  58 2.235663e-01  721.1528  0.00899036 9.910513e-01      
+6         Expertise:Complexity   1  29 5.618312e+00  418.8978  0.38895174 5.377259e-01      
+7           Control:Complexity   2  58 2.636777e+00  912.4385  0.08380458 9.197221e-01      
+8 Expertise:Control:Complexity   2  58 3.690540e+00  912.4385  0.11729631 8.895321e-01      
+           ges
+1 6.615953e-01
+2 3.071742e-02
+3 3.443519e-02
+5 6.348564e-04
+4 3.643453e-05
+6 9.148102e-04
+7 4.295457e-04
+8 6.011065e-04
+
+$`Mauchly's Test for Sphericity`
+                        Effect         W         p p<.05
+3                      Control 0.8991853 0.2258856      
+4            Expertise:Control 0.8991853 0.2258856      
+7           Control:Complexity 0.9795465 0.7487736      
+8 Expertise:Control:Complexity 0.9795465 0.7487736      
+
+$`Sphericity Corrections`
+                        Effect       GGe        p[GG] p[GG]<.05       HFe        p[HF] p[HF]<.05
+3                      Control 0.9084181 0.0007325012         * 0.9657648 0.0005469718         *
+4            Expertise:Control 0.9084181 0.9869241238           0.9657648 0.9896920986          
+7           Control:Complexity 0.9799564 0.9165177636           1.0502441 0.9197220958          
+8 Expertise:Control:Complexity 0.9799564 0.8858362791           1.0502441 0.8895320592          
+
+################################################################################ 
+T-test for group difference 
+################################################################################ 
+
+	Paired t-test
+
+data:  data_wp$Input and data_user$Input
+t = 0.23886, df = 61, p-value = 0.812
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.188931  1.511511
+sample estimates:
+mean of the differences 
+              0.1612903 
+
+[1] "Adjusted p-val bonferroni"
+[1] 2.436034
+
+	Paired t-test
+
+data:  data_wp$Input and data_shared$Input
+t = 4.5091, df = 61, p-value = 3.016e-05
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 1.552915 4.027730
+sample estimates:
+mean of the differences 
+               2.790323 
+
+[1] "Adjusted p-val bonferroni"
+[1] 9.047607e-05
+
+	Paired t-test
+
+data:  data_user$Input and data_shared$Input
+t = 3.8425, df = 61, p-value = 0.0002927
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 1.260889 3.997175
+sample estimates:
+mean of the differences 
+               2.629032 
+
+[1] "Adjusted p-val bonferroni"
+[1] 0.0008782035
+Identical method of performing post-hoc tests 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$Input and data_all$Control 
+
+              directergodic sharedergodic
+sharedergodic 0.00088       -            
+waypoint      1.00000       9e-05        
+
+P value adjustment method: bonferroni 
+Post-hoc test across all experimental conditions
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$Input and data_all$combo 
+
+                   directergodic high directergodic low sharedergodic high sharedergodic low
+directergodic low  1.000              -                 -                  -                
+sharedergodic high 0.180              0.296             -                  -                
+sharedergodic low  0.079              0.070             1.000              -                
+waypoint high      1.000              1.000             0.045              0.120            
+waypoint low       1.000              1.000             0.047              0.055            
+                   waypoint high
+directergodic low  -            
+sharedergodic high -            
+sharedergodic low  -            
+waypoint high      -            
+waypoint low       1.000        
+
+P value adjustment method: bonferroni 
+
+################################################################################ 
+############################## HIGH BUILDING DENSITY  ########################## 
+################################################################################ 
+
+################################################################################ 
+Test for normality: Shapiro test
+################################################################################ 
+[38;5;246m# A tibble: 3 x 4[39m
+  Control       variable statistic     p
+  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<dbl>[39m[23m [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m directergodic Input        0.961 0.301
+[38;5;250m2[39m sharedergodic Input        0.946 0.111
+[38;5;250m3[39m waypoint      Input        0.981 0.828
+
+################################################################################ 
+Test for Sphericity: ezANOVA 
+################################################################################ 
+$ANOVA
+             Effect DFn DFd          SSn      SSd           F            p p<.05          ges
+1       (Intercept)   1  30 5806.8529167 1946.053 89.51737577 1.634683e-10     * 0.6575557109
+2         Expertise   1  30  129.8529167 1946.053  2.00178866 1.674102e-01       0.0411712958
+3           Control   2  60  130.6265476 1078.061  3.63504162 3.235032e-02     * 0.0414064275
+4 Expertise:Control   2  60    0.8765476 1078.061  0.02439234 9.759124e-01       0.0002897687
+
+$`Mauchly's Test for Sphericity`
+             Effect         W         p p<.05
+3           Control 0.9437611 0.4320159      
+4 Expertise:Control 0.9437611 0.4320159      
+
+$`Sphericity Corrections`
+             Effect       GGe      p[GG] p[GG]<.05      HFe      p[HF] p[HF]<.05
+3           Control 0.9467555 0.03493458         * 1.008643 0.03235032         *
+4 Expertise:Control 0.9467555 0.97151675           1.008643 0.97591242          
+
+################################################################################ 
+T-test for group difference 
+################################################################################ 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_high$Input and data_high$Control 
+
+              directergodic sharedergodic
+sharedergodic 0.0312        -            
+waypoint      1.0000        0.0092       
+
+P value adjustment method: bonferroni 
+
+################################################################################ 
+############################## LOW BUILDING DENSITY  ########################## 
+################################################################################ 
+
+################################################################################ 
+Test for normality: Shapiro test
+################################################################################ 
+[38;5;246m# A tibble: 3 x 4[39m
+  Control       variable statistic     p
+  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<dbl>[39m[23m [3m[38;5;246m<dbl>[39m[23m
+[38;5;250m1[39m directergodic Input        0.963 0.322
+[38;5;250m2[39m sharedergodic Input        0.954 0.193
+[38;5;250m3[39m waypoint      Input        0.970 0.496
+
+################################################################################ 
+Test for Sphericity: ezANOVA 
+################################################################################ 
+$ANOVA
+             Effect DFn DFd         SSn       SSd          F            p p<.05          ges
+1       (Intercept)   1  30 7200.000000 2593.8333 83.2744329 3.686755e-10     * 0.6951037024
+2         Expertise   1  30   45.125000 2593.8333  0.5219109 4.756220e-01       0.0140870719
+3           Control   2  60   85.895833  564.3333  4.5662286 1.425863e-02     * 0.0264778602
+4 Expertise:Control   2  60    2.020833  564.3333  0.1074276 8.983139e-01       0.0006394663
+
+$`Mauchly's Test for Sphericity`
+             Effect         W         p p<.05
+3           Control 0.9068795 0.2423646      
+4 Expertise:Control 0.9068795 0.2423646      
+
+$`Sphericity Corrections`
+             Effect       GGe      p[GG] p[GG]<.05      HFe      p[HF] p[HF]<.05
+3           Control 0.9148123 0.01705607         * 0.971204 0.01514786         *
+4 Expertise:Control 0.9148123 0.88212622           0.971204 0.89313761          
+
+################################################################################ 
+T-test for group difference 
+################################################################################ 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_low$Input and data_low$Control 
+
+              directergodic sharedergodic
+sharedergodic 0.012         -            
+waypoint      1.000         0.011        
+
+P value adjustment method: bonferroni 

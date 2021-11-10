@@ -75,23 +75,13 @@ installation from a terminal window from the root code are:
 * install.packages("multicomp") OR sudo apt-get install -y r-cran-multcomp
 * install.packages("mvtnorm") OR 'sudo apt-get install -y r-cran-mvtnorm'
 
-## Python 2.7.18
-Dependencies:
-* numpy
-* rosbag
-* datetime
-* csv
-* os
-* pandas
-* glob
-* matplotlib
+## Python
+save_data.py and save_data_subscriber.py were run using python version 2.7.18. The remaining python scripts use python version 3.....*check*
+au
 
 
-## Instructions for plotting and statistical tests
-Note, instructions for running specific scripts are provided at the top of each script.
-
-
-
+## Statistical output files
+The full statistical results are provided in the Stats/ folder. The filename indicates the outcome metric, the test performed (repeated measures ANOVA or generalized linear model), the subset of participants included (all, experts, or novices), and the subset of trials included (control = all 5 control paradigms; autonomy = only coverage control paradigms). Regardless of whether the primary statistical tests suggest that the control paradigm has a different effect in the low and high density environments, we included tests looking at performance in just the low/high density environments for your reference. Compareexpertise indicates only factor for expertise level (expert/novice) and control paradigm are included--these statistical tests were performed to justify the choice to separate the experts and novices. Further explanations are included in the statistical output files and in the .r scripts.
 
 ## Subjects included in plots
 33 subjects have almost full datasets (at least 9 trials completed): [1, 7, 8,
@@ -102,21 +92,37 @@ Note, instructions for running specific scripts are provided at the top of each 
   * 31 subjects with full datasets are included in input plots and analyses: ['01', '07', '08', '09', '11', '13', '14', '17', '18', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '39', '40', '41', '42']
   * 24 experts; 7 novices
 
-* Game Score
-  * 33 subjects with almost full datasets are included in input plots and analyses: ['01', '07', '08', '09', '11', '13', '14', '15', '17', '18', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42']
-  * 25 experts; 8 novices
-
 * RR Interval
   * 29 subjects with full datasets are included in input plots and analyses: ['01', '07', '08', '09', '11', '13', '14', '18', '20', '21', '22', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '39', '40', '41', '42']
   * 23 experts; 6 novices
+
+* Game Score
+  * 33 subjects with almost full datasets are included in input plots and analyses: ['01', '07', '08', '09', '11', '13', '14', '15', '17', '18', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42']
+  * 25 experts; 8 novices
 
 * Difficulty Rating
   * 30 subjects with full datasets are included in input plots and analyses: ['01', '11', '13', '14', '15', '17', '18', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42']
   * 23 experts; 7 novices
 
 
-## Scripts for analysis and plotting
+## Scripts for plotting and formatting for statistical tests
+Note, instructions for running specific scripts are provided at the top of each script.
+  - plot_data.py reads raw_data/raw_data.csv and raw_data/subject_info.csv, formats the data for statistical processing in raw_data_formatted/raw_data_formatted.csv, and plots the score, input, and difficulty results, saving the plots to the Plots/ folder. To look at experienced and novice participants separately, edit the boolean at the top of the plot_data.py script.
+  - plot_data_cogload.py reads raw_data/RR_raw.csv and raw_data/subject_info.csv, formats the data for statistical processing in raw_data_formatted/RR_formatted.csv, and plots the cognitive availability results, saving the plots to the Plots/ folder. To look at experienced and novice participants separately, edit the boolean at the top of the plot_data.py script.
 
+## Scripts for statistical tests
+
+Note, instructions for running specific scripts are provided at the top of each script. For each script, edit the variable skill near the top of the file to specify which participant group to analyze. 'all' includes all participants and control type, building density, and expertise level as experimental factors. 'expert' and 'novice' includes participants with >999 hours and <999 hours, respectively, of video game experience with control type and building density as experimental factors. Change the file directory at the beginning of each script.
+* Input
+  * stat-test-rm-inputdifficulty.r performs repeated measures ANOVAs, followed by post-hoc t-tests. Since no assumptions are violated, no additional statistical tests are required
+* RR Interval
+  * stat-test-rm.r performs repeated measures ANOVAs, followed by post-hoc t-tests. Since no assumptions are violated, no additional statistical tests are required
+* Score
+  * stat-test-rm.r performs repeated measures ANOVAs. However, the normality assumption is violated--this typically leads to overly-conservative, and thus incorrect results with lower statistical power. Therefore, we used a generalized linear model as well, but included these results for reference.
+  * stat-test-glmer.r fits a generalized linear model to the data with the experimental factors at predictors, then performs a Wald ANOVA, followed by a Tukey post-hoc test
+  *
+* Difficulty rating
+  * stat-test-rm-inputdifficulty.r performs repeated measures ANOVAs. However, the normality assumption is violated, and thus incorrect results with lower statistical power. Therefore, we used a generalized linear model as well, but included these results for reference.
 
 
 ## Scripts for extracting raw data

@@ -2,7 +2,7 @@
 
 # This code will only save uncorrupted data with clear start & end markers. To
 # include data from the ROS bags that are faulty, which are listed in
-# unparsable_bags.csv file, one needs to run perfromenace_subscriber script.
+# unparsable_bags.csv file, one needs to run save_data_subscriber script.
 
 # Specify the folder with the rosbags by changing the variable readDataDIR
 
