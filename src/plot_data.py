@@ -57,10 +57,6 @@ combine_complexity = True # keep this as True
 # Booleans for plottings specific metrics
 plot_difficulty = True
 plot_input = True
-plot_lives = True
-plot_treasures = True
-plot_scorebar = True
-plot_scorebox = True
 plot_score_paper = True
 
 # Indicate range of subjects to include in plots within [1,42]
@@ -183,7 +179,7 @@ for sub in range(minsub, maxsub):
                           'HN', 'HW', 'HD', 'HS', 'HA')
                 plt.xticks(ind, labels)
                 plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
-                plt.savefig(file_plot_ind + subID + '_performance.pdf')
+                plt.savefig(file_plot_ind + subID + '_performance.png')
 
                 plt.figure(sub+1)
                 width = 0.5
@@ -194,7 +190,7 @@ for sub in range(minsub, maxsub):
                 labels = ('LN', 'LW', 'LD', 'LS', 'LA',
                           'HN', 'HW', 'HD', 'HS', 'HA')
                 plt.xticks(ind, labels)
-                plt.savefig(file_plot_ind + subID + '_input.pdf')
+                plt.savefig(file_plot_ind + subID + '_input.png')
 
                 plt.figure(sub+2)
                 width = 0.5
@@ -205,7 +201,7 @@ for sub in range(minsub, maxsub):
                 labels = ('LN', 'LW', 'LD', 'LS', 'LA',
                           'HN', 'HW', 'HD', 'HS', 'HA')
                 plt.xticks(ind, labels)
-                plt.savefig(file_plot_ind + subID + '_difficulty.pdf')
+                plt.savefig(file_plot_ind + subID + '_difficulty.png')
                 plt.close('all')
 
             # Read subject_info.csv for the amount of video games played

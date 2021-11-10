@@ -152,7 +152,7 @@ for sub in range(minsub, maxsub):
                 labels = ('LN', 'LW', 'LD', 'LS', 'LA',
                           'HN', 'HW', 'HD', 'HS', 'HA')
                 plt.xticks(ind, labels)
-                plt.savefig(file_plot_ind + subID + '_RR.pdf')
+                plt.savefig(file_plot_ind + subID + '_RR.png')
                 plt.close('all')
 
             # Read subject_info.csv for the amount of video games played
