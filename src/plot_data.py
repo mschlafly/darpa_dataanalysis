@@ -46,7 +46,7 @@ save_data = False  # Saves data into csv file for statistical processing
 plot_each = False  # Creates and saves a plot for each participant
 
 # Booleans for analyzing subset of participants
-only_experts = False  # Only plots experts
+only_experts = True  # Only plots experts
 only_novices = False  # Only plots novices
 if only_experts or only_novices:
     save_data = False
@@ -514,7 +514,7 @@ if plot_difficulty:
         y = 4.9
         text_buffer = .2
     else:
-        title = 'Percieved Difficulty Rating'
+        title = 'Perceived Difficulty Rating'
         sig_matrix = np.array([
                         [1, 4, 0.0166],  # waypoint - autoergodic
                         [0, 2, 0.0298],  # none - directergodic
