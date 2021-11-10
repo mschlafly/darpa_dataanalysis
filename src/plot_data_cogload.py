@@ -31,7 +31,7 @@ file_subdata = "raw_data/subject_info.csv"
 file_control = "raw_data_formatted/RR_raw_formatted.csv"
 
 # Location of folders where to save the plots
-file_plot_all = 'Plots/'
+file_plot_all = 'Plots/RR/'
 file_plot_ind = 'Plots/Indiv Plots/'
 
 ###############################################################################
@@ -152,7 +152,7 @@ for sub in range(minsub, maxsub):
                 labels = ('LN', 'LW', 'LD', 'LS', 'LA',
                           'HN', 'HW', 'HD', 'HS', 'HA')
                 plt.xticks(ind, labels)
-                plt.savefig(file_plot_ind + subID + '_RR.png')
+                plt.savefig(file_plot_ind + subID + '_RR.pdf')
                 plt.close('all')
 
             # Read subject_info.csv for the amount of video games played
@@ -206,7 +206,7 @@ for sub in range(minsub, maxsub):
             # we are only looking at either experts or novies, the participant
             # has to additionally belong to that group
             include_sub = False
-            if (all_low == 1) or (all_high == 1):
+            if (all_low == 1) and (all_high == 1):
                 if only_experts:
                     if expertise == "expert":
                         include_sub = True
@@ -236,16 +236,16 @@ print('These are the subjects: ',sub_list)
 # figure_size: sets the size of the figure in inches
 ###############################################################################
 
-figure_size = (6, 3.55)
+# Plot parameters: 5 items
+figure_size = (4.5, 3.25)
+alphas = [None, None, None, None, None, None]
+colors = ['#BA4900','#BA4900','#BA0071','#0071BA','#00BA49','#00BAA6']
+labels = ['','No Swarm','Waypoint\nControl','User','Shared','Autonomous']
 
-# Plot parameters: RR
-alphas_RR = [None, None, None, None, None, None]
-colors_RR = ['#BA4900','#BA4900','#BA0071','#0071BA','#00BA49','#00BAA6']
-labels_RR = ['','No Swarm','Waypoint\nControl','User','Shared','Autonomous']
-
+xlabel = ''
 
 ###############################################################################
-# [PAPER] Plotting trial RR rating
+# Plotting trial RR rating
 ###############################################################################
 
 if combine_complexity:
@@ -261,50 +261,36 @@ else:
 
 if only_experts:
     title = '\'RR\' Interval'
-    sig_matrix = np.array([[1,0,.0957/2], # wp - none
-                            [1,3,.0283/2],  # wp - shared
-                            [1,4,.0119/2] # waypoint - auto
+    sig_matrix = np.array([
+                            [1,2,0.02533904], # none - wp
+                            [2,4,0.03165469],  # wp - shared
+                            [2,5,0.008010422]  # wp - auto
                             ])
+    y = -1
 elif only_novices:
     title = '\'RR\' Interval'
     sig_matrix = np.array([])
-    sig_matrix = np.array([[1,0,.01352/2], # wp - none
-                          [2,3,.08263/2],  # direct - shared
-                          [0,2,.00284/2], # none - direct
-                          [0,4,.09795/2] # none - auto
-                          ])
+    y = -1.1
 else:
     title = '\'RR\' Interval'
     sig_matrix = np.array([])
-    # sig_matrix = np.array([
-    #                         [1, 3, 0.05005/2],  # waypoint - shared ergodic
-    #                         [1, 4, 0.00171/2],   # waypoint - auto ergodic
-    #                         [0, 2, 0.08522/2],  # none - direct ergodic
-    #                        [0, 3, 0.02925/2],  # none - shared ergodic
-    #                        [0, 4, 0.001/2]  # none - auto ergodic
-    #                        ])
+    y = -.7
 
-# Create a plot ###########################################################
-
+# Create a plot ##########################################################
 ylabel = 'Within-Subject Z-score'
-fig, ax = plt.subplots(figsize=figure_size,dpi=300)
 xlabel = ''
-upper_data_bound = make_scatter(fig, ax, data, title, xlabel, ylabel, labels_RR, colors_RR)
-
-# [fig, ax] = make_boxplot(data, title, xlabel, ylabel,
-#                          labels_RR, colors_RR,
-#                          alphas_RR, figure_size)
+fig, ax = plt.subplots(figsize=figure_size,dpi=300)
+upper_data_bound = make_scatter(fig, ax, data, title, xlabel, ylabel, labels, colors)
 
 # Add stastical signicant marking #########################################
 add_stats(upper_data_bound,sig_matrix,ax,spread_factor=22,type='bar')
 
 # Add *Ergodic* label and arrow on the bottom of the plot #################
 fig.subplots_adjust(bottom=0.18)  # asjust white spacing on the bottom
-text_buffer = .1  # adjust spacing from the arrow line
 
 x1 = [2.75, 0]  # start of the arrow
 x2 = [5.25, 0]  # end of the arrow
-y = -.5
+text_buffer = .1
 name = ['Coverage Control', '']  # single label due to combining env. complexity
 
 add_labels(ax, x1, x2, y, name, text_buffer)

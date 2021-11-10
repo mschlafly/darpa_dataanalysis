@@ -136,7 +136,7 @@ def add_labels(ax, x1, x2, y, name, text_buffer):
                     arrowprops=dict(arrowstyle='<|-|>', facecolor='black'),  # sets style of arrow and colour
                     annotation_clip=False)  # This enables the arrow to be outside of the plot
         ax.text(text_x, text_height, name[i],
-                horizontalalignment='center', fontname="sans-serif", fontsize=10)
+                horizontalalignment='center', fontname="sans-serif", fontsize=9)
 
     # l2_x1 = [-.5,4.5]
     # l2_x2 = [4.5,9.5]
@@ -149,23 +149,23 @@ def add_labels(ax, x1, x2, y, name, text_buffer):
     #     ax.annotate('', xy=(l2_x1[i],l2_y),xytext=(l2_x2[i],l2_y),                     #draws an arrow from one set of coordinates to the other
     #                 arrowprops=dict(arrowstyle='<|-|>',facecolor='black'),   #sets style of arrow and colour
     #                 annotation_clip=False)                               #This enables the arrow to be outside of the plot
-    #     ax.text(text_x, text_height,l2_name[i],horizontalalignment='center', fontname="sans-serif", fontsize=10)
+    #     ax.text(text_x, text_height,l2_name[i],horizontalalignment='center', fontname="sans-serif", fontsize=9)
 
 
     # ax.annotate('', xy=(6.5,a1_y),xytext=(9.5,a1_y),                     #draws an arrow from one set of coordinates to the other
     #             arrowprops=dict(arrowstyle='<|-|>',facecolor='black'),   #sets style of arrow and colour
     #             annotation_clip=False)                               #This enables the arrow to be outside of the plot
-    # ax.text(.83, text_height,'Ergodic',horizontalalignment='center', fontname="sans-serif", fontsize=10)
+    # ax.text(.83, text_height,'Ergodic',horizontalalignment='center', fontname="sans-serif", fontsize=9)
     # arrow_height = 14.25
     # text_height = -.28
     # ax.annotate('', xy=(-.5,arrow_height),xytext=(4.5,arrow_height),                     #draws an arrow from one set of coordinates to the other
     #             arrowprops=dict(arrowstyle='<|-|>',facecolor='black'),   #sets style of arrow and colour
     #             annotation_clip=False)                               #This enables the arrow to be outside of the plot
-    # ax.text(.26, text_height,'Low Density',horizontalalignment='center', fontname="sans-serif", fontsize=10)
+    # ax.text(.26, text_height,'Low Density',horizontalalignment='center', fontname="sans-serif", fontsize=9)
     # ax.annotate('', xy=(4.5,arrow_height),xytext=(9.5,arrow_height),                     #draws an arrow from one set of coordinates to the other
     #             arrowprops=dict(arrowstyle='<|-|>',facecolor='black'),   #sets style of arrow and colour
     #             annotation_clip=False)                               #This enables the arrow to be outside of the plot
-    # ax.text(.75, text_height,'High Density',horizontalalignment='center', fontname="sans-serif", fontsize=10)
+    # ax.text(.75, text_height,'High Density',horizontalalignment='center', fontname="sans-serif", fontsize=9)
 
     return
 
@@ -199,26 +199,26 @@ def make_stackedbar(data1, data2, title, xlabel, ylabel, labels, colors, alphas,
     # plot data bars sequentially
     upper_data_bound = []  # store the upper bar for stat testing
     for i in range(n1):
+        data_2 = data1[i] + data2[i]
         data1_mean = np.mean(data1[i])
-        data1_std = np.std(data1[i])/np.sqrt(data1[i].shape[0])
-
         data2_mean = np.mean(data2[i])
-        data2_std = np.std(data2[i])/np.sqrt(data2[i].shape[0])
-
+        data2_std = np.std(data_2)/np.sqrt(data_2.shape[0])
         upper_data_bound.append(data1_mean+data2_mean+data2_std)
 
-        if alphas[i] == 1:
-            p1 = ax.bar(ind[i], data1_mean, width, yerr=data1_std,
-                        ecolor='black', capsize=5, color=colors[0],
-                        alpha=alphas[i])
+        if i == 1:
+            p1 = ax.bar(ind[i], data1_mean, width,# yerr=data1_std,
+                        ecolor='black', capsize=5, color=colors[i],
+                        alpha=alphas[i],edgecolor='black')
             p2 = ax.bar(ind[i], data2_mean, width, bottom=data1_mean,
                         yerr=data2_std, ecolor='black', capsize=5,
-                        color=colors[1], alpha=alphas[i])
+                        color=colors[i], alpha=alphas[i], hatch='..',edgecolor='black')
         else:
-            ax.bar(ind[i], data1_mean, width, yerr=data1_std,
-                   ecolor='black', capsize=5, color=colors[0], alpha=alphas[i])
+            ax.bar(ind[i], data1_mean, width,# yerr=data1_std,
+                   ecolor='black', capsize=5, color=colors[i],
+                   alpha=alphas[i],edgecolor='black')
             ax.bar(ind[i], data2_mean, width, bottom=data1_mean, yerr=data2_std,
-                   ecolor='black', capsize=5, color=colors[1], alpha=alphas[i])
+                   ecolor='black', capsize=5, color=colors[i],
+                   alpha=alphas[i], hatch='..',edgecolor='black')
 
     # # place grid in back
     # ax.grid(True, linestyle='-', which='major', axis='y',
@@ -226,19 +226,19 @@ def make_stackedbar(data1, data2, title, xlabel, ylabel, labels, colors, alphas,
     # ax.set_axisbelow(True)
 
     # Add titles and labels
-    plt.xlabel(xlabel, fontname="sans-serif", fontsize=11)
-    plt.ylabel(ylabel, fontname="sans-serif", fontsize=11)
-    plt.title(title, fontname="sans-serif", fontsize=11, fontweight='bold')
+    plt.xlabel(xlabel, fontname="sans-serif", fontsize=9)
+    plt.ylabel(ylabel, fontname="sans-serif", fontsize=9)
+    plt.title(title, fontname="sans-serif", fontsize=9, fontweight='bold')
     for label in (ax.get_yticklabels()):
         label.set_fontsize(8)
 
     # figure legend
-    L = fig.legend([p1[0], p2[0]], ['Lives', 'Treasures'], ncol=2, fontsize=10,
+    L = fig.legend([p1[0], p2[0]], ['Lives', 'Treasures'], ncol=1, fontsize=9,
                    loc='upper center', bbox_to_anchor=(0.46, .79, 0.1, 0.1))
     plt.setp(L.texts, family='sans-serif')
 
     # x-ticks x-axis
-    plt.xticks(ind, labels, fontname="sans-serif", fontsize=10)
+    plt.xticks(ind, labels, fontname="sans-serif", fontsize=9)
     for tick in ax.get_xticklabels():
         tick.set_rotation(0)
 
@@ -282,16 +282,16 @@ def make_scatter(fig, ax, data, title, xlabel, ylabel, labels, colors):
     # ax.set_axisbelow(True)
 
     # Add titles and labels
-    plt.xlabel(xlabel, fontname="sans-serif", fontsize=10)
-    plt.ylabel(ylabel, fontname="sans-serif", fontsize=10)
-    plt.title(title, fontname="sans-serif", fontsize=10, fontweight='bold')
+    plt.xlabel(xlabel, fontname="sans-serif", fontsize=9)
+    plt.ylabel(ylabel, fontname="sans-serif", fontsize=9)
+    plt.title(title, fontname="sans-serif", fontsize=9, fontweight='bold')
     for label in (ax.get_yticklabels()):
         label.set_fontsize(8)
 
     # x-ticks x-axis
     ax.set_xticks(ind)
     ax.set_xticklabels(labels, fontname="sans-serif", fontsize=9)
-    # ax.set_xticklabels(ind, labels, fontname="sans-serif", fontsize=10)
+    # ax.set_xticklabels(ind, labels, fontname="sans-serif", fontsize=9)
     for tick in ax.get_xticklabels():
         tick.set_rotation(0)
 
@@ -323,9 +323,9 @@ def make_boxplot(data, title, xlabel, ylabel, labels, box_colors, box_alpha, fig
     ax.yaxis.grid(True, linestyle='-', which='major', color='lightgrey', alpha=0.5)
 
     ax.set_axisbelow(True)  # Hide these grid behind plot objects
-    ax.set_title(title, fontname="sans-serif", fontsize=11, fontweight='bold')
-    ax.set_xlabel(xlabel, fontname="sans-serif", fontsize=11)
-    ax.set_ylabel(ylabel, fontname="sans-serif", fontsize=11)
+    ax.set_title(title, fontname="sans-serif", fontsize=9, fontweight='bold')
+    ax.set_xlabel(xlabel, fontname="sans-serif", fontsize=9)
+    ax.set_ylabel(ylabel, fontname="sans-serif", fontsize=9)
     # for label in (ax.get_xticklabels() + ax.get_yticklabels()):
     #     label.set_fontsize(8)
     for tick in ax.get_xticklabels():

@@ -61,6 +61,7 @@ plot_lives = True
 plot_treasures = True
 plot_scorebar = True
 plot_scorebox = True
+plot_score_paper = True
 
 # Indicate range of subjects to include in plots within [1,42]
 minsub = 1
@@ -182,7 +183,7 @@ for sub in range(minsub, maxsub):
                           'HN', 'HW', 'HD', 'HS', 'HA')
                 plt.xticks(ind, labels)
                 plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
-                plt.savefig(file_plot_ind + subID + '_performance.png')
+                plt.savefig(file_plot_ind + subID + '_performance.pdf')
 
                 plt.figure(sub+1)
                 width = 0.5
@@ -193,7 +194,7 @@ for sub in range(minsub, maxsub):
                 labels = ('LN', 'LW', 'LD', 'LS', 'LA',
                           'HN', 'HW', 'HD', 'HS', 'HA')
                 plt.xticks(ind, labels)
-                plt.savefig(file_plot_ind + subID + '_input.png')
+                plt.savefig(file_plot_ind + subID + '_input.pdf')
 
                 plt.figure(sub+2)
                 width = 0.5
@@ -204,7 +205,7 @@ for sub in range(minsub, maxsub):
                 labels = ('LN', 'LW', 'LD', 'LS', 'LA',
                           'HN', 'HW', 'HD', 'HS', 'HA')
                 plt.xticks(ind, labels)
-                plt.savefig(file_plot_ind + subID + '_difficulty.png')
+                plt.savefig(file_plot_ind + subID + '_difficulty.pdf')
                 plt.close('all')
 
             # Read subject_info.csv for the amount of video games played
@@ -285,9 +286,8 @@ for sub in range(minsub, maxsub):
                 sub_list_input.append(subID)
                 for i in range(10):
                     if trial_happened[i] == 1:
-                        if isinstance(lives_all_list[i], int):
+                        if isinstance(input_all_list[i], int):
                             input_all_list[i] = input_all[sub, i]
-
                         else:
                             input_all_list[i] = np.append(input_all_list[i], input_all[sub, i])
 
@@ -341,195 +341,95 @@ print('These are the subjects: ',sub_list_difficulty)
 # figure_size: sets the size of the figure in inches
 ###############################################################################
 
-figure_size = (6, 3.55)
-
-# Plot parameters for testing
-labels_test = ('L-None', 'L-WP', 'L-User', 'L-Shared', 'L-Auto',
-               'H-None', 'H-WP', 'H-Direct', 'H-Shared', 'H-Auto')
-colors_test = ['#b71c1c', '#ff6f00', '#1b5e20', '#006064', '#1a237e',
-               '#b71c1c', '#ff6f00', '#1b5e20', '#006064', '#1a237e']
-alphas_test = [0.5, 0.5, 0.5, 0.5, 0.5, None, None, None, None, None]
-xlabel_test = 'Experimental Condition'
-
-# Plot parameters: PAPER
-xlabel = ''
-
-# Plot arameters: scorebar
-alphas = [.4, .55, .7, .85, 1, .4, .55, .7, .85, 1]
-colors = ['#998ec3', '#f1a340']
-labels = ['None','WP','UECC','SECC','AECC',
-            'None','WP','UECC','SECC','AECC']
-
 # Plot parameters: command input
+figure_size = (4, 3.25)
 alphas_input = [None, None, None]
 colors_input = ['#BA0071','#0071BA','#00BA49']
 labels_input = ('Waypoint', 'User', 'Shared')
 
-# Plot parameters: difficulty
-alphas_difficulty = [None, None, None, None, None]
-colors_difficulty = ['#BA4900','#BA0071','#0071BA','#00BA49','#00BAA6']
-labels_difficulty = ['No Swarm','Waypoint\nControl','User','Shared','Autonomous']
+# Plot parameters: 5 items
+alphas5 = [None, None, None, None, None]
+colors5 = ['#BA4900','#BA0071','#0071BA','#00BA49','#00BAA6']
+labels5 = ['No Swarm','Waypoint\nControl','User','Shared','Autonomous']
+
+xlabel = ''
 
 ###############################################################################
 # Plotting overall game score: bar plot
 ###############################################################################
 
-if plot_scorebar:
+if plot_score_paper:
+
+    if combine_complexity:
+        data_low = lives_all_list[:5]
+        data_high = lives_all_list[5:]
+        data_lives = []
+        for i in range(len(data_low)):
+            data_combined = np.concatenate((data_low[i], data_high[i]), axis=0)
+            data_lives.append(data_combined)
+        data_low = treasure_all_list[:5]
+        data_high = treasure_all_list[5:]
+        data_treas = []
+        for i in range(len(data_low)):
+            data_combined = np.concatenate((data_low[i], data_high[i]), axis=0)
+            data_treas.append(data_combined)
+    else:
+        data_lives = lives_all_list
+        data_treas = treasure_all_list
+
     if only_experts:
-        title = 'Game Performance: Experts'
+        title = 'Game Performance'
         sig_matrix = np.array([
-                    [4, 8, 0.0405/2],  # low autoergodic - high sharedergodic
-                    [4, 3, 0.0521/2]])  # low autoergodic - low sharedergodic
-                    # [8, 1, 0.0267/2],  # high sharedergodic - low waypoint
-                    # [3, 1, 0.0364/2]])  # low sharedergodic - low waypoint
+                    [1, 3, 0.0189], # waypoint - sharedergodic
+                    [0,0,1]])
         spread_factor = 50
 
     elif only_novices:
-        title = 'Game Performance: Novices'
+        title = 'Game Performance'
         sig_matrix = np.array([
-                    # [9, 7, 0.0159/2],  # high autoergodic - high directergodic
-                    [9, 0, 0.0573/2],  # high autoergodic - low none
-                    [9, 3, 0.0153/2],  # high autoergodic - low sharedergodic
-                    [9, 6, 0.0724/2]])  # high autoergodic - high waypoint
-        spread_factor = 30
+                    [2, 4, 0.0194],  # directergodic - autoergodic
+                    [1, 4, 0.0416]])  # waypoint - autoergodic
+        spread_factor = 20
     else:
-        title = 'Game Performance: All'
+        title = 'Game Performance'
         sig_matrix = np.array([])
         spread_factor = 30
 
     ylabel = 'Final Game Score'
-    lives_all_list2 = [i * 3 for i in lives_all_list]
-    [fig, ax, upper_data_bound] = make_stackedbar(lives_all_list2,
-                                                  treasure_all_list,
+    data_lives2 = [i * 3 for i in data_lives]
+    [fig, ax, upper_data_bound] = make_stackedbar(data_lives2,
+                                                  data_treas,
                                                   title, xlabel, ylabel,
-                                                  labels, colors, alphas,
+                                                  labels5, colors5, alphas5,
                                                   figure_size)
 
-    ax.set_ylim(bottom=16, top=28.5)
-    print(upper_data_bound)
+    if only_novices:
+        ax.set_ylim(bottom=17, top=28.5)
+        y = 15
+    else:
+        ax.set_ylim(bottom=18, top=28.5)
+        y = 17
     add_stats(upper_data_bound, sig_matrix, ax, spread_factor=spread_factor, type='bar')
 
     # Add arrows on the bottom of the plot
     fig.subplots_adjust(bottom=0.18)
     text_buffer = .65
 
-    # Round 1 -- add Ergodic labels
-    # x1 = [1.5, 6.5]
-    # x2 = [4.5, 9.5]
-    y = 14.65
-    # name = ['Ergodic', 'Ergodic']
-    # add_labels(ax, x1, x2, y, name, text_buffer)
-
-    x1 = [-.5, 4.5]
-    x2 = [4.5, 9.5]
-    # y = 13.8
-    name = ['Low-Density', 'High-Density']
+    x1 = [1.75, 0]  # start of the arrow
+    x2 = [4.25, 0]  # end of the arrow
+    name = ['Coverage Control', '']  # single label due to combining env. complexity
     add_labels(ax, x1, x2, y, name, text_buffer)
 
     if only_experts:
-        plt.savefig(file_plot_all + 'Score/scorebar_experts.png')
+        plt.savefig(file_plot_all + 'Score/score_experts.pdf')
     elif only_novices:
-        plt.savefig(file_plot_all + 'Score/scorebar_novices.png')
+        plt.savefig(file_plot_all + 'Score/score_novices.pdf')
     else:
-        plt.savefig(file_plot_all + 'Score/scorebar.png')
+        plt.savefig(file_plot_all + 'Score/score.pdf')
+
 
 ###############################################################################
-# [TEST] Plotting overall game score: box plot
-###############################################################################
-
-if plot_scorebox:
-    data = score_all_list
-    ylabel = 'Final score = #lives*3+#treasure'
-    if only_experts:
-        title = 'Final Score for Experts'
-        sig_matrix = np.array([
-                    # [7,8,.0653/2]  # high autoergodic - low autoergodic
-                    # [7,8,.0026/2]  # low autoergodic - high sharedergodic
-                    [4, 3, .0089/2],  # low autoergodic - low sharedergodic
-                    # [7,8,.0352/2]  # high sharedergodic - low waypoint
-                    [3, 1, .0956/2]])  # low sharedergodic - low waypoint
-        # sig_matrix = np.array([])
-    elif only_novices:
-        title = 'Final Score for Novices'
-        # sig_matrix = np.array([
-        #            [9, 7, .000001/2],  # high autoergodic - high directergodic
-        #            [9, 5, .0844/2],  # high autoergodic - high none
-        #            # [9, 3, .0238/2],  # high autoergodic - low sharedergodic
-        #            [9, 6, .0178/2],  # high autoergodic - high waypoint
-        #            # [4, 7, .0679/2],  # low autoergodic - high directergodic
-        #            # [7, 2, .0632/2],  # high directergodic - low directergodic
-        #            [7, 8, .0294/2]])  # high directergodic - high sharedergodic
-        #            # [7, 6, .0092/2]])  # high directergodic - low waypoint
-        sig_matrix = np.array([])
-    else:
-        title = 'Final Score'
-        sig_matrix = np.array([])
-    [fig, ax] = make_boxplot(data, title, xlabel, ylabel, labels_test,
-                             colors_test, alphas_test, figure_size)
-    add_stats(data, sig_matrix, ax)
-    if only_experts:
-        fig.savefig(file_plot_all + 'Score/overall_score_experts.png')
-    elif only_novices:
-        fig.savefig(file_plot_all + 'Score/overall_score_novices.png')
-    else:
-        fig.savefig(file_plot_all + 'Score/overall_score.png')
-
-###############################################################################
-# [TEST] Plotting overall lives
-###############################################################################
-
-if plot_lives:
-    data = lives_all_list
-    ylabel = 'Number of lives at the end of the game'
-    if only_experts:
-        title = 'Lives Leftover for Experts'
-        sig_matrix = np.array([])
-    elif only_novices:
-        title = 'Lives Leftover for Novices'
-        sig_matrix = np.array([])
-    else:
-        title = 'Lives Leftover'
-        sig_matrix = np.array([])
-
-    [fig, ax] = make_boxplot(data, title, xlabel_test, ylabel, labels_test,
-                             colors_test, alphas_test, figure_size)
-
-    if only_experts:
-        add_stats(data, sig_matrix, ax)
-        fig.savefig(file_plot_all + 'Lives/overall_lives_experts.png')
-    elif only_novices:
-        fig.savefig(file_plot_all + 'Lives/overall_lives_novices.png')
-    else:
-        fig.savefig(file_plot_all + 'Lives/overall_lives.png')
-
-###############################################################################
-# [TEST] Plotting treasure data
-###############################################################################
-
-if plot_treasures:
-    data = treasure_all_list
-    ylabel = 'Number of targets collected'
-    if only_experts:
-        title = 'Targets Collected for Experts'
-        sig_matrix = np.array([])
-    elif only_novices:
-        title = 'Targets Collected for Novices'
-        sig_matrix = np.array([])
-    else:
-        title = 'Targets Collected'
-        sig_matrix = np.array([])
-    [fig, ax] = make_boxplot(data, title, xlabel_test, ylabel, labels_test,
-                             colors_test, alphas_test, figure_size)
-    add_stats(data, sig_matrix, ax)
-    if only_experts:
-        fig.savefig(file_plot_all + 'Treasures/overall_treas_experts.png')
-    elif only_novices:
-        fig.savefig(file_plot_all + 'Treasures/overall_treas_novices.png')
-    else:
-        fig.savefig(file_plot_all + 'Treasures/overall_treas.png')
-
-###############################################################################
-# [PAPER] Plotting command input counts
+# Plotting command input counts
 ###############################################################################
 
 if plot_input:
@@ -548,48 +448,37 @@ if plot_input:
 
     # Add stastical significant basedon ANOVA #################################
     if only_experts:
-        title = 'Command Input: Experts'
+        title = 'Instructions Required to Operate Swarm'
         sig_matrix = np.array([
-                    [0, 1, 1/2],  # waypoint - direct ergodic
-                    [0, 2, 0.0027/2],  # waypoint - shared ergodic
-                    [1, 2, 0.0013/2]])  # direct ergodic - shared ergodic
+                    [1, 2, 0.002745709],  # direct ergodic - shared ergodic
+                    [0, 2, 0.001252248]])  # waypoint - shared ergodic
     elif only_novices:
-        title = 'Command Input: Novices'
+        title = 'Instructions Required to Operate Swarm'
         sig_matrix = np.array([
-                    [0, 1, 1/2],  # waypoint - direct ergodic
-                    [0, 2, 0.088/2],  # waypoint - shared ergodic
-                    [1, 2, 0.417/2]])  # direct ergodic - shared ergodic
+                    [0, 2, 0.08780068]])  # waypoint - shared ergodic
     else:
-        title = 'Control Paradigm Impacts Number of\nUser Commands to Operate Swarm'
+        title = 'Instructions Required to Operate Swarm'
         sig_matrix = np.array([
-                    [1, 2, 0.00088/2],  # direct ergodic - shared ergodic
-                    [0, 1, 4.9e-05/2],  # waypoint - direct ergodic
-                    [0, 2, 6.4e-13/2]])  # waypoint - shared ergodic
+                    [1, 2, 0.0008782035],  # direct ergodic - shared ergodic
+                    [0, 2, 9.047607e-05]])  # waypoint - shared ergodic
 
     # Create a plot ###########################################################
-
     ylabel = 'Number of Commands During Trial'
     fig, ax = plt.subplots(figsize=figure_size,dpi=300)
     upper_data_bound = make_scatter(fig, ax, data, title, xlabel, ylabel, labels_input, colors_input)
-    # [fig, ax] = make_boxplot(data, title, xlabel, ylabel, labels_input,
-    #                          colors_input, alphas_input, figure_size)
-    # ax.set_ylim(bottom=-1.5, top=31.5)
 
     # Add stastical signicant marking #########################################
-    add_stats(upper_data_bound,sig_matrix,ax,spread_factor=22,type='bar')
+    add_stats(upper_data_bound,sig_matrix,ax,spread_factor=18,type='bar')
 
-    # add_stats(data, sig_matrix, ax)
+    # Add arrows on the bottom of the plot
+    fig.subplots_adjust(bottom=0.18)
+    text_buffer = .3
 
-    # Add *Ergodic* label and arrow on the bottom of the plot #################
-    # fig.subplots_adjust(bottom=0.18)  # asjust white spacing on the bottom
-    # text_buffer = 1.75  # adjust spacing from the arrow line
+    x1 = [1.75, 0]  # start of the arrow
+    x2 = [4.25, 0]  # end of the arrow
+    name = ['Coverage Control', '']  # single label due to combining env. complexity
+    add_labels(ax, x1, x2, y, name, text_buffer)
 
-    # x1 = [1.85, 0]  # start of the arrow
-    # x2 = [3.2, 0]  # end of the arrow
-    # y = -5.3
-    # name = ['Ergodic', '']  # single label due to combining env. complexity
-    #
-    # add_labels(ax, x1, x2, y, name, text_buffer)
 
     # Saving the plots ########################################################
     if only_experts:
@@ -597,10 +486,10 @@ if plot_input:
     elif only_novices:
         fig.savefig(file_plot_all + 'Inputs/inputs_novices.pdf')
     else:
-        fig.savefig(file_plot_all + 'Inputs/inputs.png')
+        fig.savefig(file_plot_all + 'Inputs/inputs.pdf')
 
 ###############################################################################
-# [PAPER] Plotting trial difficulty rating
+# Plotting trial difficulty rating
 ###############################################################################
 
 if plot_difficulty:
@@ -616,53 +505,51 @@ if plot_difficulty:
         data = difficulty_all_list
 
     if only_experts:
-        title = 'Difficulty rating: Experts'
+        title = 'Experienced Participants\' Difficulty Rating'
         sig_matrix = np.array([
-                        [1, 4, 0.014/2],  # none - shared ergodic
-                        [1, 5, 0.026/2]])  # none - auto ergodic
+                        [1, 4, 0.0278],  # waypoint - auto ergodic
+                        [0, 4, 0.0113]])  # none - auto ergodic
+        y = 6.25
+        text_buffer = .15
     elif only_novices:
-        title = 'Difficulty rating: Novices'
-        sig_matrix = np.array([])
+        title = 'Novice Participants\' Difficulty Rating'
+        sig_matrix = np.array([
+                        [1, 2, 0.0223]])  # waypoint - direct ergodic
+        y = 4.9
+        text_buffer = .2
     else:
         title = 'Percieved Difficulty Rating'
-        # sig_matrix = np.array([])
         sig_matrix = np.array([
-                                [1, 3, 0.05005/2],  # waypoint - shared ergodic
-                                [1, 4, 0.00171/2],   # waypoint - auto ergodic
-                                [0, 2, 0.08522/2],  # none - direct ergodic
-                               [0, 3, 0.02925/2],  # none - shared ergodic
-                               [0, 4, 0.001/2]  # none - auto ergodic
-                               ])
+                        [1, 4, 0.0166],  # waypoint - autoergodic
+                        [0, 2, 0.0298],  # none - directergodic
+                        [0, 3, 0.0133],  # none - sharedergodic
+                        [0, 3, 0.0014]])  # none - autoergodic
+        y = 6.35
+        text_buffer = .15
 
     # Create a plot ###########################################################
 
     ylabel = 'Ease of Usage'
     fig, ax = plt.subplots(figsize=figure_size,dpi=300)
-    upper_data_bound = make_scatter(fig, ax, data, title, xlabel, ylabel, labels_difficulty, colors_difficulty)
-
-    # [fig, ax] = make_boxplot(data, title, xlabel, ylabel,
-    #                          labels_difficulty, colors_difficulty,
-    #                          alphas_difficulty, figure_size)
+    upper_data_bound = make_scatter(fig, ax, data, title, xlabel, ylabel, labels5, colors5)
 
     # Add stastical signicant marking #########################################
     add_stats(upper_data_bound,sig_matrix,ax,spread_factor=22,type='bar')
 
     # Add *Ergodic* label and arrow on the bottom of the plot #################
     fig.subplots_adjust(bottom=0.18)  # asjust white spacing on the bottom
-    text_buffer = .65  # adjust spacing from the arrow line
 
-    x1 = [2.75, 0]  # start of the arrow
-    x2 = [5.25, 0]  # end of the arrow
-    y = 0.2
-    name = ['Ergodic', '']  # single label due to combining env. complexity
+    x1 = [1.75, 0]  # start of the arrow
+    x2 = [4.25, 0]  # end of the arrow
+    name = ['Coverage Control', '']  # single label due to combining env. complexity
 
     add_labels(ax, x1, x2, y, name, text_buffer)
 
     # Saving the plots ########################################################
 
     if only_experts:
-        fig.savefig(file_plot_all + 'Difficulty/difficulty_experts.png')
+        fig.savefig(file_plot_all + 'Difficulty/difficulty_experts.pdf')
     elif only_novices:
-        fig.savefig(file_plot_all + 'Difficulty/difficulty_novices.png')
+        fig.savefig(file_plot_all + 'Difficulty/difficulty_novices.pdf')
     else:
-        fig.savefig(file_plot_all + 'Difficulty/difficulty.png')
+        fig.savefig(file_plot_all + 'Difficulty/difficulty.pdf')
