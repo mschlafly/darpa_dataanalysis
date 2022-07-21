@@ -13,7 +13,7 @@
 # * On ROS side, make sure to
 #   * set use_sim_time to true via $ rosparam set use_sim_time true
 #   * start $ roscore
-#   * run this script $ rosrun darpa_data_analysis save_data_subscriber.py
+#   * run this script $ rosrun darpa_dataanalysis save_data_subscriber.py
 #   * play rosbag file in a separate terminal following print instructions. NOTE:
 #   this assumes you are in the folder where the particular ROS bag is located.
 
@@ -21,9 +21,11 @@
 import rospy
 import numpy as np
 import csv
+import os
 from utils.populate_buildings import populate_building_array
-from user_input.msg import treasure_info, person_position, player_info
-from user_input.msg import input_array
+from user_input.msg import treasure_info, person_position, player_info, object_position, input_array
+# from user_input.msg import input_array
+# from user_input.msg import object_position
 from std_msgs.msg import Int32
 from datetime import datetime
 
@@ -48,6 +50,7 @@ class parse_bag:
         rospy.Subscriber('/player_info', player_info, self.update_player_info)
         rospy.Subscriber('/client_count', Int32, self.update_client)
         rospy.Subscriber('/input', input_array, self.update_input)
+        rospy.Subscriber('/object_position', object_position, self.update_object)
 
     def reset_game(self):
         self.lives = 8
@@ -66,6 +69,7 @@ class parse_bag:
         self.adversary_3_y_prev = 0
         self.player_x = 30
         self.player_y = 30
+        self.player_theta = 0
         self.player_x_prev = 30
         self.player_y_prev = 30
         self.found1 = False
@@ -81,23 +85,50 @@ class parse_bag:
         self.time_connected = 0
         self.client_connected = False
         self.game_on = False
-        # self.drone_ID = []  # drone IDs that are being controlled
-        # self.time_player_input = []  # time at which input is given
         self.input_count = 0
 
+        # Playback items
+        self.object_id = []
+        self.object_posX = []
+        self.object_posY = []
+        self.object_time = []
+        self.player_posX = []
+        self.player_posY = []
+        self.player_posTheta = []
+        self.player_time = []
+        self.treas_posX = []
+        self.treas_posY = []
+        self.treas_time = []
+        self.adv0_posX = []
+        self.adv0_posY = []
+        self.adv0_theta = []
+        self.adv0_time = []
+        self.adv1_posX = []
+        self.adv1_posY = []
+        self.adv1_theta = []
+        self.adv1_time = []
+        self.adv2_posX = []
+        self.adv2_posY = []
+        self.adv2_theta = []
+        self.adv2_time = []
+
     def update_treasure(self, msg):
-        self.treas_loc_x_prev = self.treas_loc_x
-        self.treas_loc_y_prev = self.treas_loc_y
-        self.treas_loc_x = msg.xpos
-        self.treas_loc_y = msg.ypos
-        if self.game_on:
-            if self.treas_loc_x_prev != self.treas_loc_x or self.treas_loc_y_prev != self.treas_loc_y:
-                self.treasures += 1
-            if (msg.treasure_count > self.game_treasures):
-                self.game_treasures = msg.treasure_count
+        if self.treas_loc_x != msg.xpos or self.treas_loc_y != msg.ypos:
+            self.treas_loc_x_prev = self.treas_loc_x
+            self.treas_loc_y_prev = self.treas_loc_y
+            self.treas_loc_x = msg.xpos
+            self.treas_loc_y = msg.ypos
+            if self.game_on:
+                if self.treas_loc_x_prev != self.treas_loc_x or self.treas_loc_y_prev != self.treas_loc_y:
+                    self.treasures += 1
+                if (msg.treasure_count > self.game_treasures):
+                    self.game_treasures = msg.treasure_count
+                self.treas_posX.append(msg.xpos)  # List of xPos for animation
+                self.treas_posY.append(msg.ypos)  # List of yPos for animation
+                self.treas_time.append(rospy.get_time()-self.start_time)
 
     def update_adv_1(self, msg):
-        if msg.xpos != self.adversary_1_x and msg.ypos != self.adversary_1_y:
+        if msg.xpos != self.adversary_1_x or msg.ypos != self.adversary_1_y:
             self.adversary_1_x_prev = self.adversary_1_x
             self.adversary_1_y_prev = self.adversary_1_y
             self.adversary_1_x = msg.xpos
@@ -105,9 +136,13 @@ class parse_bag:
             if self.game_on:
                 t = rospy.get_time()
                 self.found1 = self.is_player_found(self.found1, self.adversary_1_x, self.adversary_1_y, self.adversary_1_x_prev, self.adversary_1_y_prev, t)
+                self.adv0_posX.append(msg.xpos)  # List of xPos for animation
+                self.adv0_posY.append(msg.ypos)  # List of yPos for animation
+                self.adv0_theta.append(msg.theta)  # List of theta for animation
+                self.adv0_time.append(rospy.get_time()-self.start_time)
 
     def update_adv_2(self, msg):
-        if msg.xpos != self.adversary_2_x and msg.ypos != self.adversary_2_y:
+        if msg.xpos != self.adversary_2_x or msg.ypos != self.adversary_2_y:
             self.adversary_2_x_prev = msg.xpos
             self.adversary_2_y_prev = msg.ypos
             self.adversary_2_x = msg.xpos
@@ -115,9 +150,13 @@ class parse_bag:
             if self.game_on:
                 t = rospy.get_time()
                 self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t)
+                self.adv1_posX.append(msg.xpos)  # List of xPos for animation
+                self.adv1_posY.append(msg.ypos)  # List of yPos for animation
+                self.adv1_theta.append(msg.theta)  # List of theta for animation
+                self.adv1_time.append(rospy.get_time()-self.start_time)
 
     def update_adv_3(self, msg):
-        if msg.xpos != self.adversary_3_x and msg.ypos != self.adversary_3_y:
+        if msg.xpos != self.adversary_3_x or msg.ypos != self.adversary_3_y:
             self.adversary_3_x_prev = self.adversary_3_x
             self.adversary_3_y_prev = self.adversary_3_y
             self.adversary_3_x = msg.xpos
@@ -125,13 +164,24 @@ class parse_bag:
             if self.game_on:
                 t = rospy.get_time()
                 self.found3 = self.is_player_found(self.found3, self.adversary_3_x, self.adversary_3_y, self.adversary_3_x_prev, self.adversary_3_y_prev, t)
+                self.adv2_posX.append(msg.xpos)  # List of xPos for animation
+                self.adv2_posY.append(msg.ypos)  # List of yPos for animation
+                self.adv2_theta.append(msg.theta)  # List of theta for animation
+                self.adv2_time.append(rospy.get_time()-self.start_time)
 
     def update_person(self, msg):
-        if msg.xpos != self.player_x and msg.ypos != self.player_y:
+        if msg.xpos != self.player_x or msg.ypos != self.player_y or msg.theta != self.player_theta:
+            # print('updating person position')
             self.player_x_prev = self.player_x
             self.player_y_prev = self.player_y
             self.player_x = msg.xpos
             self.player_y = msg.ypos
+            self.player_theta = msg.theta
+            if self.game_on:
+                self.player_posX.append(msg.xpos)  # List of xPos for animation
+                self.player_posY.append(msg.ypos)  # List of yPos for animation
+                self.player_posTheta.append(msg.theta)
+                self.player_time.append(rospy.get_time()-self.start_time)
 
     def update_player_info(self, msg):
         if (msg.lives_count < self.game_lives):
@@ -156,10 +206,18 @@ class parse_bag:
     def update_input(self, msg):
         """ Saves number of input commands by subject."""
         if msg.droneID != 10:
-            # player_input = round((t.secs-self.start_time)/60.0, 2)
+            # player_input = round((rospy.get_time()-self.start_time)/60.0, 2)
             # self.time_player_input.append(player_input)
             # self.drone_ID.append(msg.droneID)
             self.input_count += 1
+
+    def update_object(self, msg):
+        if msg.xpos != self.object_posX or msg.ypos != self.object_posY:
+            if self.game_on:
+                self.object_id.append(msg.id)
+                self.object_posX.append(msg.xpos)
+                self.object_posY.append(msg.ypos)
+                self.object_time.append(rospy.get_time()-self.start_time)
 
     def is_player_found(self, found, adversary_x, adversary_y, adversary_x_prev, adversary_y_prev,t):
         is_adv_close = False
@@ -208,18 +266,39 @@ class parse_bag:
 
             return found
 
+
+###############################################################################
+# Functions for csv file manipulation
+###############################################################################
+
+def create_csv(filePath, columns):
+    # creates a csv file with given column names
+    with open(filePath, 'w') as csvFile:
+        writer = csv.writer(csvFile, delimiter=',')
+        writer.writerow(columns)
+
+def write_csv_rows(filePath, rows):
+    with open(filePath, 'a') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        for i in range(1,rows.shape[0]): # skip the first row
+            writer.writerow(rows[i,:])
+
+###############################################################################
+# Main Function
+###############################################################################
 if __name__ == '__main__':
 
     # update the specific location of the raw_data and gametime csv files
     # that correspond to the filepath on your computer
     file = '/home/murpheylab/catkin_ws/src/darpa_dataanalysis/src/raw_data/raw_data.csv'
     file_game = '/home/murpheylab/catkin_ws/src/darpa_dataanalysis/src/raw_data/gametime.csv'
+    file_playback = '/home/murpheylab/catkin_ws/src/darpa_dataanalysis/src/raw_data/playback/'
 
     # Update this info based on the particular ROS bag trial to be parsed. NOTE
     # that all the relavant info is stored in a missing_bags.csv file.
-    sub = 39  # subject number
-    con = 4   # corresponds to the control type
-    env = 1   # corresponds to the enviornmental complexity
+    sub = 5  # subject number
+    con = 1   # corresponds to the control type
+    env = 0   # corresponds to the enviornmental complexity
 
     control = ['none', 'waypoint', 'directergodic', 'sharedergodic', 'autoergodic']
     environments = ['low', 'high']
@@ -244,7 +323,7 @@ if __name__ == '__main__':
     # Run the command in a separate terminal to play the specific rosbag from
     # the folder where those bags are saved at. NOTE: Make sure you have
     # (1) started roscore ahead of time and (2) rosparam set use_sim_time true.
-    print('Run this: rosbag play -r 35 --clock '+'sub'+subID+'/'+subID+'_'+control[con]+'_'+environments[env]+'.bag')
+    print('Run this: rosbag play -r 20 --clock '+'sub'+subID+'/'+subID+'_'+control[con]+'_'+environments[env]+'.bag')
 
     row_found = False
     # Listen to trial and save once finished
@@ -259,12 +338,9 @@ if __name__ == '__main__':
         else:
             game_length = 5*60 - 13
         done = False
-        # game_complete = False
         while (not rospy.is_shutdown()) and done is False:
-            # print(game_data.game_on)
             if game_data.game_on:
                 game_time = rospy.get_time()-game_data.start_time
-                # print(game_time)
                 if game_time > game_length:
                     print('game end found')
                     game_data.game_on = False
@@ -292,19 +368,92 @@ if __name__ == '__main__':
         if game_data.treasures != game_data.game_treasures:
             print('Discrepency in treasure-- game_treasures: ', game_data.game_treasures, 'treasures: ', game_data.treasures)
 
-        # Append data files
-        row = [subID, control[con], environments[env], game_data.lives, game_data.treasures, game_data.input_count]
-        with open(file, 'a') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',')
-            writer.writerow(row)
-        print('Saved row to file: ', row)
+        # # Append data files
+        # row = [subID, control[con], environments[env], game_data.lives, game_data.treasures, game_data.input_count]
+        # with open(file, 'a') as csvfile:
+        #     writer = csv.writer(csvfile, delimiter=',')
+        #     writer.writerow(row)
+        # print('Saved row to file: ', row)
+        #
+        # row = [subID, control[con], environments[env],
+        #        start_time.month, start_time.day,
+        #        start_time.hour, start_time.minute, start_time.second,
+        #        end_time.month, end_time.day,
+        #        end_time.hour, end_time.minute, end_time.second]
+        # with open(file_game, 'a') as csvfile:
+        #     writer = csv.writer(csvfile, delimiter=',')
+        #     writer.writerow(row)
+        # print('Saved row to file: ', row)
 
-        row = [subID, control[con], environments[env],
-               start_time.month, start_time.day,
-               start_time.hour, start_time.minute, start_time.second,
-               end_time.month, end_time.day,
-               end_time.hour, end_time.minute, end_time.second]
-        with open(file_game, 'a') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',')
-            writer.writerow(row)
-        print('Saved row to file: ', row)
+        # Create and fill data files for playback
+        # For playback data, subject folder if not already created
+        sub_folder_DIR = file_playback + 'Sub' + subID + '/'
+        if not os.path.exists(sub_folder_DIR):
+            os.makedirs(sub_folder_DIR)
+        trialInfo = subID + '_' + control[con] + '_' + environments[env]
+
+
+        # Player position over time
+        file = sub_folder_DIR + trialInfo + "_player.csv"
+        columns = ['Time', 'x', 'y', 'theta']
+        create_csv(file, columns)
+        data_length = len(game_data.player_time)
+        rows = np.concatenate((np.array(game_data.player_time).reshape((data_length,1)),
+                                np.array(game_data.player_posX).reshape((data_length,1)),
+                                np.array(game_data.player_posY).reshape((data_length,1)),
+                                np.array(game_data.player_posTheta).reshape((data_length,1))),axis=1)
+        write_csv_rows(file, rows)
+
+        # Treasure position over time
+        file = sub_folder_DIR + trialInfo + "_treasure.csv"
+        columns = ['Time', 'x', 'y']
+        create_csv(file, columns)
+        data_length = len(game_data.treas_time)
+        rows = np.concatenate((np.array(game_data.treas_time).reshape((data_length,1)),
+                                np.array(game_data.treas_posX).reshape((data_length,1)),
+                                np.array(game_data.treas_posY).reshape((data_length,1))),axis=1)
+        write_csv_rows(file, rows)
+
+        # Adv 0 position over time
+        file = sub_folder_DIR + trialInfo + "_adv0.csv"
+        columns = ['Time', 'x', 'y', 'theta']
+        create_csv(file, columns)
+        data_length = len(game_data.adv0_time)
+        rows = np.concatenate((np.array(game_data.adv0_time).reshape((data_length,1)),
+                                np.array(game_data.adv0_posX).reshape((data_length,1)),
+                                np.array(game_data.adv0_posY).reshape((data_length,1)),
+                                np.array(game_data.adv0_theta).reshape((data_length,1))),axis=1)
+        write_csv_rows(file, rows)
+
+        # Adv 1 position over time
+        file = sub_folder_DIR + trialInfo + "_adv1.csv"
+        columns = ['Time', 'x', 'y', 'theta']
+        create_csv(file, columns)
+        data_length = len(game_data.adv1_time)
+        rows = np.concatenate((np.array(game_data.adv1_time).reshape((data_length,1)),
+                                np.array(game_data.adv1_posX).reshape((data_length,1)),
+                                np.array(game_data.adv1_posY).reshape((data_length,1)),
+                                np.array(game_data.adv1_theta).reshape((data_length,1))),axis=1)
+        write_csv_rows(file, rows)
+
+        # Adv 2 position over time
+        file = sub_folder_DIR + trialInfo + "_adv2.csv"
+        columns = ['Time', 'x', 'y', 'theta']
+        create_csv(file, columns)
+        data_length = len(game_data.adv2_time)
+        rows = np.concatenate((np.array(game_data.adv2_time).reshape((data_length,1)),
+                                np.array(game_data.adv2_posX).reshape((data_length,1)),
+                                np.array(game_data.adv2_posY).reshape((data_length,1)),
+                                np.array(game_data.adv2_theta).reshape((data_length,1))),axis=1)
+        write_csv_rows(file, rows)
+
+        # Detected objects
+        file = sub_folder_DIR + trialInfo + "_objects.csv"
+        columns = ['Time', 'id', 'x', 'y']
+        create_csv(file, columns)
+        data_length = len(game_data.object_time)
+        rows = np.concatenate((np.array(game_data.object_time).reshape((data_length,1)),
+                                np.array(game_data.object_id).reshape((data_length,1)),
+                                np.array(game_data.object_posX).reshape((data_length,1)),
+                                np.array(game_data.object_posY).reshape((data_length,1))),axis=1)
+        write_csv_rows(file, rows)

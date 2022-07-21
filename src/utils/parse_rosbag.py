@@ -4,7 +4,6 @@ import rosbag
 import numpy as np
 from populate_buildings import populate_building_array
 
-
 class parse_bag:
     """Analyze ROS bags directly to save desired performance metrics."""
 
@@ -89,6 +88,7 @@ class parse_bag:
         self.player_time = []
         self.player_x = 0
         self.player_y = 0
+        self.player_theta = 0
         self.player_x_prev = 0
         self.player_y_prev = 0
         self.start_time = 0  # 5*60 + 60 # corresponds to the game being over
@@ -97,6 +97,18 @@ class parse_bag:
         self.treas_posX = []
         self.treas_posY = []
         self.treas_time = []
+        self.adv0_posX = []
+        self.adv0_posY = []
+        self.adv0_theta = []
+        self.adv0_time = []
+        self.adv1_posX = []
+        self.adv1_posY = []
+        self.adv1_theta = []
+        self.adv1_time = []
+        self.adv2_posX = []
+        self.adv2_posY = []
+        self.adv2_theta = []
+        self.adv2_time = []
         self.treas_loc_x = 0
         self.treas_loc_y = 0
         self.treas_loc_x_prev = 0
@@ -109,53 +121,72 @@ class parse_bag:
                     self.game_lives = msg.lives_count
                     # print('Game now shows player has ',self.game_lives,' self.lives at time',(t.secs-self.start_time)/60.0)
             elif topic == self.topic_list[1]:  # /treasure_info
-                self.treas_loc_x_prev = self.treas_loc_x
-                self.treas_loc_y_prev = self.treas_loc_y
-                self.treas_loc_x = msg.xpos
-                self.treas_loc_y = msg.ypos
-                if self.game_on:
-                    if self.treas_loc_x_prev != self.treas_loc_x or self.treas_loc_y_prev != self.treas_loc_y:
-                        self.treasures += 1
-                    if (msg.treasure_count > self.game_treasures):
-                        self.game_treasures = msg.treasure_count
-                self.treas_posX.append(msg.xpos)  # List of xPos for animation
-                self.treas_posY.append(msg.ypos)  # List of yPos for animation
-                self.treas_time.append(t.secs)
+                if self.treas_loc_x != msg.xpos or self.treas_loc_y != msg.ypos:
+                    self.treas_loc_x_prev = self.treas_loc_x
+                    self.treas_loc_y_prev = self.treas_loc_y
+                    self.treas_loc_x = msg.xpos
+                    self.treas_loc_y = msg.ypos
+                    if self.game_on:
+                        if self.treas_loc_x_prev != self.treas_loc_x or self.treas_loc_y_prev != self.treas_loc_y:
+                            self.treasures += 1
+                        if (msg.treasure_count > self.game_treasures):
+                            self.game_treasures = msg.treasure_count
+                    self.treas_posX.append(msg.xpos)  # List of xPos for animation
+                    self.treas_posY.append(msg.ypos)  # List of yPos for animation
+                    self.treas_time.append(t.secs-self.start_time)
             elif topic == self.topic_list[2]:  # /adversary_1_position
-                self.adversary_1_x_prev = self.adversary_1_x
-                self.adversary_1_y_prev = self.adversary_1_y
-                self.adversary_1_x = msg.xpos
-                self.adversary_1_y = msg.ypos
-                if self.game_on:
-                    self.found1 = self.is_player_found(self.found1, self.adversary_1_x, self.adversary_1_y, self.adversary_1_x_prev, self.adversary_1_y_prev, t.secs)
+                if msg.xpos != self.adversary_1_x or msg.ypos != self.adversary_1_y:
+                    self.adversary_1_x_prev = self.adversary_1_x
+                    self.adversary_1_y_prev = self.adversary_1_y
+                    self.adversary_1_x = msg.xpos
+                    self.adversary_1_y = msg.ypos
+                    if self.game_on:
+                        self.found1 = self.is_player_found(self.found1, self.adversary_1_x, self.adversary_1_y, self.adversary_1_x_prev, self.adversary_1_y_prev, t.secs)
+                    self.adv0_posX.append(msg.xpos)  # List of xPos for animation
+                    self.adv0_posY.append(msg.ypos)  # List of yPos for animation
+                    self.adv0_theta.append(msg.theta)  # List of theta for animation
+                    self.adv0_time.append(t.secs-self.start_time)
             elif topic == self.topic_list[3]:   # /adversary_2_position
-                self.adversary_2_x_prev = msg.xpos
-                self.adversary_2_y_prev = msg.ypos
-                self.adversary_2_x = msg.xpos
-                self.adversary_2_y = msg.ypos
-                if self.game_on:
-                    self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t.secs)
+                if msg.xpos != self.adversary_2_x or msg.ypos != self.adversary_2_y:
+                    self.adversary_2_x_prev = msg.xpos
+                    self.adversary_2_y_prev = msg.ypos
+                    self.adversary_2_x = msg.xpos
+                    self.adversary_2_y = msg.ypos
+                    if self.game_on:
+                        self.found2 = self.is_player_found(self.found2, self.adversary_2_x, self.adversary_2_y, self.adversary_2_x_prev, self.adversary_2_y_prev, t.secs)
+                    self.adv1_posX.append(msg.xpos)  # List of xPos for animation
+                    self.adv1_posY.append(msg.ypos)  # List of yPos for animation
+                    self.adv1_theta.append(msg.theta)  # List of theta for animation
+                    self.adv1_time.append(t.secs-self.start_time)
             elif topic == self.topic_list[4]:    # /adversary_3_position
-                self.adversary_3_x_prev = self.adversary_3_x
-                self.adversary_3_y_prev = self.adversary_3_y
-                self.adversary_3_x = msg.xpos
-                self.adversary_3_y = msg.ypos
-                if self.game_on:
-                    self.found3 = self.is_player_found(self.found3, self.adversary_3_x, self.adversary_3_y, self.adversary_3_x_prev, self.adversary_3_y_prev, t.secs)
+                if msg.xpos != self.adversary_3_x or msg.ypos != self.adversary_3_y:
+                    self.adversary_3_x_prev = self.adversary_3_x
+                    self.adversary_3_y_prev = self.adversary_3_y
+                    self.adversary_3_x = msg.xpos
+                    self.adversary_3_y = msg.ypos
+                    if self.game_on:
+                        self.found3 = self.is_player_found(self.found3, self.adversary_3_x, self.adversary_3_y, self.adversary_3_x_prev, self.adversary_3_y_prev, t.secs)
+                    self.adv2_posX.append(msg.xpos)  # List of xPos for animation
+                    self.adv2_posY.append(msg.ypos)  # List of yPos for animation
+                    self.adv2_theta.append(msg.theta)  # List of theta for animation
+                    self.adv2_time.append(t.secs-self.start_time)
             elif topic == self.topic_list[5]:  # /object_position
-                self.object_id.append(msg.id)
-                self.object_posX.append(msg.xpos)
-                self.object_posY.append(msg.ypos)
-                self.object_time.append(t.secs)
+                if msg.xpos != self.object_posX or msg.ypos != self.object_posY:
+                    self.object_id.append(msg.id)
+                    self.object_posX.append(msg.xpos)
+                    self.object_posY.append(msg.ypos)
+                    self.object_time.append(t.secs-self.start_time)
             elif topic == self.topic_list[6]:  # /player_position
-                self.player_x_prev = self.player_x
-                self.player_y_prev = self.player_y
-                self.player_x = msg.xpos
-                self.player_y = msg.ypos
-                self.player_posX.append(msg.xpos)  # List of xPos for animation
-                self.player_posY.append(msg.ypos)  # List of yPos for animation
-                self.player_posTheta.append(msg.theta)
-                self.player_time.append(t.secs)
+                if msg.xpos != self.player_x or msg.ypos != self.player_y or msg.theta != self.player_theta:
+                    self.player_x_prev = self.player_x
+                    self.player_y_prev = self.player_y
+                    self.player_x = msg.xpos
+                    self.player_y = msg.ypos
+                    self.player_theta = msg.theta
+                    self.player_posX.append(msg.xpos)  # List of xPos for animation
+                    self.player_posY.append(msg.ypos)  # List of yPos for animation
+                    self.player_posTheta.append(msg.theta)
+                    self.player_time.append(t.secs-self.start_time)
             elif topic == self.topic_list[7]:  # /swarm_pos
                 self.drone_time.append(t.secs)
                 self.drone1_posX.append(msg.poses[0].position.x)
