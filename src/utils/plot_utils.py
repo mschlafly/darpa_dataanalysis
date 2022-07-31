@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 
-
 def add_stats(data, sig_matrix, ax, spread_factor=30, type='boxplot'):
     """
     Add asterisks to the plot to indicate significance; makes it so the bars and

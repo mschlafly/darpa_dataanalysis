@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from utils.plot_utils import *
+from utils.parse_files import *
 
 ###############################################################################
 # Folder location from where to get necessary hst data
@@ -18,6 +19,7 @@ from utils.plot_utils import *
 # raw_data cotaines overall performance, input count, and difficulty rating
 file = "raw_data/raw_data.csv"
 file_RR = "raw_data/RR_raw.csv"
+file_MDP = "raw_data/raw_data_MDP.csv"
 
 # contains subject info from the questionaire like the number of hours spent
 # playing video games over their lifetime
@@ -35,8 +37,7 @@ dfID = pd.read_csv(file_difficulty, usecols=[0]).to_numpy().flatten()
 file_control = "raw_data_formatted/raw_data_formatted.csv"
 
 # Location of folders where to save the plots
-file_plot_all = 'Plots/'
-file_plot_ind = 'Plots/Indiv Plots/'
+file_plot = 'Plots/'
 
 ###############################################################################
 # Set booleans that determine what instances of data to plot
@@ -46,7 +47,7 @@ save_data = False  # Saves data into csv file for statistical processing
 plot_each = False  # Creates and saves a plot for each participant
 
 # Booleans for analyzing subset of participants
-only_experts = True  # Only plots experts
+only_experts = False  # Only plots experts
 only_novices = False  # Only plots novices
 if only_experts or only_novices:
     save_data = False
@@ -58,6 +59,8 @@ combine_complexity = True # keep this as True
 plot_difficulty = True
 plot_input = True
 plot_score_paper = True
+plot_RR = True
+plot_MDP = True
 
 # Indicate range of subjects to include in plots within [1,42]
 minsub = 1
@@ -76,9 +79,9 @@ if save_data:
     # 'Uselow' and 'Usehigh' are booleans stating whether you have all of the
     # data for all of the low or all of the high complexity trials
     columns = ['Subject', 'Control', 'Complexity', 'Trial',
-               'Skill', 'Perweek', 'Lifetime', 'Expertise',
-               'Alllow', 'Allhigh',
-               'Lives', 'Treasure', 'Input', 'Difficulty', 'Score']
+               'Perweek', 'Lifetime', 'Expertise',
+               'Lives', 'Treasure', 'Input', 'Difficulty',
+               'Score', 'RR','Regret-cum']
 
     # type of control
     with open(file_control, 'w') as csvfile:
@@ -98,19 +101,17 @@ autonomy = ['direct', 'shared', 'auto']
 subnum_input = 0
 subnum_performace = 0
 subnum_difficulty = 0
+subnum_RR = 0
+subnum_MDP = 0
 
 # Keep track of subject IDs (with complete data) included in figures
 sub_list_input = []
 sub_list_performance = []
 sub_list_difficulty = []
+sub_list_RR = []
+sub_list_MDP = []
 
-# These matrices are filled while looping through raw data
 maxsub += 1
-lives_all = np.zeros((maxsub, 10))
-treasure_all = np.zeros((maxsub, 10))
-score_all = np.zeros((maxsub, 10))
-input_all = np.zeros((maxsub, 10))
-difficulty_all = np.zeros((maxsub, 10))
 
 # aggregate list
 lives_all_list = [0] * 10
@@ -118,10 +119,15 @@ treasure_all_list = [0] * 10
 input_all_list = [0] * 10
 difficulty_all_list = [0] * 10
 score_all_list = [0] * 10
+RR_all_list = [0] * 10
+regret_all_list = [0] * 10
 
 # Look through all participants
 for sub in range(minsub, maxsub):
-    trial_happened = np.zeros(10)
+    # trial_happened = np.zeros(10)
+    trial_happened_RR = np.zeros(10)
+    trial_happened_MDP = np.zeros(10)
+
     # Skips subjects numbers in the skipped_subjects list
     found = False
     for i in range(len(skipped_subjects)):
@@ -135,201 +141,139 @@ for sub in range(minsub, maxsub):
         else:
             subID = str(sub)
 
-        # Import data for parsing
-        with open(file, 'r') as csvfile:
-            data = csv.reader(csvfile, delimiter=',')
-
-            # Loop through rows in csv with each row representing a trial.
-            # If the row is for the subject of interest, act
-            for row in data:
-                if row[0] == subID:
-                    # If the row is for a low complexity trial,
-                    # store data in the first 5 columns
-                    if row[2] == environments[0]:
-                        for i in range(len(control)):
-                            if row[1] == control[i]:
-                                lives_all[sub, i] = row[3]
-                                treasure_all[sub, i] = row[4]
-                                input_all[sub, i] = row[5]
-                                difficulty_all[sub, i] = row[6]
-                                score_all[sub, i] = lives_all[sub, i]*3. + treasure_all[sub, i]
-                                trial_happened[i] = 1
-                    # If the row is for a high complexity trial,
-                    # store data in the last 5 columns
+        # Read subject_info.csv for the amount of video games played
+        with open(file_subdata, 'r') as csvfile:
+            subdata = csv.reader(csvfile)  # ,delimiter=',')
+            for row in subdata:
+                if str(sub) == row[0]:
+                    # skill = np.mean(lives_all[sub, :])
+                    perweek = row[1]
+                    lifetime = row[2]
+                    if float(lifetime + '.0') > 999.0:
+                        expertise = "expert"
                     else:
-                        for i in range(len(control)):
-                            if row[1] == control[i]:
-                                lives_all[sub, i+5] = row[3]
-                                treasure_all[sub, i+5] = row[4]
-                                input_all[sub, i+5] = row[5]
-                                difficulty_all[sub, i+5] = row[6]
-                                score_all[sub, i+5] = lives_all[sub, i+5]*3. + treasure_all[sub, i+5]
-                                trial_happened[i+5] = 1
+                        expertise = "novice"
 
-            # Plot bar graph for individual subject
-            if plot_each:
-                plt.figure(sub)
-                width = 0.5
-                ind = np.arange(10)
-                p1 = plt.bar(ind, lives_all[sub, :], width)
-                p2 = plt.bar(ind, treasure_all[sub, :], width, bottom=lives_all[sub, :])
-                plt.ylabel('Score')
-                plt.title('Game Performance for Subject ' + subID)
-                labels = ('LN', 'LW', 'LD', 'LS', 'LA',
-                          'HN', 'HW', 'HD', 'HS', 'HA')
-                plt.xticks(ind, labels)
-                plt.legend((p1[0], p2[0]), ('Lives', 'Targets'))
-                plt.savefig(file_plot_ind + subID + '_performance.png')
+        # Import data for parsing
+        [lives, treasure, input, difficulty, score, trial_happened] = parse_performance_data(file,subID,environments,control,plot_each)
+        [RR_mean, RR_zscore, trial_happened_RR] = parse_cogload_data(file_RR,subID,environments,control,plot_each)
+        [regret_cum, trial_happened_MDP] = parse_MDP_data(file_MDP,sub,environments,control,plot_each)
 
-                plt.figure(sub+1)
-                width = 0.5
-                ind = np.arange(10)
-                p1 = plt.bar(ind, input_all[sub, :], width)
-                plt.ylabel('Score')
-                plt.title('Inputs for Subject ' + subID)
-                labels = ('LN', 'LW', 'LD', 'LS', 'LA',
-                          'HN', 'HW', 'HD', 'HS', 'HA')
-                plt.xticks(ind, labels)
-                plt.savefig(file_plot_ind + subID + '_input.png')
-
-                plt.figure(sub+2)
-                width = 0.5
-                ind = np.arange(10)
-                p1 = plt.bar(ind, difficulty_all[sub, :], width)
-                plt.ylabel('Score')
-                plt.title('Difficulty for Subject ' + subID)
-                labels = ('LN', 'LW', 'LD', 'LS', 'LA',
-                          'HN', 'HW', 'HD', 'HS', 'HA')
-                plt.xticks(ind, labels)
-                plt.savefig(file_plot_ind + subID + '_difficulty.png')
-                plt.close('all')
-
-            # Read subject_info.csv for the amount of video games played
-            with open(file_subdata, 'r') as csvfile:
-                subdata = csv.reader(csvfile)  # ,delimiter=',')
-                for row in subdata:
-                    if str(sub) == row[0]:
-                        skill = np.mean(lives_all[sub, :])
-                        perweek = row[1]
-                        lifetime = row[2]
-                        if float(lifetime + '.0') > 999.0:
-                            expertise = "expert"
+        # Saves data for statistical tests in R if there are 9/10 experimental trials
+        # if (all_high == 1 or all_low == 1):
+        if save_data:
+            if np.sum(trial_happened)>=9:
+                with open(file_control, 'a') as csvfile:
+                    testwriter = csv.writer(csvfile, delimiter=',')
+                    for i in range(10):
+                        if i < 5:
+                            con = i
+                            env = 0
                         else:
-                            expertise = "novice"
+                            con = i-5
+                            env = 1
+                            env = 1
+                        row_save = ["Sub" + subID, control[con],
+                                    environments[env], 'trial' + str(i),
+                                    perweek, lifetime, expertise,
+                                    lives[i],
+                                    treasure[i],
+                                    input[i],
+                                    difficulty[i],
+                                    score[i],
+                                    RR_mean[i], regret_cum[i]]
+                        testwriter.writerow(row_save)
 
-            # Check to see if we have data for all low complexity trials and
-            # all high complexity trials seperately. Makes the assumption that
-            # no trial ended with 0 lives
-            if np.min(lives_all[sub, 0:5]) > 0:
-                all_low = 1
-            else:
-                all_low = 0
+        # Decide whether the subject should be included, default is to skip
+        # and that is overwritten if we have lives data for every trial. If
+        # we are only looking at either experts or novies, the participant
+        # has to additionally belong to that group
 
-            if np.min(lives_all[sub, 5:10]) > 0:
-                all_high = 1
-            else:
-                all_high = 0
+        # Input plots only include participants with data from all 10 trials,
+        # but performance plots include participants with at least 9 trials
 
-            # if all of the experimental trials are there
-            # for either all high or all low environmental complexity
-            if (all_high == 1 or all_low == 1):
-                # Saves data for statistical tests in R
-                if save_data:
-                    with open(file_control, 'a') as csvfile:
-                        testwriter = csv.writer(csvfile, delimiter=',')
-                        for i in range(10):
-                            if i < 5:
-                                con = i
-                                env = 0
-                            else:
-                                con = i-5
-                                env = 1
-                                env = 1
-                            row_save = ["Sub" + subID, control[con],
-                                        environments[env], 'trial' + str(i),
-                                        skill, perweek, lifetime, expertise,
-                                        all_low, all_high, lives_all[sub, i],
-                                        treasure_all[sub, i],
-                                        input_all[sub, i],
-                                        difficulty_all[sub, i],
-                                        score_all[sub, i]]
-                            testwriter.writerow(row_save)
+        ###############################
+        # Include data in input lists
+        ###############################
+        include_sub = use_sub(10,trial_happened, expertise, only_experts, only_novices)
+        if include_sub:
+            subnum_input += 1
+            sub_list_input.append(subID)
+            for i in range(10):
+                if trial_happened[i] == 1:
+                    if isinstance(input_all_list[i], int):
+                        input_all_list[i] = input[i]
+                    else:
+                        input_all_list[i] = np.append(input_all_list[i], input[i])
 
-            # Decide whether the subject should be included, default is to skip
-            # and that is overwritten if we have lives data for every trial. If
-            # we are only looking at either experts or novies, the participant
-            # has to additionally belong to that group
+        ###############################
+        # Include data in performance lists
+        ###############################
+        include_sub = use_sub(9,trial_happened, expertise, only_experts, only_novices)
+        if include_sub:
+            subnum_performace += 1
+            sub_list_performance.append(subID)
+            if sub in dfID:
+                subnum_difficulty += 1
+                sub_list_difficulty.append(subID)
+            for i in range(10):
+                if trial_happened[i] == 1:
+                    if isinstance(lives_all_list[i], int):
+                        lives_all_list[i] = lives[i]
+                        treasure_all_list[i] = treasure[i]
+                        score_all_list[i] = score[i]
+                        if sub in dfID:
+                            difficulty_all_list[i] = difficulty[i]
 
-            # Input plots only include participants with data from all 10 trials,
-            # but performance plots include participants with at least 9 trials
+                    else:
+                        lives_all_list[i] = np.append(lives_all_list[i], lives[i])
+                        treasure_all_list[i] = np.append(treasure_all_list[i], treasure[i])
+                        score_all_list[i] = np.append(score_all_list[i], score[i])
+                        if sub in dfID:
+                            difficulty_all_list[i] = np.append(difficulty_all_list[i], difficulty[i])
 
-            ###############################
-            # Include data in input lists
-            ###############################
-            include_sub = False
-            if (all_low == 1) and (all_high == 1):
-                if only_experts:
-                    if expertise == "expert":
-                        include_sub = True
-                elif only_novices:
-                    if expertise == "novice":
-                        include_sub = True
-                else:
-                    include_sub = True
+        ###############################
+        # Include data in CogLoad lists
+        ###############################
+        include_sub = use_sub(10,trial_happened_RR, expertise, only_experts, only_novices)
+        if include_sub:
+            subnum_RR += 1
+            sub_list_RR.append(subID)
+            for i in range(10):
+                if trial_happened_RR[i] == 1:
+                    if isinstance(RR_all_list[i], int):
+                        RR_all_list[i] = RR_zscore[i]
+                    else:
+                        RR_all_list[i] = np.append(RR_all_list[i], RR_zscore[i])
 
-            if include_sub:
-                subnum_input += 1
-                sub_list_input.append(subID)
-                for i in range(10):
-                    if trial_happened[i] == 1:
-                        if isinstance(input_all_list[i], int):
-                            input_all_list[i] = input_all[sub, i]
-                        else:
-                            input_all_list[i] = np.append(input_all_list[i], input_all[sub, i])
+        ###############################
+        # Include data in MDP lists
+        ###############################
+        include_sub = use_sub(9,trial_happened_MDP, expertise, only_experts, only_novices)
+        if sub==1:
+            print(include_sub,trial_happened_MDP, expertise, only_experts, only_novices)
 
-            ###############################
-            # Include data in performance lists
-            ###############################
-            include_sub = False
-            if (all_low == 1) or (all_high == 1):
-                if only_experts:
-                    if expertise == "expert":
-                        include_sub = True
-                elif only_novices:
-                    if expertise == "novice":
-                        include_sub = True
-                else:
-                    include_sub = True
-
-            if include_sub:
-                subnum_performace += 1
-                sub_list_performance.append(subID)
-                if sub in dfID:
-                    subnum_difficulty += 1
-                    sub_list_difficulty.append(subID)
-                for i in range(10):
-                    if trial_happened[i] == 1:
-                        if isinstance(lives_all_list[i], int):
-                            lives_all_list[i] = lives_all[sub, i]
-                            treasure_all_list[i] = treasure_all[sub, i]
-                            score_all_list[i] = score_all[sub, i]
-                            if sub in dfID:
-                                difficulty_all_list[i] = difficulty_all[sub, i]
-
-                        else:
-                            lives_all_list[i] = np.append(lives_all_list[i], lives_all[sub, i])
-                            treasure_all_list[i] = np.append(treasure_all_list[i], treasure_all[sub, i])
-                            score_all_list[i] = np.append(score_all_list[i], score_all[sub, i])
-                            if sub in dfID:
-                                difficulty_all_list[i] = np.append(difficulty_all_list[i], difficulty_all[sub, i])
-
+        if include_sub:
+            subnum_MDP += 1
+            sub_list_MDP.append(subID)
+            for i in range(10):
+                if trial_happened_MDP[i] == 1:
+                    if isinstance(regret_all_list[i], int):
+                        regret_all_list[i] = regret_cum[i]
+                    else:
+                        regret_all_list[i] = np.append(regret_all_list[i], regret_cum[i])
 
 print('The number of subjects included in input plots is ' + str(subnum_input) + '.')
 print('These are the subjects: ',sub_list_input)
 print('The number of subjects included in performance plots is ' + str(subnum_performace) + '.')
 print('These are the subjects: ',sub_list_performance)
+print('The number of subjects included in cognitive load plots is ' + str(subnum_RR) + '.')
+print('These are the subjects: ',sub_list_RR)
 print('The number of subjects included in difficulty plots is ' + str(subnum_difficulty) + '.')
 print('These are the subjects: ',sub_list_difficulty)
+print('The number of subjects included in MDP plots is ' + str(subnum_MDP) + '.')
+print('These are the subjects: ',sub_list_MDP)
+
 
 ###############################################################################
 # PLOT BOXPLOTS
@@ -348,12 +292,16 @@ alphas5 = [None, None, None, None, None]
 colors5 = ['#BA4900','#BA0071','#0071BA','#00BA49','#00BAA6']
 labels5 = ['No Swarm','Waypoint\nControl','User','Shared','Autonomous']
 
+# Plot parameters: Cog load
+figure_size_RR = (4.5, 3.25)
+colors_RR = ['#BA4900','#BA4900','#BA0071','#0071BA','#00BA49','#00BAA6']
+labels_RR = ['','No Swarm','Waypoint\nControl','User','Shared','Autonomous']
+
 xlabel = ''
 
 ###############################################################################
 # Plotting overall game score: bar plot
 ###############################################################################
-
 if plot_score_paper:
 
     if combine_complexity:
@@ -417,17 +365,15 @@ if plot_score_paper:
     add_labels(ax, x1, x2, y, name, text_buffer)
 
     if only_experts:
-        plt.savefig(file_plot_all + 'Score/score_experts.pdf')
+        plt.savefig(file_plot + 'Score/score_experts.pdf')
     elif only_novices:
-        plt.savefig(file_plot_all + 'Score/score_novices.pdf')
+        plt.savefig(file_plot + 'Score/score_novices.pdf')
     else:
-        plt.savefig(file_plot_all + 'Score/score.pdf')
-
+        plt.savefig(file_plot + 'Score/score.pdf')
 
 ###############################################################################
 # Plotting command input counts
 ###############################################################################
-
 if plot_input:
     # Formatting data to be plotted ###########################################
     if combine_complexity:
@@ -478,16 +424,15 @@ if plot_input:
 
     # Saving the plots ########################################################
     if only_experts:
-        fig.savefig(file_plot_all + 'Inputs/inputs_experts.pdf')
+        fig.savefig(file_plot + 'Inputs/inputs_experts.pdf')
     elif only_novices:
-        fig.savefig(file_plot_all + 'Inputs/inputs_novices.pdf')
+        fig.savefig(file_plot + 'Inputs/inputs_novices.pdf')
     else:
-        fig.savefig(file_plot_all + 'Inputs/inputs.pdf')
+        fig.savefig(file_plot + 'Inputs/inputs.pdf')
 
 ###############################################################################
 # Plotting trial difficulty rating
 ###############################################################################
-
 if plot_difficulty:
     if combine_complexity:
         data_low = difficulty_all_list[:5]
@@ -544,8 +489,118 @@ if plot_difficulty:
     # Saving the plots ########################################################
 
     if only_experts:
-        fig.savefig(file_plot_all + 'Difficulty/difficulty_experts.pdf')
+        fig.savefig(file_plot + 'Difficulty/difficulty_experts.pdf')
     elif only_novices:
-        fig.savefig(file_plot_all + 'Difficulty/difficulty_novices.pdf')
+        fig.savefig(file_plot + 'Difficulty/difficulty_novices.pdf')
     else:
-        fig.savefig(file_plot_all + 'Difficulty/difficulty.pdf')
+        fig.savefig(file_plot + 'Difficulty/difficulty.pdf')
+
+###############################################################################
+# Plotting RR results
+###############################################################################
+if plot_RR:
+    if combine_complexity:
+        data_low = RR_all_list[:5]
+        data_high = RR_all_list[5:]
+        data = [np.array([0,0,0])]
+
+        for i in range(len(data_low)):
+            data_combined = np.concatenate((data_low[i], data_high[i]), axis=0)
+            data.append(data_combined)
+    else:
+        data = RR_all_list
+
+    if only_experts:
+        title = '\'RR\' Interval'
+        sig_matrix = np.array([
+                                [1,2,0.02533904], # none - wp
+                                [2,4,0.03165469],  # wp - shared
+                                [2,5,0.008010422]  # wp - auto
+                                ])
+        y = -1
+    elif only_novices:
+        title = '\'RR\' Interval'
+        sig_matrix = np.array([])
+        y = -1.1
+    else:
+        title = '\'RR\' Interval'
+        sig_matrix = np.array([])
+        y = -.7
+
+    # Create a plot ##########################################################
+    ylabel = 'Within-Subject Z-score'
+    xlabel = ''
+    fig, ax = plt.subplots(figsize=figure_size_RR,dpi=300)
+    upper_data_bound = make_scatter(fig, ax, data, title, xlabel, ylabel, labels_RR, colors_RR)
+
+    # Add stastical signicant marking #########################################
+    add_stats(upper_data_bound,sig_matrix,ax,spread_factor=22,type='bar')
+
+    # Add *Ergodic* label and arrow on the bottom of the plot #################
+    fig.subplots_adjust(bottom=0.18)  # asjust white spacing on the bottom
+
+    x1 = [2.75, 0]  # start of the arrow
+    x2 = [5.25, 0]  # end of the arrow
+    text_buffer = .1
+    name = ['Coverage Control', '']  # single label due to combining env. complexity
+
+    add_labels(ax, x1, x2, y, name, text_buffer)
+
+    # Saving the plots ########################################################
+
+    if only_experts:
+        fig.savefig(file_plot + 'RR/RR_experts.pdf')
+    elif only_novices:
+        fig.savefig(file_plot + 'RR/RR_novices.pdf')
+    else:
+        fig.savefig(file_plot + 'RR/RR.pdf')
+
+###############################################################################
+# Plotting MDP results
+###############################################################################
+if plot_MDP:
+    if combine_complexity:
+        data_low = regret_all_list[:5]
+        data_high = regret_all_list[5:]
+        data = []
+
+        for i in range(len(data_low)):
+            data_combined = np.concatenate((data_low[i], data_high[i]), axis=0)
+            data.append(data_combined)
+    else:
+        data = regret_all_list
+
+    if only_experts:
+        title = 'Cummulative Regret'
+    elif only_novices:
+        title = 'Cummulative Regret'
+    else:
+        title = 'Cummulative Regret'
+
+    # Create a plot ##########################################################
+    ylabel = 'Cummulative Regret'
+    xlabel = ''
+
+    fig, ax = make_boxplot(data, title, xlabel, ylabel, labels5, colors5, alphas5, figure_size)
+
+    # # Add stastical signicant marking #########################################
+    # add_stats(upper_data_bound,sig_matrix,ax,spread_factor=22,type='bar')
+
+    # Add *Ergodic* label and arrow on the bottom of the plot #################
+    fig.subplots_adjust(bottom=0.18)  # asjust white spacing on the bottom
+
+    x1 = [2.75, 0]  # start of the arrow
+    x2 = [5.25, 0]  # end of the arrow
+    text_buffer = .1
+    name = ['Coverage Control', '']  # single label due to combining env. complexity
+
+    add_labels(ax, x1, x2, y, name, text_buffer)
+
+    # Saving the plots ########################################################
+
+    if only_experts:
+        fig.savefig(file_plot + 'MDP/regret_experts.pdf')
+    elif only_novices:
+        fig.savefig(file_plot + 'MDP/regret_novices.pdf')
+    else:
+        fig.savefig(file_plot + 'MDP/regret.pdf')

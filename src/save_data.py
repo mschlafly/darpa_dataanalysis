@@ -30,7 +30,6 @@ writeDataPlayback = writeDataDIR+'playback/'
 ###############################################################################
 
 def create_csv(filePath, columns):
-    # creates a csv file with given column names
     with open(filePath, 'w') as csvFile:
         writer = csv.writer(csvFile, delimiter=',')
         writer.writerow(columns)
