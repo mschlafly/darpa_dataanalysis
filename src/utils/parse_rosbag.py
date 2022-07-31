@@ -121,19 +121,19 @@ class parse_bag:
                     self.game_lives = msg.lives_count
                     # print('Game now shows player has ',self.game_lives,' self.lives at time',(t.secs-self.start_time)/60.0)
             elif topic == self.topic_list[1]:  # /treasure_info
-                if self.treas_loc_x != msg.xpos or self.treas_loc_y != msg.ypos:
-                    self.treas_loc_x_prev = self.treas_loc_x
-                    self.treas_loc_y_prev = self.treas_loc_y
-                    self.treas_loc_x = msg.xpos
-                    self.treas_loc_y = msg.ypos
-                    if self.game_on:
-                        if self.treas_loc_x_prev != self.treas_loc_x or self.treas_loc_y_prev != self.treas_loc_y:
-                            self.treasures += 1
-                        if (msg.treasure_count > self.game_treasures):
-                            self.game_treasures = msg.treasure_count
-                    self.treas_posX.append(msg.xpos)  # List of xPos for animation
-                    self.treas_posY.append(msg.ypos)  # List of yPos for animation
-                    self.treas_time.append(t.secs-self.start_time)
+                # if self.treas_loc_x != msg.xpos or self.treas_loc_y != msg.ypos:
+                self.treas_loc_x_prev = self.treas_loc_x
+                self.treas_loc_y_prev = self.treas_loc_y
+                self.treas_loc_x = msg.xpos
+                self.treas_loc_y = msg.ypos
+                if self.game_on:
+                    if self.treas_loc_x_prev != self.treas_loc_x or self.treas_loc_y_prev != self.treas_loc_y:
+                        self.treasures += 1
+                    if (msg.treasure_count > self.game_treasures):
+                        self.game_treasures = msg.treasure_count
+                self.treas_posX.append(msg.xpos)  # List of xPos for animation
+                self.treas_posY.append(msg.ypos)  # List of yPos for animation
+                self.treas_time.append(t.secs-self.start_time)
             elif topic == self.topic_list[2]:  # /adversary_1_position
                 if msg.xpos != self.adversary_1_x or msg.ypos != self.adversary_1_y:
                     self.adversary_1_x_prev = self.adversary_1_x

@@ -106,27 +106,27 @@ for sub in range(minsub, maxsub+1):
 
                     if game_data.game_complete is True:
 
-                        # # saving performance data
-                        # row = [subID, control[con], environments[env],
-                        #        game_data.lives, game_data.treasures,
-                        #        game_data.input_count]
-                        # with open(file, 'a') as csvfile:
-                        #     writer = csv.writer(csvfile, delimiter=',')
-                        #     writer.writerow(row)
-                        # print('Saved row to file: ', row)
+                        # saving performance data
+                        row = [subID, control[con], environments[env],
+                               game_data.lives, game_data.treasures,
+                               game_data.input_count]
+                        with open(file, 'a') as csvfile:
+                            writer = csv.writer(csvfile, delimiter=',')
+                            writer.writerow(row)
+                        print('Saved row to file: ', row)
 
-                        # # saving gametime.csv data
-                        # start_time = datetime.fromtimestamp(game_data.start_time)
-                        # end_time = datetime.fromtimestamp(game_data.end_time)
-                        # row = [subID, control[con], environments[env],
-                        #        start_time.month, start_time.day,
-                        #        start_time.hour, start_time.minute, start_time.second,
-                        #        end_time.month, end_time.day,
-                        #        end_time.hour, end_time.minute, end_time.second]
-                        # with open(file_game, 'a') as csvfile:
-                        #     writer = csv.writer(csvfile, delimiter=',')
-                        #     writer.writerow(row)
-                        # print('Saved row to file: ', row)
+                        # saving gametime.csv data
+                        start_time = datetime.fromtimestamp(game_data.start_time)
+                        end_time = datetime.fromtimestamp(game_data.end_time)
+                        row = [subID, control[con], environments[env],
+                               start_time.month, start_time.day,
+                               start_time.hour, start_time.minute, start_time.second,
+                               end_time.month, end_time.day,
+                               end_time.hour, end_time.minute, end_time.second]
+                        with open(file_game, 'a') as csvfile:
+                            writer = csv.writer(csvfile, delimiter=',')
+                            writer.writerow(row)
+                        print('Saved row to file: ', row)
 
                         ###########################################################
                         # Saving playback data:

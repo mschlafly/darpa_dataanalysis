@@ -113,19 +113,19 @@ class parse_bag:
         self.adv2_time = []
 
     def update_treasure(self, msg):
-        if self.treas_loc_x != msg.xpos or self.treas_loc_y != msg.ypos:
-            self.treas_loc_x_prev = self.treas_loc_x
-            self.treas_loc_y_prev = self.treas_loc_y
-            self.treas_loc_x = msg.xpos
-            self.treas_loc_y = msg.ypos
-            if self.game_on:
-                if self.treas_loc_x_prev != self.treas_loc_x or self.treas_loc_y_prev != self.treas_loc_y:
-                    self.treasures += 1
-                if (msg.treasure_count > self.game_treasures):
-                    self.game_treasures = msg.treasure_count
-                self.treas_posX.append(msg.xpos)  # List of xPos for animation
-                self.treas_posY.append(msg.ypos)  # List of yPos for animation
-                self.treas_time.append(rospy.get_time()-self.start_time)
+        # if self.treas_loc_x != msg.xpos or self.treas_loc_y != msg.ypos:
+        self.treas_loc_x_prev = self.treas_loc_x
+        self.treas_loc_y_prev = self.treas_loc_y
+        self.treas_loc_x = msg.xpos
+        self.treas_loc_y = msg.ypos
+        if self.game_on:
+            if self.treas_loc_x_prev != self.treas_loc_x or self.treas_loc_y_prev != self.treas_loc_y:
+                self.treasures += 1
+            if (msg.treasure_count > self.game_treasures):
+                self.game_treasures = msg.treasure_count
+            self.treas_posX.append(msg.xpos)  # List of xPos for animation
+            self.treas_posY.append(msg.ypos)  # List of yPos for animation
+            self.treas_time.append(rospy.get_time()-self.start_time)
 
     def update_adv_1(self, msg):
         if msg.xpos != self.adversary_1_x or msg.ypos != self.adversary_1_y:
@@ -296,9 +296,9 @@ if __name__ == '__main__':
 
     # Update this info based on the particular ROS bag trial to be parsed. NOTE
     # that all the relavant info is stored in a missing_bags.csv file.
-    sub = 5  # subject number
-    con = 1   # corresponds to the control type
-    env = 0   # corresponds to the enviornmental complexity
+    sub = 39  # subject number
+    con = 4   # corresponds to the control type
+    env = 1   # corresponds to the enviornmental complexity
 
     control = ['none', 'waypoint', 'directergodic', 'sharedergodic', 'autoergodic']
     environments = ['low', 'high']
