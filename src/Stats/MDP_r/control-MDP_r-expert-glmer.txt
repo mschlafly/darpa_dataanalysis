@@ -1,0 +1,118 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+[1] "Sum of squares"
+[1] 1495.627
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: MDP_r
+                      Chisq Df Pr(>Chisq)    
+(Intercept)        104.8394  1     <2e-16 ***
+Complexity           0.4550  1     0.5000    
+Control              5.7162  4     0.2214    
+Complexity:Control   4.2906  4     0.3681    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "degrees of freedom:"
+[1] 135
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lme4::lmer(formula = MDP_r ~ Complexity * Control + (1 | Subject), 
+    data = data_all)
+
+Linear Hypotheses:
+                                   Estimate Std. Error t value Pr(>|t|)
+directergodic - autoergodic == 0     0.8648     1.0135   0.853    0.913
+none - autoergodic == 0             -0.2143     1.0135  -0.211    1.000
+sharedergodic - autoergodic == 0    -1.5625     1.0135  -1.542    0.537
+waypoint - autoergodic == 0         -0.5357     1.0135  -0.529    0.984
+none - directergodic == 0           -1.0791     1.0135  -1.065    0.824
+sharedergodic - directergodic == 0  -2.4273     1.0135  -2.395    0.123
+waypoint - directergodic == 0       -1.4005     1.0135  -1.382    0.640
+sharedergodic - none == 0           -1.3482     1.0135  -1.330    0.673
+waypoint - none == 0                -0.3214     1.0135  -0.317    0.998
+waypoint - sharedergodic == 0        1.0268     1.0135   1.013    0.849
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 77.51005
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: MDP_r
+               Chisq Df Pr(>Chisq)    
+(Intercept) 901.0035  1     <2e-16 ***
+Control       5.2908  4     0.2587    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = MDP_r ~ Control + (1 | Subject), data = data_high, 
+    family = poisson(link = "identity"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0    -1.7143     1.3171  -1.302    0.690
+none - autoergodic == 0             -0.4286     1.3515  -0.317    0.998
+sharedergodic - autoergodic == 0     1.2857     1.3961   0.921    0.889
+waypoint - autoergodic == 0          0.2143     1.3684   0.157    1.000
+none - directergodic == 0            1.2857     1.3054   0.985    0.862
+sharedergodic - directergodic == 0   3.0000     1.3515   2.220    0.172
+waypoint - directergodic == 0        1.9286     1.3229   1.458    0.590
+sharedergodic - none == 0            1.7143     1.3850   1.238    0.729
+waypoint - none == 0                 0.6429     1.3571   0.474    0.990
+waypoint - sharedergodic == 0       -1.0714     1.4015  -0.764    0.941
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 76.56536
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: MDP_r
+               Chisq Df Pr(>Chisq)    
+(Intercept) 480.3904  1     <2e-16 ***
+Control       5.6989  4     0.2228    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = MDP_r ~ Control + (1 | Subject), data = data_low, 
+    family = poisson(link = "identity"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0     1.7442     1.1624   1.500    0.562
+none - autoergodic == 0              2.1812     1.1758   1.855    0.342
+sharedergodic - autoergodic == 0     2.5338     1.1865   2.136    0.205
+waypoint - autoergodic == 0          1.5461     1.1563   1.337    0.668
+none - directergodic == 0            0.4370     1.2278   0.356    0.997
+sharedergodic - directergodic == 0   0.7897     1.2380   0.638    0.969
+waypoint - directergodic == 0       -0.1980     1.2091  -0.164    1.000
+sharedergodic - none == 0            0.3527     1.2506   0.282    0.999
+waypoint - none == 0                -0.6350     1.2220  -0.520    0.985
+waypoint - sharedergodic == 0       -0.9877     1.2323  -0.802    0.930
+(Adjusted p values reported -- single-step method)
+

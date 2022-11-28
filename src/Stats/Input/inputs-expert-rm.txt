@@ -7,15 +7,15 @@
 ################################################################################ 
 Test for normality: Shapiro test
 ################################################################################ 
-[38;5;246m# A tibble: 6 x 5[39m
+# A tibble: 6 × 5
   Control       Complexity variable statistic     p
-  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m      [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<dbl>[39m[23m [3m[38;5;246m<dbl>[39m[23m
-[38;5;250m1[39m directergodic high       Input        0.947 0.231
-[38;5;250m2[39m sharedergodic high       Input        0.949 0.253
-[38;5;250m3[39m waypoint      high       Input        0.981 0.909
-[38;5;250m4[39m directergodic low        Input        0.963 0.505
-[38;5;250m5[39m sharedergodic low        Input        0.937 0.141
-[38;5;250m6[39m waypoint      low        Input        0.974 0.762
+  <fct>         <fct>      <chr>        <dbl> <dbl>
+1 directergodic high       Input        0.947 0.231
+2 sharedergodic high       Input        0.949 0.253
+3 waypoint      high       Input        0.981 0.909
+4 directergodic low        Input        0.963 0.505
+5 sharedergodic low        Input        0.937 0.141
+6 waypoint      low        Input        0.974 0.762
 
 ################################################################################ 
 Test for Sphericity: ezANOVA 
@@ -99,18 +99,12 @@ Post-hoc test across all experimental conditions
 
 data:  data_all$Input and data_all$combo 
 
-                   directergodic high directergodic low sharedergodic high sharedergodic low
-directergodic low  1.00               -                 -                  -                
-sharedergodic high 0.19               1.00              -                  -                
-sharedergodic low  0.25               0.43              1.00               -                
-waypoint high      1.00               1.00              0.16               0.32             
-waypoint low       1.00               1.00              0.19               0.25             
-                   waypoint high
-directergodic low  -            
-sharedergodic high -            
-sharedergodic low  -            
-waypoint high      -            
-waypoint low       1.00         
+                   directergodic high directergodic low sharedergodic high sharedergodic low waypoint high
+directergodic low  1.00               -                 -                  -                 -            
+sharedergodic high 0.19               1.00              -                  -                 -            
+sharedergodic low  0.25               0.43              1.00               -                 -            
+waypoint high      1.00               1.00              0.16               0.32              -            
+waypoint low       1.00               1.00              0.19               0.25              1.00         
 
 P value adjustment method: bonferroni 
 
@@ -121,28 +115,28 @@ P value adjustment method: bonferroni
 ################################################################################ 
 Test for normality: Shapiro test
 ################################################################################ 
-[38;5;246m# A tibble: 3 x 4[39m
+# A tibble: 3 × 4
   Control       variable statistic     p
-  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<dbl>[39m[23m [3m[38;5;246m<dbl>[39m[23m
-[38;5;250m1[39m directergodic Input        0.951 0.267
-[38;5;250m2[39m sharedergodic Input        0.952 0.276
-[38;5;250m3[39m waypoint      Input        0.983 0.935
+  <fct>         <chr>        <dbl> <dbl>
+1 directergodic Input        0.947 0.231
+2 sharedergodic Input        0.949 0.253
+3 waypoint      Input        0.981 0.909
 
 ################################################################################ 
 Test for Sphericity: ezANOVA 
 ################################################################################ 
 $ANOVA
-       Effect DFn DFd       SSn       SSd          F            p p<.05       ges
-1 (Intercept)   1  24 8769.6133 1881.3867 111.869997 1.625739e-10     * 0.7671101
-2     Control   2  48  170.9867  781.0133   5.254302 8.640045e-03     * 0.0603471
+       Effect DFn DFd       SSn       SSd          F            p p<.05        ges
+1 (Intercept)   1  23 8493.3889 1877.2778 104.059158 5.245130e-10     * 0.76197430
+2     Control   2  46  173.4444  775.8889   5.141486 9.655137e-03     * 0.06136127
 
 $`Mauchly's Test for Sphericity`
    Effect         W         p p<.05
-2 Control 0.9945578 0.9391724      
+2 Control 0.9939764 0.9357003      
 
 $`Sphericity Corrections`
    Effect       GGe       p[GG] p[GG]<.05      HFe       p[HF] p[HF]<.05
-2 Control 0.9945873 0.008759393         * 1.084225 0.008640045         *
+2 Control 0.9940125 0.009797538         * 1.087775 0.009655137         *
 
 ################################################################################ 
 T-test for group difference 
@@ -153,7 +147,7 @@ T-test for group difference
 data:  data_high$Input and data_high$Control 
 
               directergodic sharedergodic
-sharedergodic 0.031         -            
+sharedergodic 0.038         -            
 waypoint      1.000         0.032        
 
 P value adjustment method: bonferroni 
@@ -165,12 +159,12 @@ P value adjustment method: bonferroni
 ################################################################################ 
 Test for normality: Shapiro test
 ################################################################################ 
-[38;5;246m# A tibble: 3 x 4[39m
+# A tibble: 3 × 4
   Control       variable statistic     p
-  [3m[38;5;246m<chr>[39m[23m         [3m[38;5;246m<chr>[39m[23m        [3m[38;5;246m<dbl>[39m[23m [3m[38;5;246m<dbl>[39m[23m
-[38;5;250m1[39m directergodic Input        0.963 0.505
-[38;5;250m2[39m sharedergodic Input        0.937 0.141
-[38;5;250m3[39m waypoint      Input        0.974 0.762
+  <fct>         <chr>        <dbl> <dbl>
+1 directergodic Input        0.963 0.505
+2 sharedergodic Input        0.937 0.141
+3 waypoint      Input        0.974 0.762
 
 ################################################################################ 
 Test for Sphericity: ezANOVA 

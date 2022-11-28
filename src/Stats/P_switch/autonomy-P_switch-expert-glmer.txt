@@ -1,0 +1,99 @@
+
+########################################################################### 
+################################### ALL ################################### 
+########################################################################### 
+[1] "Sum of squares"
+[1] 15270.38
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: P_switch
+                      Chisq Df Pr(>Chisq)    
+(Intercept)        524.1900  1  < 2.2e-16 ***
+Complexity           1.1431  1   0.285003    
+Control              3.8097  2   0.148844    
+Complexity:Control  10.8933  2   0.004311 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = P_switch ~ Complexity * Control + (1 | Subject), 
+    data = data_all, family = binomial(link = "logit"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                    Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0   -0.022680   0.056379  -0.402    0.915
+sharedergodic - autoergodic == 0    0.008206   0.051266   0.160    0.986
+sharedergodic - directergodic == 0  0.030886   0.055365   0.558    0.842
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 7445.052
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: P_switch
+               Chisq Df Pr(>Chisq)    
+(Intercept) 250.1279  1     <2e-16 ***
+Control       1.7924  2     0.4081    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = P_switch ~ Control + (1 | Subject), data = data_high, 
+    family = binomial(link = "logit"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                    Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0   -0.077702   0.073353  -1.059    0.539
+sharedergodic - autoergodic == 0   -0.080691   0.065598  -1.230    0.435
+sharedergodic - directergodic == 0 -0.002989   0.070789  -0.042    0.999
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 7747.109
+[1] "Sum of all model error"
+[1] 67202.57
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: P_switch
+              Chisq Df Pr(>Chisq)    
+(Intercept) 150.061  1    < 2e-16 ***
+Control      13.369  2    0.00125 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = P_switch ~ Control + (1 | Subject), data = data_low, 
+    family = binomial(link = "logit"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)    
+directergodic - autoergodic == 0    0.08772    0.06727   1.304 0.392828    
+sharedergodic - autoergodic == 0    0.24139    0.06653   3.628 0.000777 ***
+sharedergodic - directergodic == 0  0.15367    0.06891   2.230 0.066130 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+

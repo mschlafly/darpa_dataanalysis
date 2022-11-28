@@ -21,10 +21,10 @@
 options(contrasts=c("contr.sum","contr.poly"))
 remove(list = ls())
 
-# parameters 
-DIR = 'C:/Users/milli/OneDrive/Documents/darpa_dataanalysis/src'
-# DIR = 'C:/Users/numur/Desktop/darpa_data_analysis/src' 
-skill = "expert" # either "expert", "novice", "compareexpertise", or "all" 
+# parameters
+# DIR = 'C:/Users/milli/OneDrive/Documents/darpa_dataanalysis/src'
+DIR = '/home/milli/Desktop/darpa_dataanalysis/src'
+skill = "compareexpertise" # either "expert", "novice", "compareexpertise", or "all"
                  # (but "all" has convergence problems)
                  # instead, use "compareexpertise", test a model using just expertise and control
 onlySubset = "F" # "T" for true and "F" for false
@@ -33,22 +33,24 @@ modelerrorsum = 0
 
 # loads packages and dependencies
 library(ez)
-library(car) 
+library(car)
 library(lme4)
 library(multcomp)
 
 ################################################################################
 ################################################################################
-#               Import Data 
+#               Import Data
 ################################################################################
 ################################################################################
-data_control_original = read.csv(paste(DIR,"raw_data_formatted","raw_data_formatted.csv",sep="/"))
+data_original = read.csv(paste(DIR,"raw_data_formatted","raw_data_formatted.csv",sep="/"))
+data_original = subset(data_original, Include_Score=='True')
+data_original = subset(data_original, Score!='NaN')
 if (skill=="expert"){
-  data_control = subset(data_control_original, Lifetime>999)
+  data_control = subset(data_original, Lifetime>999)
 } else if (skill=="novice"){
-  data_control = subset(data_control_original, Lifetime<999)
+  data_control = subset(data_original, Lifetime<999)
 } else {
-  data_control = data_control_original
+  data_control = data_original
 }
 data_autonomy = subset(data_control,Control!='none' & Control!='waypoint')
 
@@ -120,7 +122,7 @@ anov = Anova(glmer_model,type="III",
              test.statistic = "Chisq")
 print(anov)
 
-# Post-hoc tukey 
+# Post-hoc tukey
 dof = nrow(data_all)-5
 print("degrees of freedom:")
 print(dof)
@@ -128,16 +130,16 @@ print(summary(glht(glmer_model,
                    linfct=mcp(Control = "Tukey",
                               interaction_average = TRUE),df=dof)))
 
-# Alternate methods of doing a post-hoc tests
-if (skill!="compareexpertise") {
-  library(emmeans)
-  marginal = lsmeans(glmer_model,~ Complexity * Control)
-  print(pairs(marginal,adjust="tukey"))
-}
+# # Alternate methods of doing a post-hoc tests
+# if (skill!="compareexpertise") {
+#   library(emmeans)
+#   marginal = lsmeans(glmer_model,~ Complexity * Control)
+#   print(pairs(marginal,adjust="tukey"))
+# }
 
 # # Post-hoc t-test with bonferroni correction - assumes normality
 # data_all$combo <- paste(data_all$Control,data_all$Complexity)
-# 
+#
 # print(data_all$combo)
 # posthoc<-pairwise.t.test(data_all$Score,data_all$combo,paired = TRUE, p.adjust.method = "bonferroni")
 # print(posthoc)

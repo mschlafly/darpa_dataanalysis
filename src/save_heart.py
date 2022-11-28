@@ -59,7 +59,7 @@ def raw_to_metricfile(sub_list, measure, my_measure):
     file_subdata = "raw_data/subject_info.csv"
     save_file = "raw_data/"+my_measure+"_raw.csv"
     columns = ['Subject','Control','Complexity','Trial',
-                'Lifetime','Expertise','Alllow','Allhigh','Mean','Zscore']
+                'Lifetime','Expertise','Alllow','Allhigh','RR_Mean','RR_Zscore']
     #     # 'Alllow' and 'Allhigh' are booleans stating whether you have all of
     #     # the data for all of the low complexity trials or all of the low complexity trials
     with open(save_file,'w',newline='') as csvfile:

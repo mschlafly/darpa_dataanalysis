@@ -41,13 +41,15 @@ library(multcomp)
 #               Import Data 
 ################################################################################
 ################################################################################
-data_control_original = read.csv(paste(DIR,"raw_data_formatted","raw_data_formatted.csv",sep="/"))
+data_original = read.csv(paste(DIR,"raw_data_formatted","raw_data_formatted.csv",sep="/"))
+data_original = subset(data_original, Include_Difficulty=='True')
+data_original = subset(data_original, Difficulty!='NaN')
 if (skill=="expert"){
-  data_control = subset(data_control_original, Lifetime>999)
+  data_control = subset(data_original, Lifetime>999)
 } else if (skill=="novice"){
-  data_control = subset(data_control_original, Lifetime<999)
+  data_control = subset(data_original, Lifetime<999)
 } else {
-  data_control = data_control_original
+  data_control = data_original
 }
 data_autonomy = subset(data_control,Control!='none' & Control!='waypoint')
 

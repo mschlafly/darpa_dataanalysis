@@ -292,7 +292,7 @@ def make_scatter(fig, ax, data, title, xlabel, ylabel, labels, colors):
     ax.set_xticklabels(labels, fontname="sans-serif", fontsize=9)
     # ax.set_xticklabels(ind, labels, fontname="sans-serif", fontsize=9)
     for tick in ax.get_xticklabels():
-        tick.set_rotation(0)
+        tick.set_rotation(30)
 
     return upper_data_bound
 

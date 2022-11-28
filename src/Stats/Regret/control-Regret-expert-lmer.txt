@@ -1,0 +1,130 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                                         Chisq Df Pr(>Chisq)    
+(Intercept)                            69.2808  1  < 2.2e-16 ***
+Complexity                              0.2448  1  0.6207420    
+Control                                23.2654  4  0.0001121 ***
+Max_regret_group2                    1186.0870  1  < 2.2e-16 ***
+Complexity:Control                     51.7515  4  1.555e-10 ***
+Complexity:Max_regret_group2            0.1033  1  0.7478998    
+Control:Max_regret_group2              41.4667  4  2.151e-08 ***
+Complexity:Control:Max_regret_group2   86.2062  4  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "degrees of freedom:"
+[1] 6421
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Complexity * Control * Max_regret_group2 + 
+    (1 | Subject), data = data_all)
+
+Linear Hypotheses:
+                                    Estimate Std. Error t value Pr(>|t|)    
+directergodic - autoergodic == 0    0.063640   0.017944   3.547  0.00307 ** 
+none - autoergodic == 0             0.004677   0.046633   0.100  0.99997    
+sharedergodic - autoergodic == 0    0.017243   0.016357   1.054  0.81456    
+waypoint - autoergodic == 0         0.161217   0.023512   6.857  < 0.001 ***
+none - directergodic == 0          -0.058963   0.047385  -1.244  0.70409    
+sharedergodic - directergodic == 0 -0.046396   0.018394  -2.522  0.07559 .  
+waypoint - directergodic == 0       0.097577   0.024971   3.908  < 0.001 ***
+sharedergodic - none == 0           0.012567   0.046809   0.268  0.99872    
+waypoint - none == 0                0.156540   0.049762   3.146  0.01241 *  
+waypoint - sharedergodic == 0       0.143974   0.023857   6.035  < 0.001 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+########################################################################### 
+####### THIS MODEL HAS A SINGULAR FIT ######### 
+########################################################################### 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                            Chisq Df Pr(>Chisq)    
+(Intercept)                0.2497  1     0.6173    
+Control                   53.3286  4  7.274e-11 ***
+Max_regret_group         660.2157  1  < 2.2e-16 ***
+Control:Max_regret_group 110.8807  4  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Control * Max_regret_group + (1 | Subject), 
+    data = data_high)
+
+Linear Hypotheses:
+                                     Estimate Std. Error z value Pr(>|z|)    
+directergodic - autoergodic == 0    0.1305704  0.0208053   6.276  < 0.001 ***
+none - autoergodic == 0             0.0449925  0.0536972   0.838  0.91015    
+sharedergodic - autoergodic == 0    0.0453504  0.0181061   2.505  0.07875 .  
+waypoint - autoergodic == 0         0.2280766  0.0264017   8.639  < 0.001 ***
+none - directergodic == 0          -0.0855779  0.0550128  -1.556  0.49857    
+sharedergodic - directergodic == 0 -0.0852200  0.0216992  -3.927  < 0.001 ***
+waypoint - directergodic == 0       0.0975062  0.0289840   3.364  0.00589 ** 
+sharedergodic - none == 0           0.0003579  0.0540498   0.007  1.00000    
+waypoint - none == 0                0.1830841  0.0573638   3.192  0.01059 *  
+waypoint - sharedergodic == 0       0.1827262  0.0271117   6.740  < 0.001 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+########################################################################### 
+####### THIS MODEL HAS A SINGULAR FIT ######### 
+########################################################################### 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                            Chisq Df Pr(>Chisq)    
+(Intercept)                0.0785  1  0.7793157    
+Control                   23.1184  4  0.0001199 ***
+Max_regret_group         608.1541  1  < 2.2e-16 ***
+Control:Max_regret_group  57.0453  4   1.21e-11 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Control * Max_regret_group + (1 | Subject), 
+    data = data_low)
+
+Linear Hypotheses:
+                                     Estimate Std. Error z value Pr(>|z|)    
+directergodic - autoergodic == 0   -0.0842407  0.0193303  -4.358   <0.001 ***
+none - autoergodic == 0            -0.0643762  0.0564780  -1.140    0.767    
+sharedergodic - autoergodic == 0    0.0427169  0.0191500   2.231    0.151    
+waypoint - autoergodic == 0         0.0431991  0.0228846   1.888    0.299    
+none - directergodic == 0           0.0198645  0.0570505   0.348    0.996    
+sharedergodic - directergodic == 0  0.1269577  0.0207777   6.110   <0.001 ***
+waypoint - directergodic == 0       0.1274398  0.0242630   5.252   <0.001 ***
+sharedergodic - none == 0           0.1070932  0.0569897   1.879    0.304    
+waypoint - none == 0                0.1075753  0.0583507   1.844    0.323    
+waypoint - sharedergodic == 0       0.0004821  0.0241196   0.020    1.000    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+

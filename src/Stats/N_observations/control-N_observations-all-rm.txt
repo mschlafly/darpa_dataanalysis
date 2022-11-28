@@ -1,0 +1,156 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+Test for normality 
+# A tibble: 8 × 5
+  Control       Complexity variable       statistic     p
+  <fct>         <fct>      <chr>              <dbl> <dbl>
+1 autoergodic   high       N_observations     0.975 0.688
+2 directergodic high       N_observations     0.940 0.102
+3 sharedergodic high       N_observations     0.961 0.357
+4 waypoint      high       N_observations     0.978 0.772
+5 autoergodic   low        N_observations     0.979 0.817
+6 directergodic low        N_observations     0.976 0.729
+7 sharedergodic low        N_observations     0.966 0.458
+8 waypoint      low        N_observations     0.962 0.377
+$ANOVA
+                        Effect DFn DFd          SSn      SSd            F            p p<.05          ges
+1                  (Intercept)   1  27 478271.17844 4304.572 2999.9087352 3.265643e-29     * 0.9594207913
+2                    Expertise   1  27    122.57499 4304.572    0.7688395 3.883115e-01       0.0060229544
+3                      Control   3  81  36365.02433 9440.157  104.0084066 1.074049e-27     * 0.6425624797
+5                   Complexity   1  27     17.05775 1329.572    0.3463968 5.610517e-01       0.0008425333
+4            Expertise:Control   3  81    176.24847 9440.157    0.5040921 6.805358e-01       0.0086375221
+6         Expertise:Complexity   1  27     19.24741 1329.572    0.3908628 5.370949e-01       0.0009505841
+7           Control:Complexity   3  81     81.86966 5154.432    0.4288505 7.328717e-01       0.0040308830
+8 Expertise:Control:Complexity   3  81    642.43862 5154.432    3.3652287 2.257534e-02     * 0.0307811497
+
+$`Mauchly's Test for Sphericity`
+                        Effect         W         p p<.05
+3                      Control 0.8384596 0.4759279      
+4            Expertise:Control 0.8384596 0.4759279      
+7           Control:Complexity 0.7139624 0.1234007      
+8 Expertise:Control:Complexity 0.7139624 0.1234007      
+
+$`Sphericity Corrections`
+                        Effect       GGe        p[GG] p[GG]<.05       HFe        p[HF] p[HF]<.05
+3                      Control 0.8927725 5.573563e-25         * 1.0003816 1.074049e-27         *
+4            Expertise:Control 0.8927725 6.598790e-01           1.0003816 6.805358e-01          
+7           Control:Complexity 0.8446830 7.000005e-01           0.9394467 7.207557e-01          
+8 Expertise:Control:Complexity 0.8446830 3.009073e-02         * 0.9394467 2.524412e-02         *
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$N_observations and data_all$Control 
+
+              autoergodic directergodic sharedergodic
+directergodic 2.2e-14     -             -            
+sharedergodic 0.014       2.1e-10       -            
+waypoint      < 2e-16     5.2e-15       < 2e-16      
+
+P value adjustment method: bonferroni 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$N_observations and data_all$combo 
+
+                   autoergodic high autoergodic low directergodic high directergodic low sharedergodic high
+autoergodic low    1.00000          -               -                  -                 -                 
+directergodic high 6.1e-07          1.4e-08         -                  -                 -                 
+directergodic low  5.5e-05          1.9e-06         1.00000            -                 -                 
+sharedergodic high 1.00000          0.24957         6.2e-07            0.00013           -                 
+sharedergodic low  1.00000          0.19293         9.0e-06            0.00395           1.00000           
+waypoint high      3.2e-13          < 2e-16         4.1e-07            2.2e-08           3.1e-14           
+waypoint low       7.0e-14          < 2e-16         5.1e-08            3.8e-07           7.9e-16           
+                   sharedergodic low waypoint high
+autoergodic low    -                 -            
+directergodic high -                 -            
+directergodic low  -                 -            
+sharedergodic high -                 -            
+sharedergodic low  -                 -            
+waypoint high      1.6e-13           -            
+waypoint low       9.7e-16           1.00000      
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+Test for normality 
+# A tibble: 4 × 4
+  Control       variable       statistic     p
+  <fct>         <chr>              <dbl> <dbl>
+1 autoergodic   N_observations     0.975 0.688
+2 directergodic N_observations     0.940 0.102
+3 sharedergodic N_observations     0.961 0.357
+4 waypoint      N_observations     0.978 0.772
+$ANOVA
+             Effect DFn DFd          SSn      SSd           F            p p<.05         ges
+1       (Intercept)   1  27 236287.85632 3159.833 2019.021717 6.472097e-27     * 0.956536422
+2         Expertise   1  27     22.33908 3159.833    0.190882 6.656579e-01       0.002076334
+3           Control   3  81  17215.99225 7576.732   61.349906 8.553535e-21     * 0.615900433
+4 Expertise:Control   3  81    282.19915 7576.732    1.005628 3.946888e-01       0.025610780
+
+$`Mauchly's Test for Sphericity`
+             Effect         W        p p<.05
+3           Control 0.8444905 0.500802      
+4 Expertise:Control 0.8444905 0.500802      
+
+$`Sphericity Corrections`
+             Effect       GGe        p[GG] p[GG]<.05       HFe        p[HF] p[HF]<.05
+3           Control 0.8910953 8.797902e-19         * 0.9982443 9.216581e-21         *
+4 Expertise:Control 0.8910953 3.888205e-01           0.9982443 3.946018e-01          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_high$N_observations and data_high$Control 
+
+              autoergodic directergodic sharedergodic
+directergodic 1.3e-07     -             -            
+sharedergodic 0.68        1.3e-07       -            
+waypoint      6.8e-14     8.9e-08       6.7e-15      
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+Test for normality 
+# A tibble: 4 × 4
+  Control       variable       statistic     p
+  <fct>         <chr>              <dbl> <dbl>
+1 autoergodic   N_observations     0.979 0.817
+2 directergodic N_observations     0.976 0.729
+3 sharedergodic N_observations     0.966 0.458
+4 waypoint      N_observations     0.962 0.377
+$ANOVA
+             Effect DFn DFd         SSn      SSd           F            p p<.05        ges
+1       (Intercept)   1  27 242000.3799 2474.310 2640.740582 1.797902e-28     * 0.96225667
+2         Expertise   1  27    119.4833 2474.310    1.303818 2.635428e-01       0.01243109
+3           Control   3  81  19230.9017 7017.857   73.987594 3.907429e-23     * 0.66952811
+4 Expertise:Control   3  81    536.4879 7017.857    2.064045 1.114507e-01       0.05349551
+
+$`Mauchly's Test for Sphericity`
+             Effect         W          p p<.05
+3           Control 0.6371448 0.04092653     *
+4 Expertise:Control 0.6371448 0.04092653     *
+
+$`Sphericity Corrections`
+             Effect       GGe        p[GG] p[GG]<.05       HFe        p[HF] p[HF]<.05
+3           Control 0.7718081 2.186697e-18         * 0.8484635 5.541651e-20         *
+4 Expertise:Control 0.7718081 1.283981e-01           0.8484635 1.224738e-01          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_low$N_observations and data_low$Control 
+
+              autoergodic directergodic sharedergodic
+directergodic 4.0e-07     -             -            
+sharedergodic 0.04134     0.00085       -            
+waypoint      < 2e-16     8.1e-08       < 2e-16      
+
+P value adjustment method: bonferroni 

@@ -4,19 +4,19 @@
 ####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
 ################################################################################ 
 [1] "Sum of squares"
-[1] 454.9643
+[1] 369.7225
 Analysis of Deviance Table (Type III Wald chisquare tests)
 
 Response: Score
                      Chisq Df Pr(>Chisq)    
-(Intercept)       483.9132  1  < 2.2e-16 ***
-Control             5.6988  4  0.2227984    
-Expertise          15.1201  1  0.0001009 ***
-Control:Expertise   7.7314  4  0.1019272    
+(Intercept)       457.3607  1  < 2.2e-16 ***
+Control             4.7568  4   0.313168    
+Expertise          12.2549  1   0.000464 ***
+Control:Expertise   7.2747  4   0.122065    
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 [1] "degrees of freedom:"
-[1] 325
+[1] 323
 
 	 Simultaneous Tests for General Linear Hypotheses
 
@@ -29,18 +29,18 @@ Fit: glmer(formula = Score ~ Control * Expertise + (1 | Subject),
 
 Linear Hypotheses:
                                    Estimate Std. Error t value Pr(>|t|)  
-directergodic - autoergodic == 0    0.38115    0.43201   0.882   0.9032  
-none - autoergodic == 0             0.32169    0.43223   0.744   0.9458  
-sharedergodic - autoergodic == 0   -0.50500    0.41455  -1.218   0.7406  
-waypoint - autoergodic == 0         0.83929    0.44207   1.899   0.3200  
-none - directergodic == 0          -0.05946    0.43938  -0.135   0.9999  
-sharedergodic - directergodic == 0 -0.88615    0.42371  -2.091   0.2260  
-waypoint - directergodic == 0       0.45814    0.44967   1.019   0.8465  
-sharedergodic - none == 0          -0.82669    0.42343  -1.952   0.2917  
-waypoint - none == 0                0.51760    0.44864   1.154   0.7774  
-waypoint - sharedergodic == 0       1.34429    0.43289   3.105   0.0176 *
+directergodic - autoergodic == 0    0.08483    0.42640   0.199    1.000  
+none - autoergodic == 0             0.35389    0.43216   0.819    0.925  
+sharedergodic - autoergodic == 0   -0.57621    0.41306  -1.395    0.631  
+waypoint - autoergodic == 0         0.51320    0.43550   1.178    0.764  
+none - directergodic == 0           0.26906    0.43487   0.619    0.972  
+sharedergodic - directergodic == 0 -0.66104    0.41631  -1.588    0.506  
+waypoint - directergodic == 0       0.42837    0.43859   0.977    0.866  
+sharedergodic - none == 0          -0.93010    0.42191  -2.205    0.180  
+waypoint - none == 0                0.15932    0.44267   0.360    0.996  
+waypoint - sharedergodic == 0       1.08941    0.42531   2.561    0.080 .
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 (Adjusted p values reported -- single-step method)
 
 
@@ -48,17 +48,17 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 ######################### HIGH BUILDING DENSITY  ########################## 
 ########################################################################### 
 [1] "Sum of squares"
-[1] 180.8815
+[1] 155.0158
 Analysis of Deviance Table (Type III Wald chisquare tests)
 
 Response: Score
                      Chisq Df Pr(>Chisq)    
-(Intercept)       340.6206  1  < 2.2e-16 ***
-Control            14.8129  4   0.005105 ** 
-Expertise          12.0211  1   0.000526 ***
-Control:Expertise   8.0722  4   0.088970 .  
+(Intercept)       357.3336  1  < 2.2e-16 ***
+Control            12.6572  4   0.013078 *  
+Expertise           7.3478  1   0.006715 ** 
+Control:Expertise   4.6898  4   0.320635    
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 
 	 Simultaneous Tests for General Linear Hypotheses
 
@@ -71,18 +71,18 @@ Fit: glmer(formula = Score ~ Control * Expertise + (1 | Subject),
 
 Linear Hypotheses:
                                    Estimate Std. Error z value Pr(>|z|)  
-directergodic - autoergodic == 0     1.3300     0.5827   2.283   0.1500  
-none - autoergodic == 0              1.2842     0.5816   2.208   0.1763  
-sharedergodic - autoergodic == 0     0.4534     0.5558   0.816   0.9257  
-waypoint - autoergodic == 0          1.6536     0.5874   2.815   0.0389 *
-none - directergodic == 0           -0.0458     0.6180  -0.074   1.0000  
-sharedergodic - directergodic == 0  -0.8766     0.5966  -1.469   0.5820  
-waypoint - directergodic == 0        0.3235     0.6253   0.517   0.9856  
-sharedergodic - none == 0           -0.8308     0.5927  -1.402   0.6261  
-waypoint - none == 0                 0.3693     0.6214   0.594   0.9759  
-waypoint - sharedergodic == 0        1.2002     0.6007   1.998   0.2664  
+directergodic - autoergodic == 0     0.6949     0.5687   1.222   0.7383  
+none - autoergodic == 0              1.3119     0.5830   2.250   0.1612  
+sharedergodic - autoergodic == 0     0.2686     0.5528   0.486   0.9886  
+waypoint - autoergodic == 0          1.6588     0.5891   2.816   0.0389 *
+none - directergodic == 0            0.6170     0.6066   1.017   0.8473  
+sharedergodic - directergodic == 0  -0.4262     0.5769  -0.739   0.9473  
+waypoint - directergodic == 0        0.9640     0.6124   1.574   0.5136  
+sharedergodic - none == 0           -1.0433     0.5895  -1.770   0.3910  
+waypoint - none == 0                 0.3469     0.6227   0.557   0.9810  
+waypoint - sharedergodic == 0        1.3902     0.5971   2.328   0.1357  
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 (Adjusted p values reported -- single-step method)
 
 
@@ -90,17 +90,17 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 ########################## LOW BUILDING DENSITY  ########################## 
 ########################################################################### 
 [1] "Sum of squares"
-[1] 216.5212
+[1] 174.8805
 Analysis of Deviance Table (Type III Wald chisquare tests)
 
 Response: Score
                      Chisq Df Pr(>Chisq)    
-(Intercept)       327.6189  1  < 2.2e-16 ***
-Control             1.1080  4   0.893005    
-Expertise           9.1896  1   0.002434 ** 
-Control:Expertise   5.5601  4   0.234495    
+(Intercept)       329.6513  1  < 2.2e-16 ***
+Control             0.7266  4  0.9480125    
+Expertise          11.1118  1  0.0008578 ***
+Control:Expertise   4.9295  4  0.2946096    
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 
 	 Simultaneous Tests for General Linear Hypotheses
 
@@ -113,15 +113,15 @@ Fit: glmer(formula = Score ~ Control * Expertise + (1 | Subject),
 
 Linear Hypotheses:
                                    Estimate Std. Error z value Pr(>|z|)
-directergodic - autoergodic == 0   -0.47391    0.64259  -0.738    0.948
-none - autoergodic == 0            -0.42275    0.64381  -0.657    0.965
-sharedergodic - autoergodic == 0   -1.29655    0.62065  -2.089    0.224
-waypoint - autoergodic == 0         0.07452    0.66605   0.112    1.000
-none - directergodic == 0           0.05116    0.62949   0.081    1.000
-sharedergodic - directergodic == 0 -0.82264    0.61093  -1.347    0.662
-waypoint - directergodic == 0       0.54843    0.65283   0.840    0.918
-sharedergodic - none == 0          -0.87380    0.60982  -1.433    0.606
-waypoint - none == 0                0.49727    0.65136   0.763    0.941
-waypoint - sharedergodic == 0       1.37107    0.63335   2.165    0.193
+directergodic - autoergodic == 0   -0.42726    0.64330  -0.664    0.964
+none - autoergodic == 0            -0.40016    0.64427  -0.621    0.972
+sharedergodic - autoergodic == 0   -1.25837    0.62182  -2.024    0.254
+waypoint - autoergodic == 0        -0.48412    0.64899  -0.746    0.946
+none - directergodic == 0           0.02711    0.63028   0.043    1.000
+sharedergodic - directergodic == 0 -0.83111    0.61141  -1.359    0.654
+waypoint - directergodic == 0      -0.05686    0.63759  -0.089    1.000
+sharedergodic - none == 0          -0.85821    0.61075  -1.405    0.624
+waypoint - none == 0               -0.08396    0.63475  -0.132    1.000
+waypoint - sharedergodic == 0       0.77425    0.61634   1.256    0.718
 (Adjusted p values reported -- single-step method)
 

@@ -1,0 +1,325 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+Test for normality 
+# A tibble: 290 × 22
+# Groups:   Complexity, Control [10]
+   Subject Control Compl…¹ Trial Perweek Lifet…² Exper…³ Lives Treas…⁴ Input Score Diffi…⁵ RR_Mean RR_Zs…⁶ MDP_r
+   <fct>   <fct>   <fct>   <fct>   <dbl>   <int> <fct>   <dbl>   <dbl> <dbl> <dbl>   <dbl>   <dbl>   <dbl> <dbl>
+ 1 Sub01   none    low     tria…      35   41860 expert      7       5     0    26     9      735.   1.09      6
+ 2 Sub01   waypoi… low     tria…      35   41860 expert      7       4     7    25    10      724.  -0.244     6
+ 3 Sub01   direct… low     tria…      35   41860 expert      7       4     6    25     8      728.   0.343     0
+ 4 Sub01   shared… low     tria…      35   41860 expert      8       5     4    29     9      715.  -1.38      0
+ 5 Sub01   autoer… low     tria…      35   41860 expert      8       5     0    29    10      736.   1.23      6
+ 6 Sub01   none    high    tria…      35   41860 expert      8       4     0    28    10      732.   0.782     0
+ 7 Sub01   waypoi… high    tria…      35   41860 expert      7       3     8    24    10      715.  -1.35      6
+ 8 Sub01   direct… high    tria…      35   41860 expert      6       3     6    21     8      718.  -0.974     3
+ 9 Sub01   shared… high    tria…      35   41860 expert      8       5     3    29     7.5    720.  -0.678     3
+10 Sub01   autoer… high    tria…      35   41860 expert      6       5     0    23    10      735.   1.17      0
+# … with 280 more rows, 7 more variables: Perc_regret_.1 <dbl>, Include_Input <fct>, Include_Score <fct>,
+#   Include_Difficulty <fct>, Include_RR <fct>, Include_MDP_r <fct>, Include_POMDP_d <fct>, and abbreviated
+#   variable names ¹​Complexity, ²​Lifetime, ³​Expertise, ⁴​Treasure, ⁵​Difficulty, ⁶​RR_Zscore
+# ℹ Use `print(n = ...)` to see more rows, and `colnames()` to see all variable names
+# A tibble: 10 × 5
+   Control       Complexity variable statistic     p
+   <fct>         <fct>      <chr>        <dbl> <dbl>
+ 1 autoergodic   high       RR_Mean      0.963 0.385
+ 2 directergodic high       RR_Mean      0.972 0.619
+ 3 none          high       RR_Mean      0.964 0.415
+ 4 sharedergodic high       RR_Mean      0.960 0.327
+ 5 waypoint      high       RR_Mean      0.967 0.478
+ 6 autoergodic   low        RR_Mean      0.967 0.486
+ 7 directergodic low        RR_Mean      0.942 0.110
+ 8 none          low        RR_Mean      0.940 0.101
+ 9 sharedergodic low        RR_Mean      0.944 0.129
+10 waypoint      low        RR_Mean      0.964 0.413
+$ANOVA
+                        Effect DFn DFd          SSn        SSd           F            p p<.05          ges
+1                  (Intercept)   1  27 1.318096e+08 4221015.88 843.1283846 6.724192e-22     * 0.9675659125
+2                    Expertise   1  27 3.878056e+04 4221015.88   0.2480623 6.224755e-01       0.0087006323
+3                      Control   4 108 6.027565e+03   94279.62   1.7261869 1.494519e-01       0.0013623284
+5                   Complexity   1  27 3.548342e+02   10443.47   0.9173696 3.466651e-01       0.0000803013
+4            Expertise:Control   4 108 2.029119e+04   94279.62   5.8110340 2.833903e-04     * 0.0045714035
+6         Expertise:Complexity   1  27 9.845683e+02   10443.47   2.5454507 1.222524e-01       0.0002227825
+7           Control:Complexity   4 108 5.030380e+03   92691.82   1.4652886 2.178017e-01       0.0011372045
+8 Expertise:Control:Complexity   4 108 1.688366e+03   92691.82   0.4918005 7.417474e-01       0.0003819729
+
+$`Mauchly's Test for Sphericity`
+                        Effect         W         p p<.05
+3                      Control 0.8665239 0.9335849      
+4            Expertise:Control 0.8665239 0.9335849      
+7           Control:Complexity 0.6452691 0.2676175      
+8 Expertise:Control:Complexity 0.6452691 0.2676175      
+
+$`Sphericity Corrections`
+                        Effect       GGe        p[GG] p[GG]<.05       HFe        p[HF] p[HF]<.05
+3                      Control 0.9288315 0.1545880878           1.0954537 0.1494518937          
+4            Expertise:Control 0.9288315 0.0004263016         * 1.0954537 0.0002833903         *
+7           Control:Complexity 0.8087623 0.2273545332           0.9318489 0.2212405782          
+8 Expertise:Control:Complexity 0.8087623 0.7028564793           0.9318489 0.7288632026          
+
+
+	Paired t-test
+
+data:  data_none$RR_Mean and data_wp$RR_Mean
+t = 1.193, df = 57, p-value = 0.2378
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -5.742417 22.670035
+sample estimates:
+mean of the differences 
+               8.463809 
+
+[1] "Adjusted p-val bonferroni"
+[1] 2.377992
+
+	Paired t-test
+
+data:  data_none$RR_Mean and data_user$RR_Mean
+t = -0.45557, df = 57, p-value = 0.6504
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -13.233754   8.328266
+sample estimates:
+mean of the differences 
+              -2.452744 
+
+[1] "Adjusted p-val bonferroni"
+[1] 6.50428
+
+	Paired t-test
+
+data:  data_none$RR_Mean and data_shared$RR_Mean
+t = -0.17005, df = 57, p-value = 0.8656
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -11.821415   9.970813
+sample estimates:
+mean of the differences 
+             -0.9253012 
+
+[1] "Adjusted p-val bonferroni"
+[1] 8.65573
+
+	Paired t-test
+
+data:  data_none$RR_Mean and data_auto$RR_Mean
+t = -1.4157, df = 57, p-value = 0.1623
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -18.003059   3.090267
+sample estimates:
+mean of the differences 
+              -7.456396 
+
+[1] "Adjusted p-val bonferroni"
+[1] 1.622971
+
+	Paired t-test
+
+data:  data_wp$RR_Mean and data_user$RR_Mean
+t = -1.6559, df = 57, p-value = 0.1032
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -24.117561   2.284455
+sample estimates:
+mean of the differences 
+              -10.91655 
+
+[1] "Adjusted p-val bonferroni"
+[1] 1.032306
+
+	Paired t-test
+
+data:  data_wp$RR_Mean and data_shared$RR_Mean
+t = -1.6128, df = 57, p-value = 0.1123
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -21.047016   2.268795
+sample estimates:
+mean of the differences 
+               -9.38911 
+
+[1] "Adjusted p-val bonferroni"
+[1] 1.123209
+
+	Paired t-test
+
+data:  data_wp$RR_Mean and data_auto$RR_Mean
+t = -2.7906, df = 57, p-value = 0.007145
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -27.344257  -4.496153
+sample estimates:
+mean of the differences 
+              -15.92021 
+
+[1] "Adjusted p-val bonferroni"
+[1] 0.0714455
+
+	Paired t-test
+
+data:  data_user$RR_Mean and data_shared$RR_Mean
+t = 0.31492, df = 57, p-value = 0.754
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -8.185162 11.240048
+sample estimates:
+mean of the differences 
+               1.527443 
+
+[1] "Adjusted p-val bonferroni"
+[1] 7.539756
+
+	Paired t-test
+
+data:  data_user$RR_Mean and data_auto$RR_Mean
+t = -0.93833, df = 57, p-value = 0.352
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -15.681798   5.674494
+sample estimates:
+mean of the differences 
+              -5.003652 
+
+[1] "Adjusted p-val bonferroni"
+[1] 3.520333
+
+	Paired t-test
+
+data:  data_shared$RR_Mean and data_auto$RR_Mean
+t = -1.2746, df = 57, p-value = 0.2076
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -16.791679   3.729489
+sample estimates:
+mean of the differences 
+              -6.531095 
+
+[1] "Adjusted p-val bonferroni"
+[1] 2.076173
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$RR_Mean and data_all$Control 
+
+              autoergodic directergodic none  sharedergodic
+directergodic 1.000       -             -     -            
+none          1.000       1.000         -     -            
+sharedergodic 1.000       1.000         1.000 -            
+waypoint      0.071       1.000         1.000 1.000        
+
+P value adjustment method: bonferroni 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$RR_Mean and data_all$combo 
+
+                   autoergodic high autoergodic low directergodic high directergodic low none high none low
+autoergodic low    1.00             -               -                  -                 -         -       
+directergodic high 1.00             1.00            -                  -                 -         -       
+directergodic low  1.00             1.00            1.00               -                 -         -       
+none high          1.00             1.00            1.00               1.00              -         -       
+none low           1.00             1.00            1.00               1.00              1.00      -       
+sharedergodic high 1.00             1.00            1.00               1.00              1.00      1.00    
+sharedergodic low  1.00             1.00            1.00               1.00              1.00      1.00    
+waypoint high      1.00             1.00            1.00               1.00              1.00      1.00    
+waypoint low       1.00             0.57            0.73               1.00              1.00      1.00    
+                   sharedergodic high sharedergodic low waypoint high
+autoergodic low    -                  -                 -            
+directergodic high -                  -                 -            
+directergodic low  -                  -                 -            
+none high          -                  -                 -            
+none low           -                  -                 -            
+sharedergodic high -                  -                 -            
+sharedergodic low  1.00               -                 -            
+waypoint high      1.00               1.00              -            
+waypoint low       1.00               1.00              1.00         
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+Test for normality 
+# A tibble: 5 × 4
+  Control       variable statistic     p
+  <fct>         <chr>        <dbl> <dbl>
+1 autoergodic   RR_Mean      0.963 0.385
+2 directergodic RR_Mean      0.972 0.619
+3 none          RR_Mean      0.964 0.415
+4 sharedergodic RR_Mean      0.960 0.327
+5 waypoint      RR_Mean      0.967 0.478
+$ANOVA
+             Effect DFn DFd          SSn        SSd           F            p p<.05         ges
+1       (Intercept)   1  27 65688695.826 2158144.52 821.8146520 9.401642e-22     * 0.966890019
+2         Expertise   1  27    13703.396 2158144.52   0.1714397 6.821063e-01       0.006055054
+3           Control   4 108     8001.393   91285.55   2.3666134 5.728396e-02       0.003544468
+4 Expertise:Control   4 108    11501.179   91285.55   3.4017633 1.160971e-02     * 0.005086921
+
+$`Mauchly's Test for Sphericity`
+             Effect         W         p p<.05
+3           Control 0.6706889 0.3392668      
+4 Expertise:Control 0.6706889 0.3392668      
+
+$`Sphericity Corrections`
+             Effect       GGe      p[GG] p[GG]<.05       HFe      p[HF] p[HF]<.05
+3           Control 0.8262805 0.07027959           0.9553057 0.06036496          
+4 Expertise:Control 0.8262805 0.01784372         * 0.9553057 0.01296061         *
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_high$RR_Mean and data_high$Control 
+
+              autoergodic directergodic none sharedergodic
+directergodic 1.00        -             -    -            
+none          1.00        0.74          -    -            
+sharedergodic 1.00        1.00          1.00 -            
+waypoint      1.00        1.00          1.00 1.00         
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+Test for normality 
+# A tibble: 5 × 4
+  Control       variable statistic     p
+  <fct>         <chr>        <dbl> <dbl>
+1 autoergodic   RR_Mean      0.967 0.486
+2 directergodic RR_Mean      0.942 0.110
+3 none          RR_Mean      0.940 0.101
+4 sharedergodic RR_Mean      0.944 0.129
+5 waypoint      RR_Mean      0.964 0.413
+$ANOVA
+             Effect DFn DFd          SSn        SSd           F            p p<.05         ges
+1       (Intercept)   1  27 66121225.811 2073314.84 861.0718764 5.103111e-22     * 0.968238490
+2         Expertise   1  27    26061.730 2073314.84   0.3393921 5.650143e-01       0.011872888
+3           Control   4 108     3056.552   95685.89   0.8624773 4.890381e-01       0.001407215
+4 Expertise:Control   4 108    10478.376   95685.89   2.9567174 2.313896e-02     * 0.004807743
+
+$`Mauchly's Test for Sphericity`
+             Effect         W         p p<.05
+3           Control 0.7712083 0.6790664      
+4 Expertise:Control 0.7712083 0.6790664      
+
+$`Sphericity Corrections`
+             Effect       GGe      p[GG] p[GG]<.05      HFe      p[HF] p[HF]<.05
+3           Control 0.8869059 0.47867971           1.037565 0.48903815          
+4 Expertise:Control 0.8869059 0.02867249         * 1.037565 0.02313896         *
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_low$RR_Mean and data_low$Control 
+
+              autoergodic directergodic none sharedergodic
+directergodic 1.00        -             -    -            
+none          1.00        1.00          -    -            
+sharedergodic 1.00        1.00          1.00 -            
+waypoint      0.13        1.00          0.46 1.00         
+
+P value adjustment method: bonferroni 

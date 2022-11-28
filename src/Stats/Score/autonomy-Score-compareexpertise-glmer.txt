@@ -3,17 +3,17 @@
 ################################### ALL ################################### 
 ########################################################################### 
 [1] "Sum of squares"
-[1] 256.9922
+[1] 222.8254
 Analysis of Deviance Table (Type III Wald chisquare tests)
 
 Response: Score
                      Chisq Df Pr(>Chisq)    
-(Intercept)       400.5648  1  < 2.2e-16 ***
-Control             2.4251  2  0.2974318    
-Expertise          14.7414  1  0.0001233 ***
-Control:Expertise   7.7714  2  0.0205334 *  
+(Intercept)       385.1891  1  < 2.2e-16 ***
+Control             0.1975  2   0.905958    
+Expertise           9.1146  1   0.002536 ** 
+Control:Expertise   6.4781  2   0.039201 *  
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 
 	 Simultaneous Tests for General Linear Hypotheses
 
@@ -25,12 +25,10 @@ Fit: glmer(formula = Score ~ Control * Expertise + (1 | Subject),
         tol = 1e-04)))
 
 Linear Hypotheses:
-                                   Estimate Std. Error z value Pr(>|z|)  
-directergodic - autoergodic == 0     0.4069     0.4344   0.937   0.6169  
-sharedergodic - autoergodic == 0    -0.5056     0.4174  -1.211   0.4463  
-sharedergodic - directergodic == 0  -0.9125     0.4267  -2.138   0.0822 .
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0    0.09847    0.42884   0.230    0.971
+sharedergodic - autoergodic == 0   -0.60448    0.41589  -1.453    0.314
+sharedergodic - directergodic == 0 -0.70295    0.41946  -1.676    0.214
 (Adjusted p values reported -- single-step method)
 
 
@@ -38,17 +36,17 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 ######################### HIGH BUILDING DENSITY  ########################## 
 ########################################################################### 
 [1] "Sum of squares"
-[1] 101.7452
+[1] 74.55639
 Analysis of Deviance Table (Type III Wald chisquare tests)
 
 Response: Score
                      Chisq Df Pr(>Chisq)    
-(Intercept)       217.0188  1  < 2.2e-16 ***
-Control             8.8130  2   0.012198 *  
-Expertise           8.3009  1   0.003963 ** 
-Control:Expertise   7.0011  2   0.030180 *  
+(Intercept)       211.0486  1     <2e-16 ***
+Control             2.1279  2     0.3451    
+Expertise           2.5844  1     0.1079    
+Control:Expertise   2.1049  2     0.3491    
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 
 	 Simultaneous Tests for General Linear Hypotheses
 
@@ -60,12 +58,10 @@ Fit: glmer(formula = Score ~ Control * Expertise + (1 | Subject),
         tol = 1e-04)))
 
 Linear Hypotheses:
-                                   Estimate Std. Error z value Pr(>|z|)  
-directergodic - autoergodic == 0     1.2956     0.5838   2.219   0.0678 .
-sharedergodic - autoergodic == 0     0.4516     0.5555   0.813   0.6948  
-sharedergodic - directergodic == 0  -0.8441     0.5989  -1.409   0.3358  
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0     0.6568     0.5691   1.154    0.481
+sharedergodic - autoergodic == 0     0.2629     0.5531   0.475    0.883
+sharedergodic - directergodic == 0  -0.3940     0.5784  -0.681    0.774
 (Adjusted p values reported -- single-step method)
 
 
@@ -75,17 +71,17 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 [1] "Sum of squares"
 [1] 102.0084
 [1] "Sum of all model error"
-[1] 1313.113
+[1] 1099.009
 Analysis of Deviance Table (Type III Wald chisquare tests)
 
 Response: Score
                      Chisq Df Pr(>Chisq)    
-(Intercept)       263.9864  1  < 2.2e-16 ***
-Control             0.5482  2   0.760262    
+(Intercept)       263.9859  1  < 2.2e-16 ***
+Control             0.5482  2   0.760261    
 Expertise           9.0526  1   0.002623 ** 
 Control:Expertise   6.1014  2   0.047325 *  
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 
 	 Simultaneous Tests for General Linear Hypotheses
 
@@ -99,9 +95,9 @@ Fit: glmer(formula = Score ~ Control * Expertise + (1 | Subject),
 Linear Hypotheses:
                                    Estimate Std. Error z value Pr(>|z|)  
 directergodic - autoergodic == 0    -0.3923     0.6484  -0.605   0.8173  
-sharedergodic - autoergodic == 0    -1.3232     0.6268  -2.111   0.0876 .
+sharedergodic - autoergodic == 0    -1.3232     0.6268  -2.111   0.0875 .
 sharedergodic - directergodic == 0  -0.9310     0.6146  -1.515   0.2838  
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  0 â€˜***â€™ 0.001 â€˜**â€™ 0.01 â€˜*â€™ 0.05 â€˜.â€™ 0.1 â€˜ â€™ 1
 (Adjusted p values reported -- single-step method)
 

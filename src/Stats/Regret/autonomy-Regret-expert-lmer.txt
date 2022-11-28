@@ -1,0 +1,103 @@
+
+########################################################################### 
+################################### ALL ################################### 
+########################################################################### 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                                        Chisq Df Pr(>Chisq)    
+(Intercept)                            7.0863  1   0.007768 ** 
+Complexity                             1.1735  1   0.278681    
+Control                                3.8708  2   0.144365    
+Max_regret_group                    1514.1675  1  < 2.2e-16 ***
+Complexity:Control                    33.1802  2  6.237e-08 ***
+Complexity:Max_regret_group            1.5027  1   0.220249    
+Control:Max_regret_group               9.7553  2   0.007615 ** 
+Complexity:Control:Max_regret_group   64.5248  2  9.741e-15 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Complexity * Control * Max_regret_group + 
+    (1 | Subject), data = data_all)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)    
+directergodic - autoergodic == 0    0.15873    0.02727   5.820   <0.001 ***
+sharedergodic - autoergodic == 0    0.04271    0.02400   1.780    0.175    
+sharedergodic - directergodic == 0 -0.11602    0.02859  -4.059   <0.001 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+########################################################################### 
+####### THIS MODEL HAS A SINGULAR FIT ######### 
+########################################################################### 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                           Chisq Df Pr(>Chisq)    
+(Intercept)                7.587  1   0.005879 ** 
+Control                   22.225  2  1.492e-05 ***
+Max_regret_group         669.625  1  < 2.2e-16 ***
+Control:Max_regret_group  37.891  2  5.916e-09 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Control * Max_regret_group + (1 | Subject), 
+    data = data_high)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)    
+directergodic - autoergodic == 0    0.13057    0.02444   5.342  < 0.001 ***
+sharedergodic - autoergodic == 0    0.04535    0.02127   2.132  0.08279 .  
+sharedergodic - directergodic == 0 -0.08522    0.02549  -3.343  0.00244 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                           Chisq Df Pr(>Chisq)    
+(Intercept)                1.164  1  0.2806406    
+Control                   14.149  2  0.0008464 ***
+Max_regret_group         875.217  1  < 2.2e-16 ***
+Control:Max_regret_group  35.672  2  1.795e-08 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Control * Max_regret_group + (1 | Subject), 
+    data = data_low)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)    
+directergodic - autoergodic == 0   -0.08295    0.02197  -3.775   <0.001 ***
+sharedergodic - autoergodic == 0    0.04258    0.02178   1.955    0.123    
+sharedergodic - directergodic == 0  0.12553    0.02366   5.305   <0.001 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+

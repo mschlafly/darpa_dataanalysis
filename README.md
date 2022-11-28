@@ -1,4 +1,4 @@
-# "Shared Coverage Control For Human-Swarm Collaboration Under Pressure" Data and Statistical Analyses
+# "Collaborative Robot Augment Human Cognition" Data and Statistical Analyses
 
 A human subject experiment was conducted to test the impact of swarm control paradigm on cognitive availability and performance. This repo contains
 * code for extracting raw data from rosbags and Somnomedics software
@@ -72,7 +72,7 @@ The full statistical results are provided in the Stats/ folder. The filename ind
   * 29 subjects with full datasets are included in input plots and analyses: ['01', '07', '08', '09', '11', '13', '14', '18', '20', '21', '22', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '39', '40', '41', '42']
   * 23 experts; 6 novices
 
-* Game Score
+* Game Score, MDP analyses
   * 33 subjects with almost full datasets are included in input plots and analyses: ['01', '07', '08', '09', '11', '13', '14', '15', '17', '18', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42']
   * 25 experts; 8 novices
 
@@ -83,8 +83,8 @@ The full statistical results are provided in the Stats/ folder. The filename ind
 
 ## Scripts for plotting and formatting for statistical tests
 Note, instructions for running specific scripts are provided at the top of each script.
-  - plot_data.py reads raw_data/raw_data.csv and raw_data/subject_info.csv, formats the data for statistical processing in raw_data_formatted/raw_data_formatted.csv, and plots the score, input, and difficulty results, saving the plots to the Plots/ folder. To look at experienced and novice participants separately, edit the boolean at the top of the plot_data.py script.
-  - plot_data_cogload.py reads raw_data/RR_raw.csv and raw_data/subject_info.csv, formats the data for statistical processing in raw_data_formatted/RR_formatted.csv, and plots the cognitive availability results, saving the plots to the Plots/ folder. To look at experienced and novice participants separately, edit the boolean at the top of the plot_data.py script.
+  - plot_data.py reads raw_data/raw_data.csv, raw_data/RR_raw.csv, and raw_data/subject_info.csv, formats the data for statistical processing in raw_data_formatted/raw_data_formatted.csv, and plots the score, input, cognitive availability, decision-making, robot utility, and difficulty results, saving the plots to the Plots/ folder. To look at experienced and novice participants separately, edit the boolean at the top of the plot_data.py script.
+
 
 ## Scripts for statistical tests
 
@@ -92,13 +92,14 @@ Note, instructions for running specific scripts are provided at the top of each 
 * Input
   * stat-test-rm-inputdifficulty.r performs repeated measures ANOVAs, followed by post-hoc t-tests. Since no assumptions are violated, no additional statistical tests are required
 * RR Interval
-  * stat-test-rm.r performs repeated measures ANOVAs, followed by post-hoc t-tests. Since no assumptions are violated, no additional statistical tests are required
+  * stat-test-rm-RR.r performs repeated measures ANOVAs, followed by post-hoc t-tests. Since no assumptions are violated, no additional statistical tests are required
 * Score
-  * stat-test-rm.r performs repeated measures ANOVAs. However, the normality assumption is violated--this typically leads to overly-conservative, and thus incorrect results with lower statistical power. Therefore, we used a generalized linear model as well, but included these results for reference.
+  <!-- * stat-test-rm.r performs repeated measures ANOVAs. However, the normality assumption is violated--this typically leads to overly-conservative, and thus incorrect results with lower statistical power. Therefore, we used a generalized linear model as well, but included these results for reference. -->
   * stat-test-glmer.r fits a generalized linear model to the data with the experimental factors at predictors, then performs a Wald ANOVA, followed by a Tukey post-hoc test
-  *
+
 * Difficulty rating
   * stat-test-rm-inputdifficulty.r performs repeated measures ANOVAs. However, the normality assumption is violated, and thus incorrect results with lower statistical power. Therefore, we used a generalized linear model as well, but included these results for reference.
+  * SECOND TEST, ADD HERE AFTER PERFORMING
 
 
 ## Scripts for extracting raw data

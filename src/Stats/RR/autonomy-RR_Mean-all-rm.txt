@@ -1,0 +1,139 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+Test for normality 
+# A tibble: 6 × 5
+  Control       Complexity variable statistic     p
+  <fct>         <fct>      <chr>        <dbl> <dbl>
+1 autoergodic   high       RR_Mean      0.963 0.385
+2 directergodic high       RR_Mean      0.972 0.619
+3 sharedergodic high       RR_Mean      0.960 0.327
+4 autoergodic   low        RR_Mean      0.967 0.486
+5 directergodic low        RR_Mean      0.942 0.110
+6 sharedergodic low        RR_Mean      0.944 0.129
+$ANOVA
+                        Effect DFn DFd          SSn         SSd            F            p p<.05          ges
+1                  (Intercept)   1  27 7.960489e+07 2619363.865 820.55496043 9.592262e-22     * 9.670687e-01
+2                    Expertise   1  27 2.104106e+04 2619363.865   0.21688806 6.451564e-01       7.702255e-03
+3                      Control   2  54 1.909187e+03   42000.131   1.22733061 3.011180e-01       7.038026e-04
+5                   Complexity   1  27 9.154923e+00    8864.837   0.02788353 8.686273e-01       3.377236e-06
+4            Expertise:Control   2  54 7.762654e+02   42000.131   0.49902623 6.098937e-01       2.862820e-04
+6         Expertise:Complexity   1  27 4.395283e+02    8864.837   1.33868958 2.573994e-01       1.621155e-04
+7           Control:Complexity   2  54 1.989634e+03   40535.774   1.32525202 2.742392e-01       7.334369e-04
+8 Expertise:Control:Complexity   2  54 1.659423e+03   40535.774   1.10530590 3.384832e-01       6.117861e-04
+
+$`Mauchly's Test for Sphericity`
+                        Effect         W         p p<.05
+3                      Control 0.9805447 0.7745981      
+4            Expertise:Control 0.9805447 0.7745981      
+7           Control:Complexity 0.9844935 0.8161449      
+8 Expertise:Control:Complexity 0.9844935 0.8161449      
+
+$`Sphericity Corrections`
+                        Effect       GGe     p[GG] p[GG]<.05      HFe     p[HF] p[HF]<.05
+3                      Control 0.9809160 0.3007423           1.057012 0.3011180          
+4            Expertise:Control 0.9809160 0.6063893           1.057012 0.6098937          
+7           Control:Complexity 0.9847303 0.2741658           1.061601 0.2742392          
+8 Expertise:Control:Complexity 0.9847303 0.3378606           1.061601 0.3384832          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$RR_Mean and data_all$Control 
+
+              autoergodic directergodic
+directergodic 1.00        -            
+sharedergodic 0.62        1.00         
+
+P value adjustment method: bonferroni 
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_all$RR_Mean and data_all$combo 
+
+                   autoergodic high autoergodic low directergodic high directergodic low sharedergodic high
+autoergodic low    1                -               -                  -                 -                 
+directergodic high 1                1               -                  -                 -                 
+directergodic low  1                1               1                  -                 -                 
+sharedergodic high 1                1               1                  1                 -                 
+sharedergodic low  1                1               1                  1                 1                 
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+Test for normality 
+# A tibble: 3 × 4
+  Control       variable statistic     p
+  <fct>         <chr>        <dbl> <dbl>
+1 autoergodic   RR_Mean      0.963 0.385
+2 directergodic RR_Mean      0.972 0.619
+3 sharedergodic RR_Mean      0.960 0.327
+$ANOVA
+             Effect DFn DFd          SSn        SSd           F            p p<.05          ges
+1       (Intercept)   1  27 39775453.397 1365446.86 786.5097286 1.669430e-21     * 0.9657890177
+2         Expertise   1  27     7699.220 1365446.86   0.1522424 6.994629e-01       0.0054347753
+3           Control   2  54     1255.420   43512.35   0.7790049 4.639500e-01       0.0008902331
+4 Expertise:Control   2  54     1934.354   43512.35   1.2002930 3.090110e-01       0.0013710135
+
+$`Mauchly's Test for Sphericity`
+             Effect         W         p p<.05
+3           Control 0.9439488 0.4724215      
+4 Expertise:Control 0.9439488 0.4724215      
+
+$`Sphericity Corrections`
+             Effect       GGe     p[GG] p[GG]<.05     HFe    p[HF] p[HF]<.05
+3           Control 0.9469238 0.4578509           1.01624 0.463950          
+4 Expertise:Control 0.9469238 0.3076676           1.01624 0.309011          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_high$RR_Mean and data_high$Control 
+
+              autoergodic directergodic
+directergodic 1           -            
+sharedergodic 1           1            
+
+P value adjustment method: bonferroni 
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+Test for normality 
+# A tibble: 3 × 4
+  Control       variable statistic     p
+  <fct>         <chr>        <dbl> <dbl>
+1 autoergodic   RR_Mean      0.967 0.486
+2 directergodic RR_Mean      0.942 0.110
+3 sharedergodic RR_Mean      0.944 0.129
+$ANOVA
+             Effect DFn DFd          SSn        SSd           F            p p<.05         ges
+1       (Intercept)   1  27 3.982945e+07 1262781.84 851.6079225 5.898189e-22     * 0.968349968
+2         Expertise   1  27 1.378137e+04 1262781.84   0.2946646 5.917001e-01       0.010475457
+3           Control   2  54 2.643401e+03   39023.56   1.8289421 1.703910e-01       0.002026451
+4 Expertise:Control   2  54 5.013346e+02   39023.56   0.3468683 7.084618e-01       0.000384959
+
+$`Mauchly's Test for Sphericity`
+             Effect         W         p p<.05
+3           Control 0.9667567 0.6443527      
+4 Expertise:Control 0.9667567 0.6443527      
+
+$`Sphericity Corrections`
+             Effect       GGe     p[GG] p[GG]<.05      HFe     p[HF] p[HF]<.05
+3           Control 0.9678263 0.1717972           1.041285 0.1703910          
+4 Expertise:Control 0.9678263 0.7015613           1.041285 0.7084618          
+
+
+	Pairwise comparisons using paired t tests 
+
+data:  data_low$RR_Mean and data_low$Control 
+
+              autoergodic directergodic
+directergodic 0.33        -            
+sharedergodic 0.45        1.00         
+
+P value adjustment method: bonferroni 

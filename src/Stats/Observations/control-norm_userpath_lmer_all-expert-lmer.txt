@@ -1,0 +1,38 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Complexity=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+[1] "Sum of squares"
+[1] 0.4920626
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: norm_userpath
+                      Chisq Df Pr(>Chisq)    
+(Intercept)        950.4040  1     <2e-16 ***
+Complexity           0.7622  1     0.3826    
+Control              1.9355  3     0.5859    
+Complexity:Control   1.1541  3     0.7640    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "degrees of freedom:"
+[1] 323
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = norm_userpath ~ Complexity * Control + (1 | Subject), 
+    data = data_all)
+
+Linear Hypotheses:
+                                     Estimate Std. Error t value Pr(>|t|)
+directergodic - autoergodic == 0    0.0004446  0.0126535   0.035    1.000
+sharedergodic - autoergodic == 0   -0.0054860  0.0123506  -0.444    0.971
+waypoint - autoergodic == 0        -0.0178212  0.0125392  -1.421    0.487
+sharedergodic - directergodic == 0 -0.0059306  0.0120394  -0.493    0.961
+waypoint - directergodic == 0      -0.0182658  0.0122517  -1.491    0.444
+waypoint - sharedergodic == 0      -0.0123352  0.0119407  -1.033    0.730
+(Adjusted p values reported -- single-step method)
+
