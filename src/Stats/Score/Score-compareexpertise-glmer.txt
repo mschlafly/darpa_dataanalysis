@@ -1,0 +1,240 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Density=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+
+################################################################################ 
+ANOVA 
+################################################################################ 
+ANOVA test evaluating the degree to which variance in the outcome measure can be
+attributed to the experimental group (e.g., control paradigm, environment, expertise. 
+We use the exANOVA R package.
+Significance indicates that performance under at least one the experimental conditions
+is different from the rest and that 
+[insert independent variable driving experimental grouping] affects [insert dependent variable / outcome measure].
+The exANOVA also tests for sphericity (one of the assumptions of an ANOVA test) 
+If the sphericity condition is not met (p<0.05), apply the greenhouse geisser correction p[GG]. 
+################################################################################ 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Score
+                     Chisq Df Pr(>Chisq)    
+(Intercept)       458.5829  1  < 2.2e-16 ***
+Control             4.3862  4  0.3562550    
+Expertise          12.6359  1  0.0003784 ***
+Control:Expertise   8.0830  4  0.0885838 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+################################################################################ 
+T-test for group difference 
+After performing an ANOVA, this test helps us determine which of the experimental 
+group/s are different from the rest.
+Since running multiple tests increases the likelihood of getting significant results,
+corrections are applied.
+################################################################################ 
+[1] "degrees of freedom:"
+[1] 323
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = Score ~ Control * Expertise + (1 | Subject), 
+    data = data_all, family = poisson(link = "identity"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error t value Pr(>|t|)
+directergodic - autoergodic == 0    0.08609    0.42638   0.202    1.000
+data_low             0.35342    0.43217   0.818    0.925
+sharedergodic - autoergodic == 0   -0.52855    0.41388  -1.277    0.705
+waypoint - autoergodic == 0         0.51232    0.43549   1.176    0.765
+none - directergodic == 0           0.26733    0.43487   0.615    0.973
+sharedergodic - directergodic == 0 -0.61464    0.41716  -1.473    0.580
+waypoint - directergodic == 0       0.42623    0.43858   0.972    0.868
+sharedergodic - none == 0          -0.88197    0.42269  -2.087    0.228
+waypoint - none == 0                0.15890    0.44266   0.359    0.996
+waypoint - sharedergodic == 0       1.04087    0.42606   2.443    0.107
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 153.3172
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Score
+                     Chisq Df Pr(>Chisq)    
+(Intercept)       351.6299  1  < 2.2e-16 ***
+Control            12.4790  4   0.014123 *  
+Expertise           7.6783  1   0.005589 ** 
+Control:Expertise   5.2184  4   0.265612    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = Score ~ Control * Expertise + (1 | Subject), 
+    data = data_high, family = poisson(link = "identity"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)  
+directergodic - autoergodic == 0     0.6982     0.5684   1.228   0.7345  
+none - autoergodic == 0              1.3134     0.5828   2.254   0.1599  
+sharedergodic - autoergodic == 0     0.3542     0.5548   0.638   0.9687  
+waypoint - autoergodic == 0          1.6615     0.5887   2.822   0.0383 *
+none - directergodic == 0            0.6152     0.6064   1.014   0.8486  
+sharedergodic - directergodic == 0  -0.3440     0.5790  -0.594   0.9759  
+waypoint - directergodic == 0        0.9633     0.6122   1.573   0.5141  
+sharedergodic - none == 0           -0.9592     0.5916  -1.621   0.4831  
+waypoint - none == 0                 0.3481     0.6225   0.559   0.9808  
+waypoint - sharedergodic == 0        1.3073     0.5992   2.182   0.1865  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 174.8805
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Score
+                     Chisq Df Pr(>Chisq)    
+(Intercept)       329.6513  1  < 2.2e-16 ***
+Control             0.7266  4  0.9480125    
+Expertise          11.1118  1  0.0008578 ***
+Control:Expertise   4.9295  4  0.2946096    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = Score ~ Control * Expertise + (1 | Subject), 
+    data = data_low, family = poisson(link = "identity"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0   -0.42726    0.64330  -0.664    0.964
+none - autoergodic == 0            -0.40016    0.64427  -0.621    0.972
+sharedergodic - autoergodic == 0   -1.25837    0.62182  -2.024    0.254
+waypoint - autoergodic == 0        -0.48412    0.64899  -0.746    0.946
+none - directergodic == 0           0.02711    0.63028   0.043    1.000
+sharedergodic - directergodic == 0 -0.83111    0.61141  -1.359    0.654
+waypoint - directergodic == 0      -0.05686    0.63759  -0.089    1.000
+sharedergodic - none == 0          -0.85821    0.61075  -1.405    0.624
+waypoint - none == 0               -0.08396    0.63475  -0.132    1.000
+waypoint - sharedergodic == 0       0.77425    0.61634   1.256    0.718
+(Adjusted p values reported -- single-step method)
+
+   Subject       Control Density  Trial Perweek Lifetime Expertise Lives Treasure Input Score Difficulty  RR_mean   RR_Zscore      MDP_r
+1    Sub01          none     low trial0    35.0    41860    expert     7        5     0    26        9.0 734.5344  1.09321663  6.5577872
+2    Sub01      waypoint     low trial1    35.0    41860    expert     7        4     7    25       10.0 723.7318 -0.24396939  8.0799597
+3    Sub01 directergodic     low trial2    35.0    41860    expert     7        4     6    25        8.0 728.4697  0.34250572  1.1597551
+4    Sub01 sharedergodic     low trial3    35.0    41860    expert     8        5     4    29        9.0 714.5767 -1.37722957  1.7316522
+5    Sub01   autoergodic     low trial4    35.0    41860    expert     8        5     0    29       10.0 735.6768  1.23463977  7.3843989
+6    Sub01          none    high trial5    35.0    41860    expert     8        4     0    28       10.0 732.0228  0.78233051  1.5278329
+7    Sub01      waypoint    high trial6    35.0    41860    expert     7        3     8    24       10.0 714.8119 -1.34812180  9.4051557
+8    Sub01 directergodic    high trial7    35.0    41860    expert     6        3     6    21        8.0 717.8308 -0.97442042  3.6936547
+9    Sub01 sharedergodic    high trial8    35.0    41860    expert     8        5     3    29        7.5 720.2219 -0.67843910  5.8233689
+10   Sub01   autoergodic    high trial9    35.0    41860    expert     6        5     0    23       10.0 735.1505  1.16948764  2.1863097
+21   Sub08          none     low trial0     5.5     1000    expert     5        3     0    18        0.0 878.1915  0.01970237  0.4862169
+22   Sub08      waypoint     low trial1     5.5     1000    expert     5        1    12    16        0.0 743.7113 -2.86399816  0.4939988
+23   Sub08 directergodic     low trial2     5.5     1000    expert     6        3    11    21        0.0 900.3115  0.49402935  3.9280948
+24   Sub08 sharedergodic     low trial3     5.5     1000    expert     6        3    10    21        0.0 862.7284 -0.31187846  3.4526417
+25   Sub08   autoergodic     low trial4     5.5     1000    expert     6        3     0    21        0.0 908.8549  0.67722739  6.9441044
+26   Sub08          none    high trial5     5.5     1000    expert     7        4     0    25        0.0 900.2243  0.49215890  9.6975018
+27   Sub08      waypoint    high trial6     5.5     1000    expert     5        2    10    17        0.0 907.8553  0.65579386  1.0288272
+28   Sub08 directergodic    high trial7     5.5     1000    expert     8        2     8    26        0.0 881.4573  0.08973255  7.0827637
+29   Sub08 sharedergodic    high trial8     5.5     1000    expert     6        2     8    20        0.0 901.0938  0.51080281  9.0229287
+30   Sub08   autoergodic    high trial9     5.5     1000    expert     6        3     0    21        0.0 888.2985  0.23642938  6.7788051
+31   Sub09          none     low trial0     2.0     5000    expert     6        3     0    21        0.0 468.4685  0.68419091  0.2596305
+33   Sub09 directergodic     low trial2     2.0     5000    expert     6        3     8    21        0.0 458.8704 -0.34569814 12.9133936
+34   Sub09 sharedergodic     low trial3     2.0     5000    expert     6        3     5    21        0.0 452.1967 -1.06179696  5.2505014
+35   Sub09   autoergodic     low trial4     2.0     5000    expert     8        3     0    27        0.0 464.3082  0.23778693  0.2775919
+36   Sub09          none    high trial5     2.0     5000    expert     6        3     0    21        0.0 459.7866 -0.24738588  0.9251282
+37   Sub09      waypoint    high trial6     2.0     5000    expert     6        4    12    22        0.0 475.7517  1.46568637  1.2570556
+38   Sub09 directergodic    high trial7     2.0     5000    expert     6        3     8    21        0.0 479.3700  1.85394024  0.7810271
+39   Sub09 sharedergodic    high trial8     2.0     5000    expert     6        3     9    21        0.0 449.6430 -1.33581546  2.0676074
+40   Sub09   autoergodic    high trial9     2.0     5000    expert     6        3     0    21        0.0 455.4534 -0.71234783  3.9161954
+41   Sub11          none     low trial0     4.0     5772    expert     5        3     0    18        5.0 846.9589  1.22880542  7.7813677
+42   Sub11      waypoint     low trial1     4.0     5772    expert     6        3    25    21        6.0 713.2593 -1.91773723 16.6895670
+    P_switch norm_mean norm_bestpath norm_userpath P_switch_cum  norm_cum norm_bestpath_cum norm_userpath_cum N_obs Include_Input
+1        NaN       NaN           NaN           NaN          NaN       NaN               NaN               NaN   NaN          True
+2  0.2586207 0.8720818     0.2970757     0.3196474    0.3333333 0.7317969         0.2413245        0.31201757    22          True
+3  0.3220339 1.3612000     0.5923849     0.6311114    0.2666667 1.1580135         0.3181542        0.60745636    37          True
+4  0.3975904 0.5483346     0.2214420     0.2206676    0.4000000 0.6663287         0.2299632        0.25815926    69          True
+5  0.3189655 0.8601439     0.2814695     0.3430742    0.4642857 1.2474513         0.3894210        0.48223690    90          True
+6        NaN       NaN           NaN           NaN          NaN       NaN               NaN               NaN   NaN          True
+7  0.1923077 0.9495973     0.3990759     0.4511955    0.1818182 0.8391261         0.2940488        0.37532151    24          True
+8  0.2777778 0.8459328     0.3260007     0.3432702    0.2500000 1.0851060         0.4054893        0.48002818    22          True
+9  0.3378378 0.7154456     0.2926885     0.3545869    0.4074074 0.7164793         0.3426134        0.32729865    68          True
+10 0.3500000 1.1004592     0.4258566     0.4334975    0.4285714 1.4384602         0.5557356        0.60684681    83          True
+21       NaN       NaN           NaN           NaN          NaN       NaN               NaN               NaN   NaN          True
+22 0.3043478 0.4680812     0.1787683     0.1436386    0.2000000 1.0505241         0.4404719        0.27562611    30          True
+23 0.4776119 0.6378803     0.2884968     0.2765803    0.5789474 0.6880086         0.3016316        0.27879978    49          True
+24 0.6551724 0.7209130     0.2823906     0.2982690    0.6500000 0.7783304         0.3607422        0.34779186    70          True
+25       NaN       NaN           NaN           NaN          NaN       NaN               NaN               NaN    69          True
+26       NaN       NaN           NaN           NaN          NaN       NaN               NaN               NaN   NaN          True
+27 0.2051282 0.4572438     0.1042998     0.2047360    0.3846154 0.4222377         0.1411163        0.09895644    26          True
+28 0.4482759 0.9218453     0.3225143     0.2308458    0.4444444 0.9527199         0.3914658        0.24271470    44          True
+29 0.2795699 0.8227609     0.3530448     0.3442688    0.4117647 1.5312272         0.7091502        0.67478079    70          True
+30 0.3780488 0.9301127     0.3944701     0.4107668    0.3913043 1.2012107         0.4336909        0.45393769    63          True
+31       NaN       NaN           NaN           NaN          NaN       NaN               NaN               NaN   NaN          True
+33 0.3076923 0.6278213     0.3157685     0.2915661    0.4705882 1.2237806         0.6964485        0.55861924    69          True
+34       NaN       NaN           NaN           NaN          NaN       NaN               NaN               NaN    65          True
+35 0.2916667 0.5757933     0.2085504     0.2815574    0.4090909 0.5562379         0.1972387        0.25189657    82          True
+36       NaN       NaN           NaN           NaN          NaN       NaN               NaN               NaN   NaN          True
+37 0.4098361 0.6862303     0.3092595     0.3594743    0.5000000 0.9933974         0.4263567        0.49377837    38          True
+38 0.2428571 0.3974321     0.1404994     0.1574809    0.4736842 0.5503001         0.2139425        0.22110788    47          True
+39 0.3368421 0.6290178     0.3331768     0.2867272    0.4090909 0.7921754         0.4991280        0.47686594    72          True
+40 0.4482759 0.8672520     0.4227993     0.3753934    0.3846154 1.0710314         0.4859833        0.45238041    90          True
+41       NaN       NaN           NaN           NaN          NaN       NaN               NaN               NaN   NaN          True
+42 0.5555556 1.0719513     0.4961023     0.4665970    0.5000000 0.8886332         0.4172870        0.37415003    33          True
+   Include_Score Include_Difficulty Include_RR_mean Include_MDP_r Include_P_switch Include_P_switch_cum Include_N_obs
+1           True               True            True          True             True                 True          True
+2           True               True            True          True             True                 True          True
+3           True               True            True          True             True                 True          True
+4           True               True            True          True             True                 True          True
+5           True               True            True          True             True                 True          True
+6           True               True            True          True             True                 True          True
+7           True               True            True          True             True                 True          True
+8           True               True            True          True             True                 True          True
+9           True               True            True          True             True                 True          True
+10          True               True            True          True             True                 True          True
+21          True               True            True          True             True                 True          True
+22          True               True            True          True             True                 True          True
+23          True               True            True          True             True                 True          True
+24          True               True            True          True             True                 True          True
+25          True               True            True          True             True                 True          True
+26          True               True            True          True             True                 True          True
+27          True               True            True          True             True                 True          True
+28          True               True            True          True             True                 True          True
+29          True               True            True          True             True                 True          True
+30          True               True            True          True             True                 True          True
+31          True               True            True          True             True                 True          True
+33          True               True            True          True             True                 True          True
+34          True               True            True          True             True                 True          True
+35          True               True            True          True             True                 True          True
+36          True               True            True          True             True                 True          True
+37          True               True            True          True             True                 True          True
+38          True               True            True          True             True                 True          True
+39          True               True            True          True             True                 True          True
+40          True               True            True          True             True                 True          True
+41          True               True            True          True             True                 True          True
+42          True               True            True          True             True                 True          True
+ [ reached 'max' / getOption("max.print") -- omitted 207 rows ]

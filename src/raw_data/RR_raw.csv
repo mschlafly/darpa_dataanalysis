@@ -1,4 +1,4 @@
-Subject,Control,Complexity,Trial,Lifetime,Expertise,Alllow,Allhigh,RR_Mean,RR_Zscore
+Subject,Control,Density,Trial,Lifetime,Expertise,Alllow,Allhigh,RR_Mean,RR_Zscore
 Sub01,none,low,trial0,41860,expert,1,1,734.534351145038,1.09321662975435
 Sub01,waypoint,low,trial1,41860,expert,1,1,723.731829573935,-0.24396938758966
 Sub01,directergodic,low,trial2,41860,expert,1,1,728.469696969697,0.34250572305399

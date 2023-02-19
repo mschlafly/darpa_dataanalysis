@@ -1,0 +1,129 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Density=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+
+################################################################################ 
+ANOVA 
+################################################################################ 
+ANOVA test evaluating the degree to which variance in the outcome measure can be
+attributed to the experimental group (e.g., control paradigm, environment, expertise. 
+We use the exANOVA R package.
+Significance indicates that performance under at least one the experimental conditions
+is different from the rest and that 
+[insert independent variable driving experimental grouping] affects [insert dependent variable / outcome measure].
+The exANOVA also tests for sphericity (one of the assumptions of an ANOVA test) 
+If the sphericity condition is not met (p<0.05), apply the greenhouse geisser correction p[GG]. 
+################################################################################ 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: P_switch_cum
+                    Chisq Df Pr(>Chisq)    
+(Intercept)       28.0837  1  1.162e-07 ***
+Control            4.6995  3     0.1952    
+Expertise          1.1002  1     0.2942    
+Control:Expertise  0.9004  3     0.8253    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+################################################################################ 
+T-test for group difference 
+After performing an ANOVA, this test helps us determine which of the experimental 
+group/s are different from the rest.
+Since running multiple tests increases the likelihood of getting significant results,
+corrections are applied.
+################################################################################ 
+[1] "degrees of freedom:"
+[1] 4994
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = P_switch_cum ~ Control * Expertise + (1 | Subject), 
+    data = data_all, family = binomial(link = "logit"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                    Estimate Std. Error t value Pr(>|t|)
+directergodic - autoergodic == 0    0.092545   0.079494   1.164    0.649
+sharedergodic - autoergodic == 0    0.133731   0.076954   1.738    0.303
+waypoint - autoergodic == 0        -0.002312   0.086820  -0.027    1.000
+sharedergodic - directergodic == 0  0.041186   0.078170   0.527    0.952
+waypoint - directergodic == 0      -0.094857   0.087836  -1.080    0.701
+waypoint - sharedergodic == 0      -0.136043   0.085725  -1.587    0.385
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 3440.175
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: P_switch_cum
+                    Chisq Df Pr(>Chisq)    
+(Intercept)       20.4783  1  6.031e-06 ***
+Control            3.2584  3     0.3535    
+Expertise          0.4622  1     0.4966    
+Control:Expertise  2.2491  3     0.5223    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = P_switch_cum ~ Control * Expertise + (1 | Subject), 
+    data = data_high, family = binomial(link = "logit"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                    Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0    0.069144   0.114870   0.602    0.931
+sharedergodic - autoergodic == 0    0.147219   0.107821   1.365    0.520
+waypoint - autoergodic == 0         0.002411   0.123513   0.020    1.000
+sharedergodic - directergodic == 0  0.078075   0.110076   0.709    0.893
+waypoint - directergodic == 0      -0.066733   0.125435  -0.532    0.951
+waypoint - sharedergodic == 0      -0.144808   0.119038  -1.216    0.615
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 3351.499
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: P_switch_cum
+                    Chisq Df Pr(>Chisq)    
+(Intercept)       13.0467  1  0.0003038 ***
+Control            1.8753  3  0.5986784    
+Expertise          0.7887  1  0.3745022    
+Control:Expertise  0.2727  3  0.9650842    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = P_switch_cum ~ Control * Expertise + (1 | Subject), 
+    data = data_low, family = binomial(link = "logit"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                    Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0    0.119645   0.110673   1.081    0.700
+sharedergodic - autoergodic == 0    0.121764   0.111122   1.096    0.691
+waypoint - autoergodic == 0         0.004448   0.123103   0.036    1.000
+sharedergodic - directergodic == 0  0.002119   0.112144   0.019    1.000
+waypoint - directergodic == 0      -0.115197   0.123551  -0.932    0.787
+waypoint - sharedergodic == 0      -0.117316   0.124420  -0.943    0.781
+(Adjusted p values reported -- single-step method)
+

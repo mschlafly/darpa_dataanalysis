@@ -1,0 +1,268 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Density=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+Here are the Maximum_Regret group ranges: [1] "(-0.00299,0.997]" "(0.997,1.99]"     "(1.99,2.99]"     
+
+################################################################################ 
+ANOVA 
+################################################################################ 
+ANOVA test evaluating the degree to which variance in the outcome measure can be
+attributed to the experimental group (e.g., control paradigm, environment, expertise. 
+We use the exANOVA R package.
+Significance indicates that performance under at least one the experimental conditions
+is different from the rest and that 
+[insert independent variable driving experimental grouping] affects [insert dependent variable / outcome measure].
+The exANOVA also tests for sphericity (one of the assumptions of an ANOVA test) 
+If the sphericity condition is not met (p<0.05), apply the greenhouse geisser correction p[GG]. 
+################################################################################ 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                                     Chisq Df Pr(>Chisq)    
+(Intercept)                       4162.138  1  < 2.2e-16 ***
+Control                             45.308  4  3.430e-09 ***
+Density                             14.760  1  0.0001221 ***
+max_regret_groups                 2810.735  2  < 2.2e-16 ***
+Control:Density                    133.123  4  < 2.2e-16 ***
+Control:max_regret_groups           74.438  8  6.391e-13 ***
+Density:max_regret_groups           27.923  2  8.641e-07 ***
+Control:Density:max_regret_groups  164.394  8  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+################################################################################ 
+T-test for group difference 
+After performing an ANOVA, this test helps us determine which of the experimental 
+group/s are different from the rest.
+Since running multiple tests increases the likelihood of getting significant results,
+corrections are applied.
+################################################################################ 
+[1] "degrees of freedom:"
+[1] 8101
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Control * Density * max_regret_groups + 
+    (1 | Subject), data = data_all)
+
+Linear Hypotheses:
+                                   Estimate Std. Error t value Pr(>|t|)    
+directergodic - autoergodic == 0   -0.06509    0.04170  -1.561  0.51501    
+none - autoergodic == 0            -0.17790    0.05692  -3.126  0.01463 *  
+sharedergodic - autoergodic == 0   -0.13398    0.03769  -3.555  0.00334 ** 
+waypoint - autoergodic == 0        -0.34011    0.04277  -7.951  < 0.001 ***
+none - directergodic == 0          -0.11281    0.05928  -1.903  0.30878    
+sharedergodic - directergodic == 0 -0.06888    0.04117  -1.673  0.44309    
+waypoint - directergodic == 0      -0.27501    0.04588  -5.994  < 0.001 ***
+sharedergodic - none == 0           0.04392    0.05654   0.777  0.93551    
+waypoint - none == 0               -0.16220    0.06005  -2.701  0.05190 .  
+waypoint - sharedergodic == 0      -0.20613    0.04228  -4.875  < 0.001 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+########################################################################### 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                            Chisq Df Pr(>Chisq)    
+(Intercept)               2148.28  1  < 2.2e-16 ***
+Control                    125.39  4  < 2.2e-16 ***
+max_regret_groups         1478.51  2  < 2.2e-16 ***
+Control:max_regret_groups  162.27  8  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "degrees of freedom:"
+[1] 4048
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Control * max_regret_groups + (1 | Subject), 
+    data = data_high)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)    
+directergodic - autoergodic == 0   -0.06450    0.04106  -1.571   0.5085    
+none - autoergodic == 0            -0.17816    0.05605  -3.179   0.0122 *  
+sharedergodic - autoergodic == 0   -0.13451    0.03711  -3.624   0.0026 ** 
+waypoint - autoergodic == 0        -0.33953    0.04212  -8.061   <0.001 ***
+none - directergodic == 0          -0.11366    0.05838  -1.947   0.2858    
+sharedergodic - directergodic == 0 -0.07000    0.04054  -1.727   0.4098    
+waypoint - directergodic == 0      -0.27502    0.04518  -6.088   <0.001 ***
+sharedergodic - none == 0           0.04365    0.05568   0.784   0.9334    
+waypoint - none == 0               -0.16137    0.05914  -2.729   0.0480 *  
+waypoint - sharedergodic == 0      -0.20502    0.04163  -4.924   <0.001 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+########################################################################### 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                             Chisq Df Pr(>Chisq)    
+(Intercept)               2223.415  1  < 2.2e-16 ***
+Control                     66.836  4  1.056e-13 ***
+max_regret_groups         1348.098  2  < 2.2e-16 ***
+Control:max_regret_groups  106.380  8  < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "degrees of freedom:"
+[1] 4048
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Control * max_regret_groups + (1 | Subject), 
+    data = data_low)
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)    
+directergodic - autoergodic == 0   -0.08476    0.04089  -2.073  0.22970    
+none - autoergodic == 0            -0.26441    0.04689  -5.639  < 0.001 ***
+sharedergodic - autoergodic == 0    0.00453    0.03890   0.116  0.99996    
+waypoint - autoergodic == 0         0.13947    0.04431   3.148  0.01391 *  
+none - directergodic == 0          -0.17964    0.04909  -3.659  0.00225 ** 
+sharedergodic - directergodic == 0  0.08929    0.04153   2.150  0.19706    
+waypoint - directergodic == 0       0.22423    0.04663   4.809  < 0.001 ***
+sharedergodic - none == 0           0.26894    0.04745   5.667  < 0.001 ***
+waypoint - none == 0                0.40387    0.05197   7.771  < 0.001 ***
+waypoint - sharedergodic == 0       0.13493    0.04489   3.006  0.02209 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+####################### SUBmax_regret_groups OF MAXIMUM_REGRET  ###################### 
+###### where maximum regret is the impact fo the decision on reward ####### 
+########################################################################### 
+
+ For level [1] "(-0.00299,0.997]"
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                    Chisq Df Pr(>Chisq)    
+(Intercept)     1493.6284  1     <2e-16 ***
+Density            0.8464  1     0.3576    
+Control           83.5616  4     <2e-16 ***
+Density:Control    5.3800  4     0.2505    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "degrees of freedom:"
+[1] 6964
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Density * Control + (1 | Subject), data = data_subset)
+
+Linear Hypotheses:
+                                    Estimate Std. Error t value Pr(>|t|)    
+directergodic - autoergodic == 0   -0.021147   0.010723  -1.972  0.27944    
+none - autoergodic == 0            -0.058203   0.010326  -5.637  < 0.001 ***
+sharedergodic - autoergodic == 0    0.010726   0.010546   1.017  0.84741    
+waypoint - autoergodic == 0        -0.026437   0.010639  -2.485  0.09394 .  
+none - directergodic == 0          -0.037056   0.009892  -3.746  0.00173 ** 
+sharedergodic - directergodic == 0  0.031873   0.010137   3.144  0.01441 *  
+waypoint - directergodic == 0      -0.005290   0.010219  -0.518  0.98559    
+sharedergodic - none == 0           0.068928   0.009721   7.091  < 0.001 ***
+waypoint - none == 0                0.031766   0.009803   3.241  0.01057 *  
+waypoint - sharedergodic == 0      -0.037163   0.010049  -3.698  0.00208 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
+
+ For level [1] "(0.997,1.99]"
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                   Chisq Df Pr(>Chisq)    
+(Intercept)     735.4952  1     <2e-16 ***
+Density           0.7938  1     0.3730    
+Control           1.4903  4     0.8284    
+Density:Control   1.1219  4     0.8908    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "degrees of freedom:"
+[1] 935
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Density * Control + (1 | Subject), data = data_subset)
+
+Linear Hypotheses:
+                                    Estimate Std. Error t value Pr(>|t|)
+directergodic - autoergodic == 0    0.026062   0.072217   0.361    0.996
+none - autoergodic == 0             0.048573   0.082895   0.586    0.977
+sharedergodic - autoergodic == 0   -0.023471   0.071150  -0.330    0.997
+waypoint - autoergodic == 0         0.051841   0.076892   0.674    0.962
+none - directergodic == 0           0.022511   0.084331   0.267    0.999
+sharedergodic - directergodic == 0 -0.049533   0.072825  -0.680    0.960
+waypoint - directergodic == 0       0.025779   0.078443   0.329    0.997
+sharedergodic - none == 0          -0.072044   0.083443  -0.863    0.910
+waypoint - none == 0                0.003268   0.088387   0.037    1.000
+waypoint - sharedergodic == 0       0.075312   0.077477   0.972    0.867
+(Adjusted p values reported -- single-step method)
+
+
+ For level [1] "(1.99,2.99]"
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                   Chisq Df Pr(>Chisq)    
+(Intercept)     168.7670  1  < 2.2e-16 ***
+Density           2.1862  1   0.139248    
+Control           5.8649  4   0.209470    
+Density:Control  15.5670  4   0.003659 ** 
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+[1] "degrees of freedom:"
+[1] 192
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Density * Control + (1 | Subject), data = data_subset)
+
+Linear Hypotheses:
+                                   Estimate Std. Error t value Pr(>|t|)   
+directergodic - autoergodic == 0     0.1930     0.2983   0.647  0.96519   
+none - autoergodic == 0              0.5539     0.4631   1.196  0.74373   
+sharedergodic - autoergodic == 0     0.4216     0.2485   1.697  0.42508   
+waypoint - autoergodic == 0          1.1179     0.3011   3.712  0.00233 **
+none - directergodic == 0            0.3609     0.4879   0.740  0.94404   
+sharedergodic - directergodic == 0   0.2286     0.2916   0.784  0.93155   
+waypoint - directergodic == 0        0.9249     0.3398   2.722  0.05079 . 
+sharedergodic - none == 0           -0.1323     0.4575  -0.289  0.99837   
+waypoint - none == 0                 0.5640     0.4880   1.156  0.76707   
+waypoint - sharedergodic == 0        0.6963     0.2947   2.363  0.12310   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+

@@ -1,0 +1,125 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Density=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+
+################################################################################ 
+ANOVA 
+################################################################################ 
+ANOVA test evaluating the degree to which variance in the outcome measure can be
+attributed to the experimental group (e.g., control paradigm, environment, expertise. 
+We use the exANOVA R package.
+Significance indicates that performance under at least one the experimental conditions
+is different from the rest and that 
+[insert independent variable driving experimental grouping] affects [insert dependent variable / outcome measure].
+The exANOVA also tests for sphericity (one of the assumptions of an ANOVA test) 
+If the sphericity condition is not met (p<0.05), apply the greenhouse geisser correction p[GG]. 
+################################################################################ 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: P_switch_cum
+                  Chisq Df Pr(>Chisq)    
+(Intercept)     40.4718  1  1.995e-10 ***
+Density          0.0130  1     0.9094    
+Control          1.7100  3     0.6347    
+Density:Control  0.8101  3     0.8471    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+################################################################################ 
+T-test for group difference 
+After performing an ANOVA, this test helps us determine which of the experimental 
+group/s are different from the rest.
+Since running multiple tests increases the likelihood of getting significant results,
+corrections are applied.
+################################################################################ 
+[1] "degrees of freedom:"
+[1] 3906
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = P_switch_cum ~ Density * Control + (1 | Subject), 
+    data = data_all, family = binomial(link = "logit"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error t value Pr(>|t|)
+directergodic - autoergodic == 0    0.01667    0.10094   0.165    0.998
+sharedergodic - autoergodic == 0    0.08104    0.09494   0.854    0.828
+waypoint - autoergodic == 0        -0.03654    0.10996  -0.332    0.987
+sharedergodic - directergodic == 0  0.06438    0.09746   0.661    0.911
+waypoint - directergodic == 0      -0.05321    0.11217  -0.474    0.965
+waypoint - sharedergodic == 0      -0.11759    0.10697  -1.099    0.689
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+######################### HIGH BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 2733.403
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: P_switch_cum
+              Chisq Df Pr(>Chisq)    
+(Intercept) 30.0733  1   4.16e-08 ***
+Control      1.1711  3     0.7599    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = P_switch_cum ~ Control + (1 | Subject), data = data_high, 
+    family = binomial(link = "logit"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0   -0.02925    0.12779  -0.229    0.996
+sharedergodic - autoergodic == 0    0.06477    0.11924   0.543    0.948
+waypoint - autoergodic == 0        -0.07005    0.13871  -0.505    0.958
+sharedergodic - directergodic == 0  0.09402    0.12272   0.766    0.869
+waypoint - directergodic == 0      -0.04080    0.14181  -0.288    0.992
+waypoint - sharedergodic == 0      -0.13482    0.13426  -1.004    0.746
+(Adjusted p values reported -- single-step method)
+
+
+########################################################################### 
+########################## LOW BUILDING DENSITY  ########################## 
+########################################################################### 
+[1] "Sum of squares"
+[1] 2579.751
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: P_switch_cum
+              Chisq Df Pr(>Chisq)    
+(Intercept) 25.3870  1  4.691e-07 ***
+Control      1.4557  3     0.6925    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: glmer(formula = P_switch_cum ~ Control + (1 | Subject), data = data_low, 
+    family = binomial(link = "logit"), control = glmerControl(check.conv.singular = .makeCC(action = "ignore", 
+        tol = 1e-04)))
+
+Linear Hypotheses:
+                                   Estimate Std. Error z value Pr(>|z|)
+directergodic - autoergodic == 0    0.12831    0.12554   1.022    0.736
+sharedergodic - autoergodic == 0    0.11729    0.12635   0.928    0.789
+waypoint - autoergodic == 0         0.03082    0.14015   0.220    0.996
+sharedergodic - directergodic == 0 -0.01102    0.12760  -0.086    1.000
+waypoint - directergodic == 0      -0.09749    0.14138  -0.690    0.901
+waypoint - sharedergodic == 0      -0.08647    0.14208  -0.609    0.929
+(Adjusted p values reported -- single-step method)
+

@@ -1,0 +1,62 @@
+################################################################################ 
+wilcox_test for group difference for all data 
+################################################################################ 
+# A tibble: 10 × 9
+   .y.        group1        group2           n1    n2 statistic     p p.adj p.adj.signif
+ * <chr>      <chr>         <chr>         <int> <int>     <dbl> <dbl> <dbl> <chr>       
+ 1 Difficulty autoergodic   directergodic    31    31     100   0.535 1     ns          
+ 2 Difficulty autoergodic   none             31    31     196.  0.023 0.228 ns          
+ 3 Difficulty autoergodic   sharedergodic    31    31     115   1     1     ns          
+ 4 Difficulty autoergodic   waypoint         31    31     180.  0.196 1     ns          
+ 5 Difficulty directergodic none             31    31     172   0.012 0.124 ns          
+ 6 Difficulty directergodic sharedergodic    31    31      85.5 0.469 1     ns          
+ 7 Difficulty directergodic waypoint         31    31     204.  0.46  1     ns          
+ 8 Difficulty none          sharedergodic    31    31      25   0.005 0.049 *           
+ 9 Difficulty none          waypoint         31    31     112.  0.18  1     ns          
+10 Difficulty sharedergodic waypoint         31    31     170   0.332 1     ns          
+
+################################################################################ 
+############################## HIGH BUILDING DENSITY  ########################## 
+################################################################################ 
+
+	Friedman rank sum test
+
+data:  data_high$Difficulty, data_high$Control and data_high$Subject
+Friedman chi-squared = 14.468, df = 4, p-value = 0.005942
+
+# A tibble: 10 × 9
+   .y.        group1        group2           n1    n2 statistic     p p.adj p.adj.signif
+ * <chr>      <chr>         <chr>         <int> <int>     <dbl> <dbl> <dbl> <chr>       
+ 1 Difficulty autoergodic   directergodic    34    34     126.  0.198 1     ns          
+ 2 Difficulty autoergodic   none             34    34     240   0.01  0.099 ns          
+ 3 Difficulty autoergodic   sharedergodic    34    34     139   0.199 1     ns          
+ 4 Difficulty autoergodic   waypoint         34    34     261   0.001 0.013 *           
+ 5 Difficulty directergodic none             34    34     194.  0.092 0.918 ns          
+ 6 Difficulty directergodic sharedergodic    34    34     104.  0.969 1     ns          
+ 7 Difficulty directergodic waypoint         34    34     203   0.045 0.453 ns          
+ 8 Difficulty none          sharedergodic    34    34      61.5 0.035 0.347 ns          
+ 9 Difficulty none          waypoint         34    34     143   0.849 1     ns          
+10 Difficulty sharedergodic waypoint         34    34     298.  0.007 0.074 ns          
+
+################################################################################ 
+############################## LOW BUILDING DENSITY  ########################## 
+################################################################################ 
+
+	Friedman rank sum test
+
+data:  data_low$Difficulty, data_low$Control and data_low$Subject
+Friedman chi-squared = 11.279, df = 4, p-value = 0.0236
+
+# A tibble: 10 × 9
+   .y.        group1        group2           n1    n2 statistic     p p.adj p.adj.signif
+ * <chr>      <chr>         <chr>         <int> <int>     <dbl> <dbl> <dbl> <chr>       
+ 1 Difficulty autoergodic   directergodic    34    34      134  0.279 1     ns          
+ 2 Difficulty autoergodic   none             34    34      239  0.011 0.107 ns          
+ 3 Difficulty autoergodic   sharedergodic    34    34      150. 0.735 1     ns          
+ 4 Difficulty autoergodic   waypoint         34    34      198  0.169 1     ns          
+ 5 Difficulty directergodic none             34    34      206  0.01  0.097 ns          
+ 6 Difficulty directergodic sharedergodic    34    34      104. 0.454 1     ns          
+ 7 Difficulty directergodic waypoint         34    34      216. 0.523 1     ns          
+ 8 Difficulty none          sharedergodic    34    34       27  0.004 0.036 *           
+ 9 Difficulty none          waypoint         34    34      116. 0.128 1     ns          
+10 Difficulty sharedergodic waypoint         34    34      177  0.444 1     ns          

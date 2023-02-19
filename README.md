@@ -75,6 +75,8 @@ The full statistical results are provided in the Stats/ folder. The filename ind
 * Game Score, MDP analyses
   * 33 subjects with almost full datasets are included in input plots and analyses: ['01', '07', '08', '09', '11', '13', '14', '15', '17', '18', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42']
   * 25 experts; 8 novices
+  * Subject 15's waypoint-low trial is missing from both analyses
+  * The MDP analyses are missing many additional trials due to technical problems saving all necessary data to replicate the real-time game scenario: 9 waypoint low, 19 shared low, 11 auto high, 19 direct high, 20 direct high, 21 waypoint high, 24 auto high, 27 auto high, 18 auto high, 34 direct high, 35 auto high, 
 
 * Difficulty Rating
   * 30 subjects with full datasets are included in input plots and analyses: ['01', '11', '13', '14', '15', '17', '18', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42']

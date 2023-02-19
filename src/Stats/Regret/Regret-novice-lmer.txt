@@ -1,0 +1,52 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Density=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+
+
+
+
+
+ SINGULAR FIT 
+
+
+
+
+Here are the Maximum_Regret group ranges: [1] "(-0.00295,0.982]" "(0.982,1.96]"     "(1.96,2.95]"     
+
+################################################################################ 
+ANOVA 
+################################################################################ 
+ANOVA test evaluating the degree to which variance in the outcome measure can be
+attributed to the experimental group (e.g., control paradigm, environment, expertise. 
+We use the exANOVA R package.
+Significance indicates that performance under at least one the experimental conditions
+is different from the rest and that 
+[insert independent variable driving experimental grouping] affects [insert dependent variable / outcome measure].
+The exANOVA also tests for sphericity (one of the assumptions of an ANOVA test) 
+If the sphericity condition is not met (p<0.05), apply the greenhouse geisser correction p[GG]. 
+################################################################################ 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                                     Chisq Df Pr(>Chisq)    
+(Intercept)                       150.0052  1  < 2.2e-16 ***
+Control                            63.8918  4  4.404e-13 ***
+Density                             0.1401  1    0.70821    
+max_regret_groups                 330.5108  2  < 2.2e-16 ***
+Control:Density                    26.7680  4  2.215e-05 ***
+Control:max_regret_groups          72.7885  8  1.366e-12 ***
+Density:max_regret_groups           9.1659  2    0.01022 *  
+Control:Density:max_regret_groups  32.5924  7  3.153e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+################################################################################ 
+T-test for group difference 
+After performing an ANOVA, this test helps us determine which of the experimental 
+group/s are different from the rest.
+Since running multiple tests increases the likelihood of getting significant results,
+corrections are applied.
+################################################################################ 
+[1] "degrees of freedom:"
+[1] 1708

@@ -1,0 +1,67 @@
+
+################################################################################ 
+###############               All Experimental Factors            ############## 
+####### Density=(low/high buiding density) Control=5 control paradigms ###### 
+################################################################################ 
+Here are the Maximum_Regret group ranges: [1] "(-0.00299,0.997]" "(0.997,1.99]"     "(1.99,2.99]"     
+
+################################################################################ 
+ANOVA 
+################################################################################ 
+ANOVA test evaluating the degree to which variance in the outcome measure can be
+attributed to the experimental group (e.g., control paradigm, environment, expertise. 
+We use the exANOVA R package.
+Significance indicates that performance under at least one the experimental conditions
+is different from the rest and that 
+[insert independent variable driving experimental grouping] affects [insert dependent variable / outcome measure].
+The exANOVA also tests for sphericity (one of the assumptions of an ANOVA test) 
+If the sphericity condition is not met (p<0.05), apply the greenhouse geisser correction p[GG]. 
+################################################################################ 
+Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: Regret
+                                       Chisq Df Pr(>Chisq)    
+(Intercept)                         1851.390  1  < 2.2e-16 ***
+Control                               78.981  4  2.863e-16 ***
+Expertise                             21.863  1  2.928e-06 ***
+max_regret_groups                   1464.756  2  < 2.2e-16 ***
+Control:Expertise                     40.326  4  3.706e-08 ***
+Control:max_regret_groups            105.707  8  < 2.2e-16 ***
+Expertise:max_regret_groups           21.746  2  1.896e-05 ***
+Control:Expertise:max_regret_groups   37.270  8  1.027e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+################################################################################ 
+T-test for group difference 
+After performing an ANOVA, this test helps us determine which of the experimental 
+group/s are different from the rest.
+Since running multiple tests increases the likelihood of getting significant results,
+corrections are applied.
+################################################################################ 
+[1] "degrees of freedom:"
+[1] 8101
+
+	 Simultaneous Tests for General Linear Hypotheses
+
+Multiple Comparisons of Means: Tukey Contrasts
+
+
+Fit: lmer(formula = Regret ~ Control * Expertise * max_regret_groups + 
+    (1 | Subject), data = data_all)
+
+Linear Hypotheses:
+                                   Estimate Std. Error t value Pr(>|t|)    
+directergodic - autoergodic == 0   -0.06730    0.03185  -2.113  0.21206    
+none - autoergodic == 0            -0.19984    0.03792  -5.270  < 0.001 ***
+sharedergodic - autoergodic == 0   -0.03680    0.03025  -1.217  0.73946    
+waypoint - autoergodic == 0        -0.09155    0.03334  -2.746  0.04692 *  
+none - directergodic == 0          -0.13254    0.03924  -3.377  0.00645 ** 
+sharedergodic - directergodic == 0  0.03051    0.03188   0.957  0.87300    
+waypoint - directergodic == 0      -0.02425    0.03483  -0.696  0.95682    
+sharedergodic - none == 0           0.16304    0.03797   4.294  < 0.001 ***
+waypoint - none == 0                0.10829    0.04047   2.676  0.05680 .  
+waypoint - sharedergodic == 0      -0.05476    0.03338  -1.641  0.46831    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+(Adjusted p values reported -- single-step method)
+
