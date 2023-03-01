@@ -360,7 +360,10 @@ def fnct_plot_difficulty(metrics,data_list,only_experts,only_novices,combine_env
 
         if only_experts:
             if combine_environments:
-                sig_matrix = np.array([])
+                sig_matrix = np.array([
+                            [1, 2, 0.018],  # waypoint - direct
+                            [0, 4, 0.044]  # none - auto
+                            ])  # waypoint - shared ergodic
             else:
                 if plot_num==0:
                     sig_matrix = np.array([])
@@ -377,8 +380,11 @@ def fnct_plot_difficulty(metrics,data_list,only_experts,only_novices,combine_env
                     sig_matrix = np.array([])
         else:
             sig_matrix = np.array([
-                        [0, 3, 0.049],  # direct ergodic - shared ergodic
-                        [0, 2, 1]])  # waypoint - shared ergodic
+                        [0, 2, 0.029],  # none - direct
+                        [0, 3, 0.005],  # none - shared
+                        [1, 4, 0.02],  # waypoint - auto
+                        [0, 4, 0.009]  # none - auto
+                        ])  # waypoint - shared ergodic
 
         title = 'Perceived Difficulty Rating'
 

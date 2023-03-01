@@ -4,16 +4,16 @@ wilcox_test for group difference for all data
 # A tibble: 10 × 9
    .y.        group1        group2           n1    n2 statistic     p p.adj p.adj.signif
  * <chr>      <chr>         <chr>         <int> <int>     <dbl> <dbl> <dbl> <chr>       
- 1 Difficulty autoergodic   directergodic    24    24      64   0.84  1     ns          
- 2 Difficulty autoergodic   none             24    24     142.  0.057 0.567 ns          
- 3 Difficulty autoergodic   sharedergodic    24    24      81.5 0.596 1     ns          
- 4 Difficulty autoergodic   waypoint         24    24     111   0.527 1     ns          
- 5 Difficulty directergodic none             24    24     112   0.024 0.237 ns          
- 6 Difficulty directergodic sharedergodic    24    24      47   0.279 1     ns          
- 7 Difficulty directergodic waypoint         24    24     128.  0.682 1     ns          
- 8 Difficulty none          sharedergodic    24    24      18   0.01  0.099 ns          
- 9 Difficulty none          waypoint         24    24      61.5 0.106 1     ns          
-10 Difficulty sharedergodic waypoint         24    24     117   0.38  1     ns          
+ 1 Difficulty autoergodic   directergodic    48    48      318. 0.162 1     ns          
+ 2 Difficulty autoergodic   none             48    48      514. 0.004 0.044 *           
+ 3 Difficulty autoergodic   sharedergodic    48    48      302. 0.71  1     ns          
+ 4 Difficulty autoergodic   waypoint         48    48      508. 0.017 0.166 ns          
+ 5 Difficulty directergodic none             48    48      436. 0.018 0.18  ns          
+ 6 Difficulty directergodic sharedergodic    48    48      189  0.24  1     ns          
+ 7 Difficulty directergodic waypoint         48    48      486  0.174 1     ns          
+ 8 Difficulty none          sharedergodic    48    48      106  0.002 0.018 *           
+ 9 Difficulty none          waypoint         48    48      268  0.205 1     ns          
+10 Difficulty sharedergodic waypoint         48    48      560  0.04  0.399 ns          
 
 ################################################################################ 
 ############################## HIGH BUILDING DENSITY  ########################## 

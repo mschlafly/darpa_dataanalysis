@@ -61,9 +61,9 @@ plot_each = False  # Creates and saves a plot for each participant
 
 # Booleans for analyzing subset of participants/trial
 only_experts = True  # Only plots experts
-only_experts = False  # Only plots experts
+# only_experts = False  # Only plots experts
 only_novices = True  # Only plots novices
-# only_novices = False  # Only plots novices
+only_novices = False  # Only plots novices
 combine_environments = True # Whether to combine the two environments
 # combine_environments = False # Whether to combine the two environments
 
@@ -76,14 +76,14 @@ if (not only_experts) and (not only_novices):
     combine_environments = True # No need to seperate experts and novices across environments
 
 # Booleans for plottings specific metrics_perf
-plot_input = True
-plot_RR = True
-plot_score = True
+plot_input = False
+plot_RR = False
+plot_score = False
 plot_difficulty = True
-plot_N_obs = True
-plot_MDP = True
-plot_POMDP_d = True
-plot_POMDP_obs = True
+plot_N_obs = False
+plot_MDP = False
+plot_POMDP_d = False
+plot_POMDP_obs = False
 # plot_RR_input_scatter = False
 # plot_RR_POMDP_d_scatter = False
 # if plot_RR_input_scatter and plot_RR_POMDP_d_scatter:

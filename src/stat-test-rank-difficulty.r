@@ -28,7 +28,7 @@ library(rstatix)
 DIR = '/home/milli/Desktop/darpa_dataanalysis/src'
 
 # Parameters
-skill = "all" # either "expert", "novice", or "all"
+skill = "novice" # either "expert", "novice", or "all"
 
 
 ################################################################################
@@ -55,7 +55,7 @@ sink(paste(DIR,"Stats","Difficulty",paste("difficulty",skill,"rank.txt",sep="-")
 data_all = data_control
 data_all = subset(data_all, Include_Difficulty=='True')
 data_all = subset(data_all, Difficulty!='NaN')
-data_all = subset(data_all, Density=='low')
+# data_all = subset(data_all, Density=='low')
 
 data_all[] <- lapply(data_all, function(x) if(is.factor(x)) factor(x) else x)
 

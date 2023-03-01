@@ -2,18 +2,18 @@
 wilcox_test for group difference for all data 
 ################################################################################ 
 # A tibble: 10 × 9
-   .y.        group1        group2           n1    n2 statistic     p p.adj p.adj.signif
- * <chr>      <chr>         <chr>         <int> <int>     <dbl> <dbl> <dbl> <chr>       
- 1 Difficulty autoergodic   directergodic    31    31     100   0.535 1     ns          
- 2 Difficulty autoergodic   none             31    31     196.  0.023 0.228 ns          
- 3 Difficulty autoergodic   sharedergodic    31    31     115   1     1     ns          
- 4 Difficulty autoergodic   waypoint         31    31     180.  0.196 1     ns          
- 5 Difficulty directergodic none             31    31     172   0.012 0.124 ns          
- 6 Difficulty directergodic sharedergodic    31    31      85.5 0.469 1     ns          
- 7 Difficulty directergodic waypoint         31    31     204.  0.46  1     ns          
- 8 Difficulty none          sharedergodic    31    31      25   0.005 0.049 *           
- 9 Difficulty none          waypoint         31    31     112.  0.18  1     ns          
-10 Difficulty sharedergodic waypoint         31    31     170   0.332 1     ns          
+   .y.        group1        group2           n1    n2 statistic        p p.adj p.adj.signif
+ * <chr>      <chr>         <chr>         <int> <int>     <dbl>    <dbl> <dbl> <chr>       
+ 1 Difficulty autoergodic   directergodic    62    62      442. 0.163    1     ns          
+ 2 Difficulty autoergodic   none             62    62      778. 0.000876 0.009 **          
+ 3 Difficulty autoergodic   sharedergodic    62    62      450  0.399    1     ns          
+ 4 Difficulty autoergodic   waypoint         62    62      788. 0.002    0.02  *           
+ 5 Difficulty directergodic none             62    62      688. 0.003    0.029 *           
+ 6 Difficulty directergodic sharedergodic    62    62      352. 0.596    1     ns          
+ 7 Difficulty directergodic waypoint         62    62      788. 0.038    0.377 ns          
+ 8 Difficulty none          sharedergodic    62    62      152  0.000491 0.005 **          
+ 9 Difficulty none          waypoint         62    62      476. 0.249    1     ns          
+10 Difficulty sharedergodic waypoint         62    62      840. 0.021    0.207 ns          
 
 ################################################################################ 
 ############################## HIGH BUILDING DENSITY  ########################## 
